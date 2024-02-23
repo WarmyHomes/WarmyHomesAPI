@@ -5,6 +5,7 @@ public class User {
         System.out.println("fevzi");
 
         System.out.println("enes");
+        System.out.println("fevzi2");
     }
 
 }
