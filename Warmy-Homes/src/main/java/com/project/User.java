@@ -6,6 +6,8 @@ public class User {
 
         System.out.println("enes");
         System.out.println("fevzi2");
+
+        System.out.println("enes 2");
     }
 
 }
