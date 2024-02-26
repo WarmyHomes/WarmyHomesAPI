@@ -24,7 +24,7 @@ public class Advert {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false, length = 150)
     private String title;
 
     @ManyToOne
