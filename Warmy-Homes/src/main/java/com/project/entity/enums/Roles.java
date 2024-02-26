@@ -7,7 +7,6 @@ public enum Roles {
     MANAGER("Manager"),
     CUSTOMER("Customer");
 
-    private Long id;
 
     private final String role_name;
 

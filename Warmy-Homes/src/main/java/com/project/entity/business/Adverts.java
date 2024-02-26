@@ -1,19 +1,18 @@
 package com.project.entity.business;
 
-
 import com.project.entity.business.helperentity.Advert_Types;
-import lombok.Getter;
-import lombok.Setter;
+import com.project.entity.user.User;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
-
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 @Entity
-@Table(name = "t_advert") // Tablo adınızı buraya yazın
-public class YourEntity {
-
+public class Adverts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,21 +32,21 @@ public class YourEntity {
 
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
-    private Country country_id;
+    private Countries country_id;
 
     @Column(name = "slug", nullable = false, length = 200)
     private String slug;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
-    private City city_id;
+    private Cities city_id;
 
     @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name = "district_id", nullable = false)
-    private District district;
+    private Districts district;
 
     @Column(name = "status", nullable = false)
     private Integer status;
@@ -61,7 +60,7 @@ public class YourEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category_id;
+    private Categories category_id;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
@@ -76,6 +75,4 @@ public class YourEntity {
     @Column(name = "update_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_at;
-
-
 }
