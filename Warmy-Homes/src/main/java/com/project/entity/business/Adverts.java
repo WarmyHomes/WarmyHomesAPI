@@ -64,7 +64,7 @@ public class Adverts {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Category categoryId;
+    private Cate categoryId;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
