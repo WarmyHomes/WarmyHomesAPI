@@ -82,4 +82,11 @@ public class Advert {
 
     @OneToMany(mappedBy = "advert")
     private List<Category_Property_Value> category_property_values;
+
+    @OneToMany(mappedBy = "advert_id", cascade = CascadeType.REMOVE)
+    private List<Tour_Request> tourRequestList;
+
+    @OneToMany(mappedBy = "advert_id", cascade = CascadeType.REMOVE)
+    private List<Log> logList;
+
 }

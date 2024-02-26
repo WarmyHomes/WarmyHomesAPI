@@ -2,6 +2,8 @@ package com.project.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.entity.business.Log;
+import com.project.entity.business.Tour_Request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,4 +48,15 @@ public class User {
     @OneToMany
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
     private UserRole userRole;
+
+    @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
+    private List<Tour_Request> tourRequests;
+
+    @OneToMany(mappedBy = "guest_user_id", cascade = CascadeType.REMOVE)
+    private List<Tour_Request> tour_requestList;
+
+    @OneToMany(mappedBy = "user_id", cascade = CascadeType.REMOVE)
+    private List<Log> logs;
+
+
 }
