@@ -1,12 +1,15 @@
 package com.project.entity.business;
 
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -76,4 +79,7 @@ public class Advert {
     @Column(name = "update_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updated_at;
+
+    @OneToMany(mappedBy = "advert")
+    private List<Category_Property_Value> category_property_values;
 }
