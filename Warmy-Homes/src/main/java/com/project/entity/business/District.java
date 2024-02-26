@@ -3,23 +3,31 @@ package com.project.entity.business;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
 
-@Getter
-@Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 @Builder(toBuilder = true)
-@Entity
-public class Countries {
+public class District {
+    //EmreAktas
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 30, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "country_id", cascade = CascadeType.REMOVE)
-    private Set<Cities> cities;
+
+    //TODO class ismini duzelt
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
 
 }
+
+

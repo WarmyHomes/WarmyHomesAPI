@@ -1,5 +1,5 @@
 package com.project.entity.business;
 
-public class Categories {
+public class Category {
     //SongulCelik
 }

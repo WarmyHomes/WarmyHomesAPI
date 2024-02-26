@@ -7,8 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 
 @Builder(toBuilder = true)
-public class Contacts {
+public class Contact {
     //Yunus_Emre_AKKAS
 
     @Id
@@ -47,6 +47,6 @@ public class Contacts {
     // status ; 1 => it was opened and read
 
     @NotNull
-    private Date dateTime;
+    private LocalDateTime dateTime;
 
 }
