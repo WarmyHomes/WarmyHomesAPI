@@ -19,14 +19,12 @@ public class Favorite {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private User userId;
 
     @ManyToOne
-    @JoinColumn(name = "advert_id")
     private Advert advertId;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
 
 }
