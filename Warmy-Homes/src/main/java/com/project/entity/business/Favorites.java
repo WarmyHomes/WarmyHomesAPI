@@ -1,5 +1,6 @@
 package com.project.entity.business;
 
+import com.project.entity.user.User;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -18,13 +19,15 @@ public class Favorites {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     //oneToMany
-    private long userId;
+
+    private User userId;
 
     //oneToMany
-    private long advertId;
+
+    private /*Advert*/Long advertId;
 
     private Date createAt;
 
