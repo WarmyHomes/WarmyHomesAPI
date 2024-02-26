@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Builder(toBuilder = true)
 //TODO class ismini duzelt
-public class Images {
+public class Image {
     //EmreAktas
 
     @Id
@@ -21,7 +21,7 @@ public class Images {
 
     @Lob //büyük boyutlu datalar için sütun oluşmasını sağlar
     @Column(nullable = false)
-    private byte[] data;
+    private Byte[] data;
 
     @Column(nullable = false)
     private String name;
@@ -35,11 +35,11 @@ public class Images {
     private ImageType type;
 
     @Column(nullable = false)
-    private boolean featured;
+    private Boolean featured;
 
     @ManyToOne
     @JoinColumn(name = "advert_id", nullable = false)
-    private Adverts advert;
+    private Advert advert;
 
 
 }

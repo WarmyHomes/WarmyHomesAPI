@@ -1,5 +1,5 @@
 package com.project.entity.business;
 
-public class Logs {
+public class Tour_Request {
     //TugbaAkdogan
 }

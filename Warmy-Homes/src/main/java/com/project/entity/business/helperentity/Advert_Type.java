@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "t_advertType")
-public class Advert_Types {
+public class Advert_Type {
     //EnesBilgic
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,6 @@
 package com.project.entity.user;
 
-import com.project.entity.enums.Roles;
+import com.project.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +20,8 @@ public class UserRole {
     private User user_id;
 
     //iliskiler belirlenecek
-    private Roles role_id;
+    private Role role_id;
 
     @Enumerated(EnumType.STRING)
-    private Roles roles;
+    private Role roles;
 }

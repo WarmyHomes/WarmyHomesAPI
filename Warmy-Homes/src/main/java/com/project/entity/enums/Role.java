@@ -1,8 +1,6 @@
 package com.project.entity.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-public enum Roles {
+public enum Role {
     ADMIN("admin"),
     MANAGER("Manager"),
     CUSTOMER("Customer");
@@ -11,7 +9,7 @@ public enum Roles {
     private final String role_name;
 
 
-    Roles(String role_name) {
+    Role(String role_name) {
         this.role_name = role_name;
     }
 
