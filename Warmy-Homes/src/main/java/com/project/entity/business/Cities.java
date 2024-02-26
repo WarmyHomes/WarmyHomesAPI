@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Cities {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
