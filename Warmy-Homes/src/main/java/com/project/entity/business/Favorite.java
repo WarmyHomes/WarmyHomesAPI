@@ -3,12 +3,8 @@ package com.project.entity.business;
 import com.project.entity.user.User;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -22,13 +18,11 @@ public class Favorite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //oneToMany
-
+    @ManyToOne
     private User userId;
 
-    //oneToMany
-
-    private /*Advert*/Long advertId;
+    @ManyToOne
+    private Advert advertId;
 
     private LocalDateTime createAt;
 
