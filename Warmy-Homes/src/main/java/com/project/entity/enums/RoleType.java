@@ -1,6 +1,6 @@
 package com.project.entity.enums;
 
-public enum Role {
+public enum RoleType {
     ADMIN("admin"),
     MANAGER("Manager"),
     CUSTOMER("Customer");
@@ -9,7 +9,7 @@ public enum Role {
     private final String role_name;
 
 
-    Role(String role_name) {
+    RoleType(String role_name) {
         this.role_name = role_name;
     }
 

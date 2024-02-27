@@ -1,6 +1,6 @@
 package com.project.entity.user;
 
-import com.project.entity.enums.Role;
+import com.project.entity.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,12 +16,14 @@ import javax.persistence.*;
 @Entity
 public class UserRole {
 
-    //iliskiler belirlenecek
-    private User user_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    //iliskiler belirlenecek
-    private Role role_id;
 
     @Enumerated(EnumType.STRING)
-    private Role roles;
+    @Column(length = 20)
+    private RoleType roleType;
+
+    private String name;
 }
