@@ -45,7 +45,7 @@ public class User {
 
     private LocalDateTime update_at;
 
-    @OneToMany
+    @OneToOne
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
     private UserRole userRole;
 
