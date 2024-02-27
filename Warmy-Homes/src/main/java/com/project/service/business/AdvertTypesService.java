@@ -20,6 +20,7 @@ public class AdvertTypesService {
     private final AdvertTypeMapper advertTypeMapper;
 
 
+    // T-01 /advert-types-Get
     public List<AdvertTypeResponse> getAllAdvertTypes() {
         // Tüm advert tiplerini veritabanından al
         List<Advert_Type> advertTypes = advertTypesRepository.findAll();
@@ -34,7 +35,7 @@ public class AdvertTypesService {
 
     }
 
-
+        // T-02 /advert-types/:id
     public AdvertTypeResponse getAdvertTypeById(Long id) {
 
         Advert_Type advert=isAdvertTaypExist(id);
@@ -44,10 +45,22 @@ public class AdvertTypesService {
     }
 
 
+
+
+    // T-03 /advert-types Post
+    public AdvertTypeResponse createAdvertType(Advert_Type advertType) {
+        Advert_Type savedAdvertType = advertTypesRepository.save(advertType);
+        return advertTypeMapper.mapAdverTypeToAdvertTypeResponse(savedAdvertType);
+    }
+
+
+
+
+
+
+
     public Advert_Type isAdvertTaypExist(Long id){
         return advertTypesRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.EDUCATION_TERM_NOT_FOUND_MESSAGE, id)));
     }
-
-
 }
