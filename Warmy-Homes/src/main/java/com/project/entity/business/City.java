@@ -12,6 +12,8 @@ import javax.persistence.*;
 @Builder(toBuilder = true)
 public class City {
 
+    /* branch g */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
