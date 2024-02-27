@@ -1,5 +1,6 @@
 package com.project.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
@@ -66,14 +67,14 @@ public class Advert {
     private Boolean isActive;
 
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
     private LocalDateTime createdAt;
 
 
     private Integer viewCount;
 
     @Column(name = "update_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
     private LocalDateTime updated_at;
 
     @OneToMany(mappedBy = "advert")
