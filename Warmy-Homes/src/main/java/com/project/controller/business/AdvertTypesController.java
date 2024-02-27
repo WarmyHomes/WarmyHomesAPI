@@ -4,10 +4,8 @@ import com.project.payload.response.business.AdvertTypeResponse;
 import com.project.service.business.AdvertTypesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,17 +17,21 @@ public class AdvertTypesController {
     private final AdvertTypesService advertTypesService;
 
 
-    // @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','TEACHER')")
+    // @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     @GetMapping
-    public Page<AdvertTypeResponse> getAllAdvertTypes(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sort", defaultValue = "startDate") String sort,
-            @RequestParam(value = "type", defaultValue = "desc") String type
-    ) {
+    public ResponseEntity<List<AdvertTypeResponse>> getAllAdvertTypes() {
 
-        return null;
+        List<AdvertTypeResponse> advertTypes = advertTypesService.getAllAdvertTypes();
+        return ResponseEntity.ok(advertTypes);
 
+    }
+
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AdvertTypeResponse> getAdvertTypeById(@PathVariable Long id) {
+        AdvertTypeResponse advertType = advertTypesService.getAdvertTypeById(id);
+        return ResponseEntity.ok(advertType);
     }
 
 }
