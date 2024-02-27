@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdvertTypeMapper {
 
-    public AdvertTypeResponse mapToAdvertTypeResponse(Advert_Type advertType) {
+    public AdvertTypeResponse mapAdverTypeToAdvertTypeResponse(Advert_Type advertType) {
           return       AdvertTypeResponse.builder()
                         .id(advertType.getId())
                         .title(advertType.getTitle())

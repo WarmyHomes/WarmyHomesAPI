@@ -1,7 +1,9 @@
 package com.project.service.business;
 
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertTypeMapper;
+import com.project.payload.messages.ErrorMessages;
 import com.project.payload.response.business.AdvertTypeResponse;
 import com.project.repository.business.AdvertTypesRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class AdvertTypesService {
 
              return     advertTypes
                        .stream()
-                       .map(advertTypeMapper::mapToAdvertTypeResponse)
+                       .map(advertTypeMapper::mapAdverTypeToAdvertTypeResponse)
                        .collect(Collectors.toList());
 
 
@@ -34,7 +36,18 @@ public class AdvertTypesService {
 
 
     public AdvertTypeResponse getAdvertTypeById(Long id) {
-        return null;
+
+        Advert_Type advert=isAdvertTaypExist(id);
+        return advertTypeMapper.mapAdverTypeToAdvertTypeResponse(advert);
+
 
     }
+
+
+    public Advert_Type isAdvertTaypExist(Long id){
+        return advertTypesRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.EDUCATION_TERM_NOT_FOUND_MESSAGE, id)));
+    }
+
+
 }
