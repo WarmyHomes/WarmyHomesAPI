@@ -14,4 +14,6 @@ public class AdvertTypeMapper {
                         .title(advertType.getTitle())
                         .build();
     }
+
+
 }

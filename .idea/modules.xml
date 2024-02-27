@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/WarmyHomesAPI.iml" filepath="$PROJECT_DIR$/.idea/WarmyHomesAPI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Warmy-Homes/warmy-homes.iml" filepath="$PROJECT_DIR$/Warmy-Homes/warmy-homes.iml" />
     </modules>
   </component>
 </project>
