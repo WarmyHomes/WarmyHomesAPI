@@ -1,4 +1,4 @@
 package com.project.controller.business;
 
-public class categoriesController {
+public class CategoryController {
 }
