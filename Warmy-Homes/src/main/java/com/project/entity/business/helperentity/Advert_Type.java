@@ -10,7 +10,7 @@ public class Advert_Type {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false, length = 30)
+
     private String title;
 
     @Column(name = "built_in", nullable = false)
