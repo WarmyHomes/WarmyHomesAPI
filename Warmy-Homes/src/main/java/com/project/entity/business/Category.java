@@ -2,10 +2,7 @@ package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.business.helperentity.Category_Property_Key;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,12 +10,14 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "categories")
+@Builder(toBuilder = true)
 public class Category {
     //SongulCelik
 
