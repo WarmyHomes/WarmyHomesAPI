@@ -19,8 +19,13 @@ public class AdvertTypesController {
     private final AdvertTypesService advertTypesService;
 
 
+
+
+    // @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','TEACHER')")
+
     // T-01 /advert-types-Get
     @PreAuthorize("hasAnyAuthority('MANEGER')")
+
     @GetMapping
     public ResponseEntity<List<AdvertTypeResponse>> getAllAdvertTypes() {
         List<AdvertTypeResponse> advertTypes = advertTypesService.getAllAdvertTypes();
