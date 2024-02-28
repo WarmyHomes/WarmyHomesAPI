@@ -19,12 +19,12 @@ public class Favorite {
     private Long id;
 
     @ManyToOne
-    private User userId;
+    private User user;
 
     @ManyToOne
-    private Advert advertId;
+    private Advert advert;
 
-    private LocalDateTime createAt;
+    private LocalDateTime create_at;
 
 
 }

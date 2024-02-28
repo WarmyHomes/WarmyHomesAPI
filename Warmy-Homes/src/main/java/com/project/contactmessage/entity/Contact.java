@@ -27,11 +27,11 @@ public class Contact {
 
     @NotNull
     @Max(30)
-    private String firstName;
+    private String first_name;
 
     @NotNull
     @Max(30)
-    private String lastName;
+    private String last_name;
 
     @NotNull
     @Max(60)
@@ -47,6 +47,6 @@ public class Contact {
     // status ; 1 => it was opened and read
 
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDateTime date_time;
 
 }
