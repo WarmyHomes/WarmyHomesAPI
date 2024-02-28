@@ -24,22 +24,20 @@ public class UserDetailsImpl implements UserDetails {
 
     private String firstName; //User Entity first_name yazilmis camelCase ile yazildi
 
-    private String phone;
+    private String last_name;
 
-    @JsonIgnore
-    private String passwordHash;//User Entity password_hash yazilmis camelCase ile yazildi
+    private String userRole;
+
+    private String passwordHash;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String firstName, String phone, String passwordHash, String role){
+    public UserDetailsImpl(Long id,String email, String firstName, String last_name, String userRole) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
-        this.passwordHash = passwordHash;
-        this.phone = phone;
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(role));
-        this.authorities = grantedAuthorities;
+        this.last_name = last_name;
+        this.userRole = userRole;
     }
 
     @Override
