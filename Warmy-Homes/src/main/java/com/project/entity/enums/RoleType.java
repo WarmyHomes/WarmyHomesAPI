@@ -7,7 +7,7 @@ public enum RoleType {
     ANONYMOUS("Anonymous");
 
 
-    private final String role_name;
+    public final String role_name;
 
 
     RoleType(String role_name) {
