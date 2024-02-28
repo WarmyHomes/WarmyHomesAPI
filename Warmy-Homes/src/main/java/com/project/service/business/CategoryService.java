@@ -2,7 +2,6 @@ package com.project.service.business;
 
 import com.project.entity.business.Category;
 import com.project.payload.mappers.CategoryMapper;
-import com.project.payload.request.business.CategoryDTO;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.repository.business.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ public class CategoryService {
         // Sayfa bilgilerine göre sayfalama nesnesinin oluşturulması
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(type), sort));
 
-        // Arama kriterine göre kategorilerin getirilmesi
+                // Arama kriterine göre kategorilerin getirilmesi
         Page<Category> categoryPage;
         if (query != null && !query.isEmpty()) {
             categoryPage = categoryRepository.findByTitleContainingAndIsActiveTrue(query, pageable);
@@ -49,5 +49,28 @@ public class CategoryService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> getAllCategories(String query, int page, int size, String sort, String type) {
+        // Default degerleri atadik
+        if (page < 0) page = 0;
+        if (size <= 0) size = 20;
+        if (sort == null || sort.isEmpty()) sort = "id";
+        if (type == null || type.isEmpty()) type = "asc";
 
+              //  pageable objesi olusturduk
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(type), sort));
+
+        // sorguyu yaptik
+        Page<Category> categoryPage;
+        if (query != null && !query.isEmpty()) {
+            categoryPage = categoryRepository.findByTitleContainingAndIsActiveTrue(query, pageable);
+        } else {
+            categoryPage = categoryRepository.findByIsActiveTrue(pageable);
+        }
+
+        // Map Category entitiyi response dondurduk
+        return categoryPage.getContent().stream()
+                .map(CategoryMapper::mapCategoryToResponse)
+                .collect(Collectors.toList());
+    }
 }

@@ -1,14 +1,12 @@
 package com.project.payload.mappers;
 
 import com.project.entity.business.Category;
-import com.project.payload.request.business.CategoryDTO;
+import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
-
-import java.time.LocalDateTime;
 
 public class CategoryMapper {
 
-    public static Category mapCategoryDTOToEntity(CategoryDTO categoryDTO) {
+    public static Category mapCategoryDTOToEntity(CategoryRequest categoryDTO) {
         return Category.builder()
                 .id(categoryDTO.getId())
                 .title(categoryDTO.getTitle())
