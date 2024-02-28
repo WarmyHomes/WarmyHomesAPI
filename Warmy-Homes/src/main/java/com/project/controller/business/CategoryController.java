@@ -21,7 +21,7 @@ public class CategoryController {
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+            @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type
     ) {
         List<CategoryResponse> categories = categoryService.getCategories(query, page, size, sort, type);
@@ -33,7 +33,7 @@ public class CategoryController {
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+            @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type
     ) {
         List<CategoryResponse> categories = categoryService.getAllCategories(query, page, size, sort, type);
