@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -49,6 +50,26 @@ public class AdvertTypesController {
     public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody Advert_Type advertType) {
         AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAdvertType);
+    }
+
+
+    // T-04 /advert-types/:id put
+
+
+    @PreAuthorize("hasAnyAuthority('MANEGER','ADMİN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<AdvertTypeResponse> updateAdvertType(@PathVariable Long id,
+                                                               @RequestBody  @Valid Advert_Type advertType) {
+        AdvertTypeResponse updatedAdvertType = advertTypesService.updateAdvertType(id, advertType);
+        return ResponseEntity.ok(updatedAdvertType);
+    }
+
+    //T-05 /advert-types/:id-Delete
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<AdvertTypeResponse> deleteAdvertType(@PathVariable Long id) {
+        AdvertTypeResponse deletedAdvertType = advertTypesService.deleteAdvertType(id);
+        return ResponseEntity.ok(deletedAdvertType);
     }
 
 
