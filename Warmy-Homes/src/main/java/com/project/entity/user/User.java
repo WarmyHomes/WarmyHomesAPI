@@ -46,7 +46,7 @@ public class User {
     private LocalDateTime update_at;
 
     @OneToOne
-    @JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
+    //@JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
     private UserRole userRole;
 
     @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
