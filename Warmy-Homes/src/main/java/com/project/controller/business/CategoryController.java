@@ -20,6 +20,7 @@ public class CategoryController {
 
 
 
+
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getCategories(
             @RequestParam(value = "q", required = false) String query,

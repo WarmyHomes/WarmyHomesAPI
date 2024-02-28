@@ -19,9 +19,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+
 
     public List<CategoryDTO> getCategories(String query, int page, int size, String sort, String type) {
         // Varsayılan değerlerin atanması
@@ -42,9 +40,9 @@ public class CategoryService {
         }
 return  null;
         // CategoryDTO listesine dönüştürme
-       //return categoryPage.getContent().stream()
-       //        .map(this::mapCategoryToCategoryRequest)
-       //        .collect(Collectors.toList());
+     // return categoryPage.getContent().stream()
+     //         .map(this::mapCategoryToCategoryRequest)
+     //         .collect(Collectors.toList());
     }
 
     // Category entity'sini CategoryDTO'ya dönüştüren metod

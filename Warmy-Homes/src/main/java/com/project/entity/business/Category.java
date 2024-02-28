@@ -44,7 +44,7 @@ public class Category {
     private String slug;
 
     @NotNull()
-    private Boolean is_active;
+    private Boolean isActive;
 
     @NotNull(message ="Create date must not be empty")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ssZ")
