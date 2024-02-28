@@ -1,4 +1,4 @@
-package com.project.security.jwt.jwt;
+package com.project.security.jwt;
 
 import com.project.security.service.UserDetailsServiceImpl;
 import org.slf4j.Logger;

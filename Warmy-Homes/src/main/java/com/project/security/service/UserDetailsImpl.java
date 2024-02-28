@@ -55,7 +55,7 @@ public class UserDetailsImpl implements UserDetails {
     //!!!username field yok ama email yazinda override bozuluyor HELP!!!
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override

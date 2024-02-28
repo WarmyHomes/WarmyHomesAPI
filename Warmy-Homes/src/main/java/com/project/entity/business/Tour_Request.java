@@ -3,14 +3,13 @@ package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -18,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "t_tour_request")
+@Builder(toBuilder = true)
 public class Tour_Request {
     //TugbaAkdogan
 
@@ -26,10 +26,10 @@ public class Tour_Request {
     private Long id;
 
     @NotNull(message = "You must enter tour date")
-    private LocalDateTime tour_date;
+    private LocalDate tour_date;
 
     @NotNull(message = "You must enter tour time")
-    private LocalDateTime tour_time;
+    private LocalTime tour_time;
 
     @NotNull
     private Integer status;
