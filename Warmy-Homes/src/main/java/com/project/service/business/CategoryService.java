@@ -1,7 +1,9 @@
 package com.project.service.business;
 
 import com.project.entity.business.Category;
+import com.project.payload.mappers.CategoryMapper;
 import com.project.payload.request.business.CategoryDTO;
+import com.project.payload.response.business.CategoryResponse;
 import com.project.repository.business.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,7 @@ public class CategoryService {
 
 
 
-    public List<CategoryDTO> getCategories(String query, int page, int size, String sort, String type) {
+    public List<CategoryResponse> getCategories(String query, int page, int size, String sort, String type) {
         // Varsayılan değerlerin atanması
         if (page < 0) page = 0;
         if (size <= 0) size = 20;
@@ -38,13 +40,14 @@ public class CategoryService {
         } else {
             categoryPage = categoryRepository.findByIsActiveTrue(pageable);
         }
-return  null;
-        // CategoryDTO listesine dönüştürme
-     // return categoryPage.getContent().stream()
-     //         .map(this::mapCategoryToCategoryRequest)
-     //         .collect(Collectors.toList());
+
+
+       return categoryPage.getContent().stream()
+              .map(CategoryMapper::mapCategoryToResponse)
+               .collect(Collectors.toList());
+
     }
 
-    // Category entity'sini CategoryDTO'ya dönüştüren metod
+
 
 }

@@ -39,7 +39,7 @@ public class CategoryDTO {
     private String slug;
 
     @NotNull(message = "Active status is required")
-    private Boolean isActive;
+    private Boolean is_active;
 
 
 }

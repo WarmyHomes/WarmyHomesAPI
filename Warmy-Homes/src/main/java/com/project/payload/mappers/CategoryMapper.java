@@ -2,6 +2,7 @@ package com.project.payload.mappers;
 
 import com.project.entity.business.Category;
 import com.project.payload.request.business.CategoryDTO;
+import com.project.payload.response.business.CategoryResponse;
 
 import java.time.LocalDateTime;
 
@@ -14,11 +15,13 @@ public class CategoryMapper {
                 .icon(categoryDTO.getIcon())
                 .seq(categoryDTO.getSeq())
                 .slug(categoryDTO.getSlug())
-               //todo buraya bak
-                // .isActive(categoryDTO.isActive())
-               // .createAt(LocalDateTime.parse(categoryDTO.getCreateAt()))
-               // .updateAt(categoryDTO.getUpdateAt() != null ? LocalDateTime.parse(categoryDTO.getUpdateAt()) : null)
+                .is_active(categoryDTO.getIs_active())
                 .build();
+
+                // !!!!! dikkat dto dan creat  ve update tarihi gelmeyecek db den alinacak
+               // !!!!!.create_at(LocalDateTime.parse(categoryDTO.get))
+               // !!!!! .updateAt(categoryDTO.getUpdateAt() != null ? LocalDateTime.parse(categoryDTO.getUpdateAt()) : null)
+
     }
 
     public static CategoryResponse mapCategoryToResponse(Category category) {
@@ -26,12 +29,11 @@ public class CategoryMapper {
                 .id(category.getId())
                 .title(category.getTitle())
                 .icon(category.getIcon())
-                .builtIn(category.isBuiltIn())
                 .seq(category.getSeq())
                 .slug(category.getSlug())
-                .isActive(category.isActive())
-                .createAt(category.getCreateAt().toString())
-                .updateAt(category.getUpdateAt() != null ? category.getUpdateAt().toString() : null)
+                .isActive(category.getIs_active())
+                .createAt(category.getCreate_at())
+                .updateAt(category.getUpdate_at() != null ? category.getUpdate_at() : null)
                 .build();
     }
 }
