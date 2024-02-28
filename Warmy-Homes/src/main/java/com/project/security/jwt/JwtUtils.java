@@ -1,4 +1,4 @@
 package com.project.security.jwt;
 
-public class demojwt {
+public class JwtUtils {
 }
