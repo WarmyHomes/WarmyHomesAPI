@@ -1,6 +1,5 @@
 package com.project.payload.request.business;
 
-import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +16,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class CategoryDTO {
+public class CategoryRequest {
     private Long id;
 
     @NotBlank(message = "Title is required")
@@ -39,7 +38,7 @@ public class CategoryDTO {
     private String slug;
 
     @NotNull(message = "Active status is required")
-    private Boolean isActive;
+    private Boolean is_active;
 
 
 }
