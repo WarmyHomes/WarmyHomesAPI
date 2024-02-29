@@ -1,31 +1,26 @@
-package com.project.entity.user;
+package com.project.entity.business.helperentity;
 
-import com.project.entity.enums.RoleType;
+import com.project.entity.enums.StatusType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserRole {
+public class StatusRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private RoleType roleType;
+    private StatusType statusType;
 
-    @NotNull
-    private String name;
+    private String statusName;
 }

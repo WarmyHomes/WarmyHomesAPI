@@ -8,6 +8,7 @@ import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.user.LoginRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
 import com.project.payload.response.user.UserResponse;
@@ -16,6 +17,7 @@ import com.project.security.jwt.JwtUtils;
 import com.project.security.service.UserDetailsImpl;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,7 +47,7 @@ public class UserService {
 
 
 
-    //login
+    // F01 - login
     public ResponseEntity<AuthResponse> authenticateUser(LoginRequest loginRequest) {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
@@ -77,7 +79,7 @@ public class UserService {
 
     }
 
-    //register
+    //F02 - register
     public ResponseMessage<UserResponse> saveUser(UserRequest userRequest, String userRole) {
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail());
         User user = userMapper.mapUserRequestToUser(userRequest);
@@ -109,4 +111,23 @@ public class UserService {
                 .build();
 
     }
+
+
+    ///F10 -  getUserById
+    public ResponseMessage<BaseUserResponse> getUserById(Long id) {
+        BaseUserResponse baseUserResponse = null;
+
+        User user = userRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
+
+        baseUserResponse = userMapper.mapUserToUserResponse(user);
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_FOUND)
+                .httpStatus(HttpStatus.OK)
+                .object(baseUserResponse)
+                .build();
+
+    }
+
+
 }
