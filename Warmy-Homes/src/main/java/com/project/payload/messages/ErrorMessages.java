@@ -16,4 +16,7 @@ public class ErrorMessages {
     public static final String IMAGE_NOT_FOUND_MESSAGE = "Image not found with id: %s";
 
 
+
+
+
 }
