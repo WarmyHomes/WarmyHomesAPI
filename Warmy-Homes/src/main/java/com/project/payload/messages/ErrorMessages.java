@@ -16,7 +16,4 @@ public class ErrorMessages {
     public static final String IMAGE_NOT_FOUND_MESSAGE = "Image not found with id: %s";
 
 
-    public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with id %s";
-
-
 }
