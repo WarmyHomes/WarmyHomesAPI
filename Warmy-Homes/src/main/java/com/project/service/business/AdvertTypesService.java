@@ -6,6 +6,7 @@ import com.project.payload.mappers.AdvertTypeMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.response.business.AdvertTypeResponse;
 import com.project.repository.business.AdvertTypesRepository;
+import com.project.repository.business.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class AdvertTypesService {
 
     private final AdvertTypesRepository advertTypesRepository;
     private final AdvertTypeMapper advertTypeMapper;
+
 
 
 
@@ -77,7 +79,11 @@ public class AdvertTypesService {
         // Eğer ilişkili kayıtlar varsa, uygun bir hata fırlatılabilir veya hata mesajı döndürülebilir
         // Burada ilişkili kayıtların kontrolü için örnek bir kod yok, çünkü bu bağlamda ne tür ilişkiler olduğunu bilemiyorum
 
-
+       /* public boolean isAdvertTypeUsed(Long advertTypeId) {
+            // Verilen Advert_Type ID'sine sahip advert var mı kontrol et
+            return advertRepository.existsByAdvertType_Id(advertTypeId);
+        }
+            */
 
 
 
