@@ -1,9 +1,12 @@
 package com.project.service.business;
 
 import com.project.entity.business.Category;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.CategoryMapper;
+import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.repository.business.CategoryRepository;
+import com.project.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final PageableHelper pageableHelper;
 
 
 
@@ -72,5 +77,22 @@ public class CategoryService {
         return categoryPage.getContent().stream()
                 .map(CategoryMapper::mapCategoryToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryResponse getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+
+        return CategoryMapper.mapCategoryToResponse(category);
+    }
+
+
+    public CategoryResponse createCategory(CategoryRequest request) {
+        Category category = CategoryMapper.mapCategoryDTOToEntity(request);
+        category.setCreate_at(LocalDateTime.now()); // creat tarihini aldik
+
+        Category savedCategory = categoryRepository.save(category);
+        return CategoryMapper.mapCategoryToResponse(savedCategory);
     }
 }
