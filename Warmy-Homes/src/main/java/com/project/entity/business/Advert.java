@@ -8,7 +8,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -52,7 +51,7 @@ public class Advert {
     private District district;
 
 
-    private Integer status;
+    private Integer status=0;
 
     @ManyToOne
     private User user;
@@ -73,6 +72,9 @@ public class Advert {
 
 
     private Integer viewCount;
+
+    @OneToMany
+    private Image images;
 
     @Column(name = "update_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
