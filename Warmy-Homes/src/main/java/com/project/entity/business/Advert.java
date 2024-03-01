@@ -29,7 +29,6 @@ public class Advert {
     private String title;
 
     @ManyToOne
-
     private Advert_Type advert_type_id;
 
 
@@ -60,7 +59,6 @@ public class Advert {
     private Boolean builtIn;
 
     @ManyToOne
-
     private Category category_id;
 
 

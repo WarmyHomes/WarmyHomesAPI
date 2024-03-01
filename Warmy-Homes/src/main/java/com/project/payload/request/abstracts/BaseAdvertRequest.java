@@ -14,6 +14,5 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 public class BaseAdvertRequest extends AbstractAdvertRequest{
 
-    @NotNull(message = "Please enter your advert type")
-    private Image images;
+
 }

@@ -1,9 +1,11 @@
 package com.project.payload.response.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.entity.business.Image;
 import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder(toBuilder = true)
 public class AdvertResponse {
 
 
@@ -40,10 +42,6 @@ public class AdvertResponse {
 
     private Integer status;
 
-
-    private Boolean built_in;
-
-
     private Boolean is_active;
 
 
@@ -51,7 +49,7 @@ public class AdvertResponse {
 
     private String location;
 
-    private Advert_Type advert_type_id;
+    private Long advert_type_id;
 
     private Long country_id;
 
@@ -59,7 +57,8 @@ public class AdvertResponse {
 
     private Long district;
 
-    private User user;
+
+    private List<Image> images;
 
     private Long category_id;
 
@@ -67,9 +66,9 @@ public class AdvertResponse {
 
     private LocalDateTime update_at;
 
-    private List<Object> category_property_values;
+    private List<Category_Property_Value> category_property_values;
 
-    private List<Object> tourRequestList;
+    private List<Tour_Request> tourRequestList;
 
-    private List<Object> logList;
+    private List<Log> logList;
 }
