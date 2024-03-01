@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 
 @Entity
 @Getter
@@ -18,12 +18,12 @@ import java.util.Date;
 @NoArgsConstructor
 
 @Builder(toBuilder = true)
-public class Contact {
+public class ContactMessage {
     //Yunus_Emre_AKKAS
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull
     @Max(30)
