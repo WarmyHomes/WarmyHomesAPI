@@ -24,9 +24,9 @@ public class AdvertController {
 
     @PostMapping("/adverts")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")//A10
-    public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@PathVariable String userRole,
+    public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@PathVariable Long id,
                                                                        @RequestBody @Valid BaseAdvertRequest advertRequest){
-        return ResponseEntity.ok(advertService.saveAdvert(userRole,advertRequest));
+        return ResponseEntity.ok(advertService.saveAdvert(id,advertRequest));
     }
 
     @GetMapping
@@ -45,11 +45,15 @@ public class AdvertController {
     }
     //A02
     @GetMapping("/advert/{city}")//normalde task'de cities yazıyor biz city yazdik
-    @PreAuthorize("ANONYMOUS")
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public ResponseEntity<Array<CityResponse>> getCityByAdvert(@RequestParam String request){
         return ResponseEntity.ok(advertService.getCityByAdvert(request));
     }
 
-
+    @DeleteMapping("/adverts/admin/{advertId}") //A13
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    public ResponseEntity<AdvertResponse> advertDeleteById(@PathVariable Long advertId){
+        return advertService.deleteAdvertById(advertId);
+    }
 
 }

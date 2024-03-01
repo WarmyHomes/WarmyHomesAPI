@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AbstractAdvertRequest {
+public class AbstractAdvertRequest extends BaseUserRequest {
 
     @NotNull(message = "Please enter your title")
     @Size(min = 5, max = 150,message = "Your title should be at least 5 chars")
@@ -39,7 +39,6 @@ public class AbstractAdvertRequest {
     @NotNull
     private Integer status=0;
 
-    @NotNull
     private Boolean built_in=false;
 
     @NotNull
@@ -52,22 +51,25 @@ public class AbstractAdvertRequest {
     private String location;
 
     @NotNull(message = "Please enter your advert type")
-    private Advert_Type advert_type_id;
+    private Long advert_type_id;
 
     @NotNull(message = "Please enter your country")
-    private Country country_id;
+    private Long country_id;
 
     @NotNull(message = "Please enter your city")
-    private City city_id;
+    private Long city_id;
 
     @NotNull(message = "Please enter your district")
-    private District district;
+    private Long district;
 
     @NotNull(message = "Please enter your user")
-    private User user;
+    private Long user;
 
     @NotNull(message = "Please enter your category")
-    private Category category_id;
+    private Long category_id;
+
+    @NotNull(message = "Please enter your advert type")
+    private Image images;
 
 
     @NotNull
@@ -79,13 +81,13 @@ public class AbstractAdvertRequest {
     private LocalDateTime update_at;
 
     @NotNull(message = "Please enter your category_property_values")
-    private List<Object> category_property_values;
+    private List<Long> category_property_values;
 
     @NotNull(message = "Please enter your tourRequestList")
-    private List<Object> tourRequestList;
+    private List<Long> tourRequestList;
 
     @NotNull(message = "Please enter your logList")
-    private List<Object> logList;
+    private List<Long> logList;
 
 
 
