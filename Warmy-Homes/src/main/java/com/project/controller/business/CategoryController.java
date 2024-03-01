@@ -56,19 +56,28 @@ public class CategoryController {
     //C04
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request,
-                                                           HttpServletRequest httpServletRequest) {
-        CategoryResponse createdCategory = categoryService.createCategory(request,httpServletRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest category) {
+        CategoryResponse createdCategory = categoryService.createCategory(category);
+        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
 
     //C05
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id,
-                                                           @RequestBody CategoryRequest request,
-                                                           HttpServletRequest httpServletRequest) {
-        CategoryResponse updatedCategory = categoryService.updateCategory(id, request,httpServletRequest);
+                                                           @RequestBody CategoryRequest request) {
+        CategoryResponse updatedCategory = categoryService.updateCategory(id, request);
         return ResponseEntity.ok(updatedCategory);
     }
+
+    //C06
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable Long id) {
+        CategoryResponse deletedCategory = categoryService.deleteCategory(id);
+        return ResponseEntity.ok(deletedCategory);
+    }
+
+
 }

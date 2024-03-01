@@ -5,6 +5,7 @@ import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.CategoryMapper;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final AdvertRepository advertRepository;
 
 
 
@@ -39,11 +41,11 @@ public class CategoryService {
     }
 
     public CategoryResponse getCategoryById(Long id,HttpServletRequest httpServletRequest) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id" , id));
         return CategoryMapper.mapCategoryToResponse(category);
     }
 
-    public CategoryResponse createCategory(CategoryRequest request,HttpServletRequest httpServletRequest) {
+    public CategoryResponse createCategory(CategoryRequest request) {
 
 
 
@@ -53,13 +55,44 @@ public class CategoryService {
         return CategoryMapper.mapCategoryToResponse(savedCategory);
     }
 
-    public CategoryResponse updateCategory(Long id, CategoryRequest request,HttpServletRequest httpServletRequest) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+
+
+    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
         if (category.getBuilt_in()) {
-            throw new UnsupportedOperationException("Cannot update built-in category");
+            throw new UnsupportedOperationException("Built-in category cannot be updated.");
         }
+
+        // Güncelleme işlemleri
         category.setTitle(request.getTitle());
-        Category updatedCategory = categoryRepository.save(category);
-        return CategoryMapper.mapCategoryToResponse(updatedCategory);
+        category.setIcon(request.getIcon());
+        category.setSeq(request.getSeq());
+        category.setSlug(request.getSlug());
+        category.setIs_active(request.getIs_active());
+        category.setUpdate_at(LocalDateTime.now()); // Güncelleme tarihini şu anki zaman olarak ayarla
+
+        Category savedCategory = categoryRepository.save(category);
+        return CategoryMapper.mapCategoryToResponse(savedCategory);
     }
+
+    public CategoryResponse deleteCategory(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+
+        if (category.getBuilt_in()) {
+            throw new UnsupportedOperationException("Built-in category cannot be deleted.");
+        }
+
+        //bagli ilan var mi ?
+        if (!advertRepository.findByCategoryId(category.getId()).isEmpty()) {
+            throw new UnsupportedOperationException("Category with related advertisements cannot be deleted.");
+        }
+
+        categoryRepository.delete(category);
+        return CategoryMapper.mapCategoryToResponse(category);
+    }
+
 }
