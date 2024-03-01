@@ -37,14 +37,10 @@ public abstract class AbstractUserRequest {
     @Pattern(regexp = "^((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$",
             message = "Please enter valid phone number")
     private String phone;
-    private String reset_password_code;
+
 
     private Boolean built_in;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
-    private LocalDateTime create_at;
-
-    private LocalDateTime update_at;
 
 
 

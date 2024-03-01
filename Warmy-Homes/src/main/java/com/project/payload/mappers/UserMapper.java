@@ -29,9 +29,6 @@ public class UserMapper {
                 .last_name(userRequest.getLast_name())
                 .password_hash(userRequest.getPassword_hash())
                 .phone(userRequest.getPhone())
-                .create_at(userRequest.getCreate_at())
-                .update_at(userRequest.getUpdate_at())
-                .reset_password_code(userRequest.getReset_password_code())
                 .built_in(userRequest.getBuilt_in())
                 .email(userRequest.getEmail())
                 .build();
