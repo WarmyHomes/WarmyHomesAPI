@@ -25,18 +25,21 @@ public class AdvertTypesService {
 
     // T-01 /advert-types-Get
     public List<AdvertTypeResponse> getAllAdvertTypes() {
-        // Tüm advert tiplerini veritabanından al
-        List<Advert_Type> advertTypes = advertTypesRepository.findAll();
+        try {
+            // Tüm advert tiplerini veritabanından al
+            List<Advert_Type> advertTypes = advertTypesRepository.findAll();
 
-        // AdvertType nesnelerini AdvertTypeResponse nesnelerine dönüştür
+            // AdvertType nesnelerini AdvertTypeResponse nesnelerine dönüştür
+            return advertTypes.stream()
+                    .map(advertTypeMapper::mapAdverTypeToAdvertTypeResponse)
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            // Veritabanından veri alırken bir hata oluşursa, daha spesifik bir mesaj döndür
+            throw new RuntimeException(ErrorMessages.FETCH_ADVERT_TYPES_ERROR_MESSAGE + ": " + ex.getMessage());
 
-             return     advertTypes
-                       .stream()
-                       .map(advertTypeMapper::mapAdverTypeToAdvertTypeResponse)
-                       .collect(Collectors.toList());
-
-
+        }
     }
+
 
         // T-02 /advert-types/:id
     public AdvertTypeResponse getAdvertTypeById(Long id) {
