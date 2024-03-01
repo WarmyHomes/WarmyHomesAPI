@@ -27,8 +27,7 @@ public class CategoryRequest {
     @Size(max = 50, message = "Icon can have at most 50 characters")
     private String icon;
 
-    @NotNull(message = "Built-in property is required")
-    private Boolean builtIn;
+
 
     @NotNull(message = "Sequence is required")
     private Integer seq;

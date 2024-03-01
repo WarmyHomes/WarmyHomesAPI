@@ -12,4 +12,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Page<Category> findByIsActiveTrue(Pageable pageable);
 
     Page<Category> findByTitleContainingAndIsActiveTrue(String query, Pageable pageable);
+
+    Page<Category> findByTitleContaining(String query, Pageable pageable);
 }
