@@ -2,6 +2,7 @@ package com.project.controller.business;
 
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,9 +57,9 @@ public class CategoryController {
     //C04
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest category) {
-        CategoryResponse createdCategory = categoryService.createCategory(category);
-        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    public ResponseMessage<CategoryResponse> createCategory(@RequestBody CategoryRequest category) {
+        ResponseMessage<CategoryResponse> createdCategory = categoryService.createCategory(category);
+        return createdCategory;
     }
 
     //C05

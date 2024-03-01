@@ -3,8 +3,10 @@ package com.project.service.business;
 import com.project.entity.business.Category;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.CategoryMapper;
+import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,14 +48,23 @@ public class CategoryService {
         return CategoryMapper.mapCategoryToResponse(category);
     }
 
-    public CategoryResponse createCategory(CategoryRequest request) {
-
-
-
+    public ResponseMessage<CategoryResponse> createCategory(CategoryRequest request) {
         Category category = CategoryMapper.mapCategoryDTOToEntity(request);
         category.setCreate_at(LocalDateTime.now());
         Category savedCategory = categoryRepository.save(category);
-        return CategoryMapper.mapCategoryToResponse(savedCategory);
+
+        CategoryResponse categoryResponse= CategoryMapper.mapCategoryToResponse(savedCategory);
+
+
+        return  ResponseMessage.<CategoryResponse>builder()
+                .object(categoryResponse)
+                .message(SuccessMessages.ADVERT_SAVE)
+                .httpStatus(HttpStatus.CREATED)
+                .build();
+
+
+
+
     }
 
 
