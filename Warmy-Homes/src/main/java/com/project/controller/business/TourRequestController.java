@@ -1,14 +1,15 @@
 package com.project.controller.business;
 
+import com.project.payload.request.business.TourRequestRequest;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.business.TourRequestResponse;
 import com.project.service.business.TourRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -44,8 +45,25 @@ public class TourRequestController {
 
     @GetMapping("/{id}/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public List<TourRequestResponse> getAuthenticatedUserTourRequestDetailById(Long id){
+    public List<TourRequestResponse> getAuthenticatedUserTourRequestDetailById(@PathVariable Long id){
         return tourRequestService.getAuthenticatedUserTourRequestDetailById(id);
     }
 
+    @GetMapping("/{id}/admin")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public TourRequestResponse getTourRequestDetailsById(@PathVariable Long id){
+        return tourRequestService.getTourRequestDetailsById(id);
+    }
+
+    @PostMapping("/tour-requests")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public TourRequestResponse createTourRequest(@RequestBody @Valid TourRequestRequest tourRequestRequest){
+        return tourRequestService.createTourRequest(tourRequestRequest);
+    }
+
+    @PutMapping("/{id}/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseMessage<TourRequestResponse> updateTourRequest(@PathVariable Long id, @RequestBody @Valid TourRequestRequest tourRequestRequest){
+        return tourRequestService.updateTourRequest(id, tourRequestRequest);
+    }
 }
