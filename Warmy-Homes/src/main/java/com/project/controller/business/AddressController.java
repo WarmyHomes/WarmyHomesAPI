@@ -33,8 +33,8 @@ public class AddressController {
     }
 
     //*** getAllDistricts()
-    // http://localhost:8080/cities
-    @GetMapping("/cities")
+    // http://localhost:8080/districts
+    @GetMapping("/districts")
     public ResponseMessage<List<AddressResponse>> getAllDistricts() {
 
         return addressService.getAllDistricts();
