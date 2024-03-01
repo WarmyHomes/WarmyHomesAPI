@@ -21,6 +21,7 @@ public class AdvertService {
 
     private final AdvertRepository advertRepository;
     private final AdvertMapper advertMapper;
+    //A10
     public ResponseMessage<AdvertResponse> saveAdvert(String userRole, BaseAdvertRequest advertRequest) {
 
         //isAdvertExistByAdvertSlug(AbstractAdvertRequest)
@@ -37,11 +38,13 @@ public class AdvertService {
         }
     }
 
+    //A01
     public Page<AdvertResponse> allAdvertsByPage(int page, int size, String sort, String type, String userRole, AbstractAdvertRequest advertRequest) {
 
         return null;
     }
 
+    //A02
 
     public ResponseEntity<Array<CityResponse>> getCityByAdvert(String request) {
 
