@@ -26,6 +26,7 @@ public class CategoryMapper {
         return CategoryResponse.builder()
                 .id(category.getId())
                 .title(category.getTitle())
+                .category_property_keys(category.getCategory_property_keys())
                 .icon(category.getIcon())
                 .seq(category.getSeq())
                 .slug(category.getSlug())

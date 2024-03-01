@@ -43,6 +43,7 @@ public class AdvertController {
     ){
         return  null; //new ResponseEntity(advertService.allAdvertsByPage(page,size,sort,type,userRole,advertRequest), HttpStatus.OK);
     }
+    //A02
     @GetMapping("/advert/{city}")//normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("ANONYMOUS")
     public ResponseEntity<Array<CityResponse>> getCityByAdvert(@RequestParam String request){
