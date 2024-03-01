@@ -1,6 +1,8 @@
 package com.project.payload.messages;
 
 public class ErrorMessages {
+    public static final String NOT_FOUND_USER_MESSAGE = "doto burasi doldurulmali";
+
     private ErrorMessages(){}
 
     public static final String EDUCATION_TERM_NOT_FOUND_MESSAGE = "Error: Education Term not found with id %s";
