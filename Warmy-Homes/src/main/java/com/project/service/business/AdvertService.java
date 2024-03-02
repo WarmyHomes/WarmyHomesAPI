@@ -123,6 +123,7 @@ public class AdvertService {
 
     public ResponseMessage<AdvertResponse> getAdvertById(Long id, AbstractAdvertRequest advertRequest) {
         isAdvertExist(id);
-        Advert advert = advertRepository.findBySlug(advertRequest.getSlug());
+
+        Advert advert = advertRepository.findBySlug();
     }
 }
