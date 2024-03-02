@@ -1,11 +1,14 @@
 package com.project.service.user;
 
+import com.project.entity.business.Tour_Request;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
+import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.UserMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
+import com.project.payload.request.abstracts.AbstractUserRequest;
 import com.project.payload.request.user.LoginRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
@@ -29,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -123,6 +127,51 @@ public class UserService {
         mailService.sendMail(email,reset_password_code);
     }
 
+    //F06/users/auth It will update the authenticated user
+    public ResponseMessage<UserResponse> updateUser(AbstractUserRequest userRequest, HttpServletRequest servletRequest) {
+
+        String email = (String) servletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+
+        uniquePropertyValidator.checkUniqueProperties(user, userRequest );
+
+        user.setFirst_name(userRequest.getFirst_name());
+        user.setLast_name(userRequest.getLast_name());
+        user.setPhone(userRequest.getPhone());
+        userRepository.save(user);
+
+        String message = SuccessMessages.USER_UPDATE_MESSAGE;
+       return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.USER_UPDATE_MESSAGE)
+                .object(userMapper.mapUserToUserResponse(user))
+                .build();
+
+    }
+
+    //F08 /users/auth It will delete authenticated user
+    public String deleteUser(HttpServletRequest servletRequest) {
+        //biult_in control
+        Boolean isBuiltlIn = (Boolean) servletRequest.getAttribute("built_in");
+        if (Boolean.TRUE.equals(isBuiltlIn)){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
+        Long id = (Long) servletRequest.getAttribute("id");
+
+        //isadvert and tour request
+        List<Tour_Request> tourRequestList = userRepository.findByTourRequestList(id);
+        if (!tourRequestList.isEmpty()){
+            throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
+        }
+
+
+
+        userRepository.deleteById(id);
+        return SuccessMessages.USER_DELETE;
+
+
+    }
+
 
     ///F10 -  getUserById
     public ResponseMessage<BaseUserResponse> getUserById(Long id) {
@@ -139,9 +188,6 @@ public class UserService {
                 .build();
 
     }
-
-
-
 
 
 }
