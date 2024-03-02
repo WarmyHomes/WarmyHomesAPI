@@ -1,8 +1,6 @@
 package com.project.payload.messages;
 
 public class ErrorMessages {
-    public static final String NOT_FOUND_USER_MESSAGE = "doto burasi doldurulmali";
-
     private ErrorMessages(){}
 
     public static final String EDUCATION_TERM_NOT_FOUND_MESSAGE = "Error: Education Term not found with id %s";
@@ -16,10 +14,9 @@ public class ErrorMessages {
     public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with id %s";
 
 
-
     public static final String IMAGE_NOT_FOUND_MESSAGE = "Image not found with id: %s";
 
-
+    public static final String FETCH_ADVERT_TYPES_ERROR_MESSAGE = "Error occurred while fetching advert types";
 
 
 

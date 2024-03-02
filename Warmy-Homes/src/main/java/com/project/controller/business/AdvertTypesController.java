@@ -20,13 +20,8 @@ public class AdvertTypesController {
     private final AdvertTypesService advertTypesService;
 
 
-
-
-    // @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','TEACHER')")
-
     // T-01 /advert-types-Get
-    @PreAuthorize("hasAnyAuthority('MANEGER')")
-
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity<List<AdvertTypeResponse>> getAllAdvertTypes() {
         List<AdvertTypeResponse> advertTypes = advertTypesService.getAllAdvertTypes();
@@ -36,7 +31,7 @@ public class AdvertTypesController {
 
 
     // T-02 /advert-types/:id
-    @PreAuthorize("hasAnyAuthority('MANEGER','ADMİN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<AdvertTypeResponse> getAdvertTypeById(@PathVariable Long id) {
         AdvertTypeResponse advertType = advertTypesService.getAdvertTypeById(id);
@@ -45,7 +40,7 @@ public class AdvertTypesController {
 
 
     // T-03 /advert-types Post
-    @PreAuthorize("hasAnyAuthority('MANEGER','ADMİN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
     public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody Advert_Type advertType) {
         AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType);
@@ -56,7 +51,7 @@ public class AdvertTypesController {
     // T-04 /advert-types/:id put
 
 
-    @PreAuthorize("hasAnyAuthority('MANEGER','ADMİN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AdvertTypeResponse> updateAdvertType(@PathVariable Long id,
                                                                @RequestBody  @Valid Advert_Type advertType) {
