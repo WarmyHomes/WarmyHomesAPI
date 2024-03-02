@@ -3,6 +3,7 @@ package com.project.payload.request.abstracts;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.business.*;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AbstractAdvertRequest {
+public class AbstractAdvertRequest extends BaseUserRequest {
 
     @NotNull(message = "Please enter your title")
     @Size(min = 5, max = 150,message = "Your title should be at least 5 chars")
@@ -39,7 +40,6 @@ public class AbstractAdvertRequest {
     @NotNull
     private Integer status=0;
 
-    @NotNull
     private Boolean built_in=false;
 
     @NotNull
@@ -69,6 +69,9 @@ public class AbstractAdvertRequest {
     @NotNull(message = "Please enter your category")
     private Category category_id;
 
+    @NotNull(message = "Please enter your advert type")
+    private Image images;
+
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
@@ -79,13 +82,13 @@ public class AbstractAdvertRequest {
     private LocalDateTime update_at;
 
     @NotNull(message = "Please enter your category_property_values")
-    private List<Object> category_property_values;
+    private List<Category_Property_Value> category_property_values;
 
     @NotNull(message = "Please enter your tourRequestList")
-    private List<Object> tourRequestList;
+    private List<Tour_Request> tourRequestList;
 
     @NotNull(message = "Please enter your logList")
-    private List<Object> logList;
+    private List<Long> logList;
 
 
 

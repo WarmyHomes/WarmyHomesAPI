@@ -24,4 +24,19 @@ public class AdvertMapper {
                 .location(advertRequest.getLocation())
                 .build();
     }
+    public AdvertResponse mapAdvertToAdvertResponse(Advert advert){
+        return AdvertResponse.builder()
+                .title(advert.getTitle())
+                .description(advert.getDescription())
+                .price(advert.getPrice())
+                .advert_type_id(advert.getAdvert_type_id())
+                .country_id(advert.getCountry_id())
+                .city_id(advert.getCity_id())
+                .id(advert.getId())
+                .district(advert.getDistrict())
+                .category_id(advert.getCategory_id())
+                .images(advert.getImages())
+                .location(advert.getLocation())
+                .build();
+    }
 }
