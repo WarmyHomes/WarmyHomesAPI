@@ -57,7 +57,7 @@ public class CategoryController {
     //C04
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseMessage<CategoryResponse> createCategory(@RequestBody CategoryRequest category) {
+    public ResponseMessage<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest category) {
         ResponseMessage<CategoryResponse> createdCategory = categoryService.createCategory(category);
         return createdCategory;
     }
@@ -66,7 +66,7 @@ public class CategoryController {
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id,
-                                                           @RequestBody CategoryRequest request) {
+                                                           @RequestBody @Valid CategoryRequest request) {
         CategoryResponse updatedCategory = categoryService.updateCategory(id, request);
         return ResponseEntity.ok(updatedCategory);
     }
