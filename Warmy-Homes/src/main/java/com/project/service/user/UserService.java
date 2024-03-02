@@ -15,6 +15,7 @@ import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.security.jwt.JwtUtils;
 import com.project.security.service.UserDetailsImpl;
+import com.project.service.mail.MailService;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +45,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
 
 
@@ -113,6 +116,14 @@ public class UserService {
     }
 
 
+    //F03
+    public void sendResetPasswordCode(HttpServletRequest servletRequest) {
+        String email= (String) servletRequest.getAttribute("email");
+        String reset_password_code= (String) servletRequest.getAttribute("reset_password_code");
+        mailService.sendMail(email,reset_password_code);
+    }
+
+
     ///F10 -  getUserById
     public ResponseMessage<BaseUserResponse> getUserById(Long id) {
         BaseUserResponse baseUserResponse = null;
@@ -123,11 +134,14 @@ public class UserService {
         baseUserResponse = userMapper.mapUserToUserResponse(user);
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_FOUND)
-                .httpStatus(HttpStatus.OK)
+                        .httpStatus(HttpStatus.OK)
                 .object(baseUserResponse)
                 .build();
 
     }
+
+
+
 
 
 }

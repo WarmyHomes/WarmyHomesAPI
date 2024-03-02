@@ -1,9 +1,7 @@
 package com.project.payload.response.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.entity.business.Image;
-import com.project.entity.business.Log;
-import com.project.entity.business.Tour_Request;
+import com.project.entity.business.*;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
@@ -49,18 +47,18 @@ public class AdvertResponse {
 
     private String location;
 
-    private Long advert_type_id;
+    private Advert_Type advert_type_id;
 
-    private Long country_id;
+    private Country country_id;
 
-    private Long city_id;
+    private City city_id;
 
-    private Long district;
+    private District district;
 
 
-    private List<Image> images;
+    private Image images;
 
-    private Long category_id;
+    private Category category_id;
 
     private LocalDateTime createdAt;
 
