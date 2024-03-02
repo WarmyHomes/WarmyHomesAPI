@@ -85,9 +85,10 @@ public class CategoryController {
 
     @GetMapping("/{id}/properties")
     public ResponseEntity<List<PropertyKeyResponse>> getCategoryPropertyKeys(@PathVariable Long id) {
-        List<PropertyKeyResponse> propertyKeys = categoryService.getCategoryPropertyKeys(id);
+        List<PropertyKeyResponse> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
         return ResponseEntity.ok(propertyKeys);
     }
+
 
 
 

@@ -119,13 +119,31 @@ public class CategoryService {
 
     }
 
-    public List<PropertyKeyResponse> getCategoryPropertyKeys(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+   //public List<PropertyKeyResponse> getCategoryPropertyKeys(Long categoryId) {
+   //    Category category = categoryRepository.findById(categoryId)
+   //            .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
 
-        return category.getPropertyKeys().stream()
-                .map(propertyKey -> new PropertyKeyResponse(propertyKey.getId(), propertyKey.getName()))
-                .collect(Collectors.toList());
+   //    return category.getPropertyKeys().stream()
+   //            .map(propertyKey -> new PropertyKeyResponse(propertyKey.getId(), propertyKey.getName()))
+   //            .collect(Collectors.toList());
+   //}
+
+
+
+   //
+   //    private final PropertyKeyRepository propertyKeyRepository;
+   //    private final ModelMapper modelMapper;
+
+   //    public List<PropertyKeyResponse> getPropertyKeysByCategoryId(Long categoryId) {
+   //        Category category = categoryRepository.findById(categoryId)
+   //                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
+
+   //        List<PropertyKey> propertyKeys = propertyKeyRepository.findByCategoryId(categoryId);
+   //        List<PropertyKeyResponse> propertyKeyResponses = propertyKeys.stream()
+   //                .map(propertyKey -> modelMapper.map(propertyKey, PropertyKeyResponse.class))
+   //                .collect(Collectors.toList());
+
+   //        return propertyKeyResponses;
+   //    }
     }
 
-}
