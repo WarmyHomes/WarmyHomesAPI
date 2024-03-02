@@ -3,6 +3,7 @@ package com.project.payload.request.abstracts;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.business.*;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,22 +52,22 @@ public class AbstractAdvertRequest extends BaseUserRequest {
     private String location;
 
     @NotNull(message = "Please enter your advert type")
-    private Long advert_type_id;
+    private Advert_Type advert_type_id;
 
     @NotNull(message = "Please enter your country")
-    private Long country_id;
+    private Country country_id;
 
     @NotNull(message = "Please enter your city")
-    private Long city_id;
+    private City city_id;
 
     @NotNull(message = "Please enter your district")
-    private Long district;
+    private District district;
 
     @NotNull(message = "Please enter your user")
-    private Long user;
+    private User user;
 
     @NotNull(message = "Please enter your category")
-    private Long category_id;
+    private Category category_id;
 
     @NotNull(message = "Please enter your advert type")
     private Image images;
@@ -81,10 +82,10 @@ public class AbstractAdvertRequest extends BaseUserRequest {
     private LocalDateTime update_at;
 
     @NotNull(message = "Please enter your category_property_values")
-    private List<Long> category_property_values;
+    private List<Category_Property_Value> category_property_values;
 
     @NotNull(message = "Please enter your tourRequestList")
-    private List<Long> tourRequestList;
+    private List<Tour_Request> tourRequestList;
 
     @NotNull(message = "Please enter your logList")
     private List<Long> logList;
