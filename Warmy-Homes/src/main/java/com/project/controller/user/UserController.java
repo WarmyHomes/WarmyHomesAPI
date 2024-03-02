@@ -1,5 +1,6 @@
 package com.project.controller.user;
 
+import com.project.payload.request.abstracts.AbstractUserRequest;
 import com.project.payload.request.user.LoginRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
@@ -60,11 +61,22 @@ public class UserController {
     }
 
 
-    //F06
+    //F06/users/auth It will update the authenticated user
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
+    @PutMapping("/users/auth")// http://localhost:8080/student/update/3
+    public ResponseMessage<UserResponse> updateStudentForManagers(@RequestBody @Valid AbstractUserRequest userRequest,
+                                                                  HttpServletRequest servletRequest) {
+        return userService.updateUser(userRequest, servletRequest);
+    }
 
     //F07
 
-    //F08
+    //F08 /users/auth It will delete authenticated user
+    @DeleteMapping("/users/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseEntity<String> deleteUser(HttpServletRequest servletRequest) {
+        return ResponseEntity.ok(userService.deleteUser(servletRequest));
+    }
 
     //F09
 
