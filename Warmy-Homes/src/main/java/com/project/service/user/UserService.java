@@ -133,7 +133,8 @@ public class UserService {
 
         baseUserResponse = userMapper.mapUserToUserResponse(user);
         return ResponseMessage.<BaseUserResponse>builder()
-                .message(SuccessMessages.USER_FOUND.httpStatus(HttpStatus.OK)
+                .message(SuccessMessages.USER_FOUND)
+                        .httpStatus(HttpStatus.OK)
                 .object(baseUserResponse)
                 .build();
 
