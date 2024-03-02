@@ -2,6 +2,7 @@ package com.project.controller.business;
 
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,13 +36,13 @@ public class CategoryController {
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
     public ResponseEntity<List<CategoryResponse>> getAllCategories(
-            HttpServletRequest httpServletRequest,
+
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type) {
-        List<CategoryResponse> categories = categoryService.getAllCategories(query, page, size, sort, type,httpServletRequest);
+        List<CategoryResponse> categories = categoryService.getAllCategories(query, page, size, sort, type);
         return ResponseEntity.ok(categories);
     }
 
@@ -56,19 +57,39 @@ public class CategoryController {
     //C04
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request,
-                                                           HttpServletRequest httpServletRequest) {
-        CategoryResponse createdCategory = categoryService.createCategory(request,httpServletRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    public ResponseMessage<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest category) {
+
+        return categoryService.createCategory(category);
     }
 
     //C05
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id,
-                                                           @RequestBody CategoryRequest request,
-                                                           HttpServletRequest httpServletRequest) {
-        CategoryResponse updatedCategory = categoryService.updateCategory(id, request,httpServletRequest);
+                                                           @RequestBody @Valid CategoryRequest request) {
+        CategoryResponse updatedCategory = categoryService.updateCategory(id, request);
         return ResponseEntity.ok(updatedCategory);
     }
+
+    //C06
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable Long id) {
+        CategoryResponse deletedCategory = categoryService.deleteCategory(id);
+        return ResponseEntity.ok(deletedCategory);
+    }
+
+
+    //C07
+
+    @GetMapping("/{id}/properties")
+    public ResponseEntity<List<PropertyKeyResponse>> getCategoryPropertyKeys(@PathVariable Long id) {
+        List<PropertyKeyResponse> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
+        return ResponseEntity.ok(propertyKeys);
+    }
+
+
+
+
 }

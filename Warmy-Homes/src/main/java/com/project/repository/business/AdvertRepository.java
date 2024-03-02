@@ -13,7 +13,13 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     boolean existsAdvertBySlug(String slug);
 
+
+    City getCityByAdvert(String request);
+
+
+
     List<City> getCityByAdvert(Long id);
 
     void findBySlug(String slug);
+
 }
