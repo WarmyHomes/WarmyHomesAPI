@@ -36,12 +36,20 @@ public class CategoryService {
         return categoryPage.getContent().stream().map(CategoryMapper::mapCategoryToResponse).collect(Collectors.toList());
     }
 
-    public List<CategoryResponse> getAllCategories(String query, int page, int size, String sort, String type,
-                                                   HttpServletRequest httpServletRequest) {
+    public List<CategoryResponse> getAllCategories(String query, int page, int size, String sort, String type) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(type), sort));
-        Page<Category> categoryPage = categoryRepository.findByTitleContaining(query, pageable);
-        return categoryPage.getContent().stream().map(CategoryMapper::mapCategoryToResponse).collect(Collectors.toList());
+        Page<Category> categoryPage;
+        //queri varsa queri ye gore olan categoryleri getiriyor
+        if (query != null && !query.isEmpty()) {
+            categoryPage = categoryRepository.findByTitleContaining(query, pageable);
+        } else {
+            categoryPage = categoryRepository.findAll(pageable);
+        }
+        return categoryPage.getContent().stream()
+                .map(CategoryMapper::mapCategoryToResponse)
+                .collect(Collectors.toList());
     }
+
 
     public CategoryResponse getCategoryById(Long id,HttpServletRequest httpServletRequest) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id" , id));
@@ -49,10 +57,11 @@ public class CategoryService {
     }
 
     public ResponseMessage<CategoryResponse> createCategory(CategoryRequest request) {
+       //todo ayni categoriden 1 tane mi olur?
         Category category = CategoryMapper.mapCategoryDTOToEntity(request);
         category.setCreate_at(LocalDateTime.now());
-        Category savedCategory = categoryRepository.save(category);
 
+        Category savedCategory = categoryRepository.save(category);
         CategoryResponse categoryResponse= CategoryMapper.mapCategoryToResponse(savedCategory);
 
 
@@ -105,6 +114,18 @@ public class CategoryService {
 
         categoryRepository.delete(category);
         return CategoryMapper.mapCategoryToResponse(category);
+
+
+
+    }
+
+    public List<PropertyKeyResponse> getCategoryPropertyKeys(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+
+        return category.getPropertyKeys().stream()
+                .map(propertyKey -> new PropertyKeyResponse(propertyKey.getId(), propertyKey.getName()))
+                .collect(Collectors.toList());
     }
 
 }
