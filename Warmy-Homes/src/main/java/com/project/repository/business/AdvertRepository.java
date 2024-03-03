@@ -1,11 +1,15 @@
 package com.project.repository.business;
 
 import com.project.entity.business.Advert;
+import com.project.entity.business.Category;
 import com.project.entity.business.City;
+import com.project.entity.business.helperentity.Advert_Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 
 import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.util.List;
 
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
     boolean existsAdvertById(Long id);
@@ -13,4 +17,9 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     boolean existsAdvertBySlug(String slug);
 
     City getCityByAdvert(String request);
+
+    List<Advert> findAdvertsByFilter(LocalDate beginningDate,
+                                     LocalDate endingDate,
+                                     Category category,
+                                     Advert_Type advertType);
 }
