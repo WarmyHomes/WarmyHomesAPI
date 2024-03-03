@@ -1,14 +1,17 @@
 package com.project.service.business;
-
 import com.project.entity.business.Category;
+import com.project.entity.business.helperentity.Category_Property_Key;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.CategoryMapper;
 import com.project.payload.messages.SuccessMessages;
+import com.project.payload.request.business.CategoryPropertyKeyRequest;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.payload.response.business.Category_Property_Key_Response;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
+import com.project.repository.helperRepository.CategoryPropertyKeyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -27,6 +31,8 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final AdvertRepository advertRepository;
+    private final CategoryPropertyKeyRepository propertyKeyRepository;
+    private final CategoryMapper categoryMapper;
 
 
 
@@ -114,36 +120,61 @@ public class CategoryService {
 
         categoryRepository.delete(category);
         return CategoryMapper.mapCategoryToResponse(category);
-
-
-
     }
 
-   //public List<PropertyKeyResponse> getCategoryPropertyKeys(Long categoryId) {
-   //    Category category = categoryRepository.findById(categoryId)
-   //            .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
 
-   //    return category.getPropertyKeys().stream()
-   //            .map(propertyKey -> new PropertyKeyResponse(propertyKey.getId(), propertyKey.getName()))
-   //            .collect(Collectors.toList());
-   //}
+    public List<Category_Property_Key_Response> findPropertyKeysByCategoryId(Long categoryId) {
+        // Kategori varlığını kontrol et
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
 
+        // Kategoriye ait özellik anahtarlarını bul
+        List<Category_Property_Key> propertyKeys = propertyKeyRepository.findByCategoryId(categoryId);
 
-
-   //
-   //    private final PropertyKeyRepository propertyKeyRepository;
-   //    private final ModelMapper modelMapper;
-
-   //    public List<PropertyKeyResponse> getPropertyKeysByCategoryId(Long categoryId) {
-   //        Category category = categoryRepository.findById(categoryId)
-   //                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-
-   //        List<PropertyKey> propertyKeys = propertyKeyRepository.findByCategoryId(categoryId);
-   //        List<PropertyKeyResponse> propertyKeyResponses = propertyKeys.stream()
-   //                .map(propertyKey -> modelMapper.map(propertyKey, PropertyKeyResponse.class))
-   //                .collect(Collectors.toList());
-
-   //        return propertyKeyResponses;
-   //    }
+        // PropertyKey nesnelerini PropertyKeyResponse DTO'larına dönüştür
+        return propertyKeys.stream()
+                .map(categoryMapper::Category_Property_KeyToResponse)
+                .collect(Collectors.toList());
     }
+
+
+
+
+        public Category_Property_Key_Response createPropertyKey(Long categoryId, CategoryPropertyKeyRequest propertyKeyRequest) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + categoryId));
+
+            Category_Property_Key propertyKey = Category_Property_Key.builder()
+                    .name(propertyKeyRequest.getName())
+                    // Diğer özelliklerini de buraya ekleyebiliriz
+                    .category(category)
+                    .build();
+
+            Category_Property_Key savedPropertyKey = propertyKeyRepository.save(propertyKey);
+
+            return categoryMapper.Category_Property_KeyToResponse(savedPropertyKey);
+
+        }
+
+    public Category_Property_Key_Response updatePropertyKey(Long id, CategoryPropertyKeyRequest request) {
+        Category_Property_Key propertyKey = propertyKeyRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Property key not found with id: " + id));
+
+        if (propertyKey.getBuilt_in()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Built-in property key cannot be updated.");
+        }
+
+        propertyKey.setName(request.getName());
+        if (request.getCategory()!=null)  propertyKey.setCategory(request.getCategory());
+        // diger setlenmesi gereken yerler varsa setlenmeli
+
+        Category_Property_Key updatedPropertyKey = propertyKeyRepository.save(propertyKey);
+
+        return categoryMapper.Category_Property_KeyToResponse(updatedPropertyKey);
+    }
+
+
+}
+
+
 
