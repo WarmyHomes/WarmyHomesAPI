@@ -23,4 +23,5 @@ public class TourRequestResponse {
     private LocalDateTime create_at;
 
     private LocalDateTime update_at;
+
 }

@@ -9,7 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import lombok.*;
@@ -55,6 +57,7 @@ public class User {
 
     @NotNull(message = "Create date must not be empty!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime create_at;
 
     @Nullable
@@ -73,6 +76,37 @@ public class User {
 
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.REMOVE)
     private List<Log> logs;
+
+    @PrePersist
+    private void createAt() {
+        create_at = LocalDateTime.now();
+    }
+    @PreUpdate
+    private void updateAt() {
+        update_at = LocalDateTime.now();
+    }
+
+    @PrePersist
+    private void resetPasswordCode(){
+        String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseLetters = upperCaseLetters.toLowerCase();
+        String numbers = "0123456789";
+        String symbols = "!@#$%^&*()-_=+[{]}|;:',<.>/?";
+
+        String combinedChars = upperCaseLetters + lowerCaseLetters + numbers + symbols;
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder passwordBuilder = new StringBuilder();
+
+        for (int i = 0; i < 8; i++) {
+            int randomIndex = random.nextInt(combinedChars.length());
+            passwordBuilder.append(combinedChars.charAt(randomIndex));
+        }
+
+        reset_password_code=passwordBuilder.toString();
+    }
+
+
 
 
 }

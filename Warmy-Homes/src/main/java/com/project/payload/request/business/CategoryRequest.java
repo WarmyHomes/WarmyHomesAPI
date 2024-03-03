@@ -1,5 +1,6 @@
 package com.project.payload.request.business;
 
+import com.project.entity.business.helperentity.Category_Property_Key;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 
 @Getter
@@ -17,6 +19,8 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CategoryRequest {
+
+
     private Long id;
 
     @NotBlank(message = "Title is required")
@@ -27,8 +31,7 @@ public class CategoryRequest {
     @Size(max = 50, message = "Icon can have at most 50 characters")
     private String icon;
 
-    @NotNull(message = "Built-in property is required")
-    private Boolean builtIn;
+
 
     @NotNull(message = "Sequence is required")
     private Integer seq;
@@ -39,6 +42,9 @@ public class CategoryRequest {
 
     @NotNull(message = "Active status is required")
     private Boolean is_active;
+
+    private List<Category_Property_Key> category_property_keys;
+
 
 
 }

@@ -1,20 +1,21 @@
 package com.project.payload.response.business;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.project.entity.business.helperentity.Category_Property_Key;
+import lombok.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Past;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 public class CategoryResponse {
 
     private Long id;
@@ -44,4 +45,6 @@ public class CategoryResponse {
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
+
+    private List<Category_Property_Key> category_property_keys;
 }
