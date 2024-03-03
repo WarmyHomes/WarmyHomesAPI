@@ -21,6 +21,7 @@ public class AdvertTypeMapper {
         return Advert_Type.builder()
                 .id(advertTypeRequest.getId())
                 .title(advertTypeRequest.getTitle())
+                .builtIn(false)
                 .build();
     }
 

@@ -60,12 +60,13 @@ public class AdvertTypesService {
     }
 
     // T-04 /advert-types/:id put
-    public AdvertTypeResponse updateAdvertType(Long id, Advert_Type newAdvertType) {
+    public AdvertTypeResponse updateAdvertType(Long id, AdvertTypeRequest newAdvertType) {
         // Güncellenecek advert tipinin varlığını kontrol edin
         Advert_Type advert_type=isAdvertTypeExist(id);
 
         // Yeni advert tipi bilgilerini mevcut advert tipine kopyalayın
         advert_type.setTitle(newAdvertType.getTitle());
+        //Built-İn nasıl olacak
 
         // Güncellenmiş advert tipini kaydedin
         Advert_Type updatedAdvertType = advertTypesRepository.save(advert_type);
