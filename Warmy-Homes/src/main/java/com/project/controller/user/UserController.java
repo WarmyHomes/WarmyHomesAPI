@@ -1,8 +1,11 @@
 package com.project.controller.user;
 
+import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractUserRequest;
+import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.LoginRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
@@ -49,9 +52,18 @@ public class UserController {
     }
 
 
-    //F04
+    //F04 It will update password
+    @PostMapping("/reset-password") //http://localhost:8080/reset-password
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
+                                 HttpServletRequest servletRequest){
 
-    //F05 /users/auth
+       userService.updatePassword(request,servletRequest);
+       return null;
+
+    }
+
+    //F05 /users/auth http://localhost:8080/users/auth
     @GetMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     public ResponseMessage<BaseUserResponse> getUser(HttpServletRequest request){
@@ -63,13 +75,25 @@ public class UserController {
 
     //F06/users/auth It will update the authenticated user
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
-    @PutMapping("/users/auth")// http://localhost:8080/student/update/3
+    @PutMapping("/users/auth")// http://localhost:8080/users/auth
     public ResponseMessage<UserResponse> updateStudentForManagers(@RequestBody @Valid AbstractUserRequest userRequest,
                                                                   HttpServletRequest servletRequest) {
         return userService.updateUser(userRequest, servletRequest);
     }
 
-    //F07
+    //F07 It will update the authenticated user’s password
+    @PatchMapping("/users/auth ") // http://localhost:8080/auth/users/auth
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
+    public ResponseEntity<String> updateUserPassword(HttpServletRequest request,
+                                                     @RequestBody @Valid BaseUserRequest baseUserRequest){
+
+        userService.updateUserPassword(request,baseUserRequest);
+        String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
+        return  ResponseEntity.ok(response);
+
+
+    }
+
 
     //F08 /users/auth It will delete authenticated user
     @DeleteMapping("/users/auth")
