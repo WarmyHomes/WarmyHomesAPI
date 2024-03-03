@@ -14,8 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -52,7 +50,7 @@ public class AdvertController {
     // ******************************************** //A02
     @GetMapping("/advert/{city}") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public ResponseEntity<ResponseMessage<List<CityResponse>>> getCityByAdvert(@PathVariable Long id){
+    public ResponseEntity<List<CityResponse>> getCityByAdvert(@PathVariable Long id){
         return advertService.getCityByAdvert(id);
     }
 

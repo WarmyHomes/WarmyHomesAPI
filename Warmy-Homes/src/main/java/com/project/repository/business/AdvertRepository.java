@@ -22,4 +22,5 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     void findBySlug(String slug);
 
+    CharSequence findByCategoryId(Long id);
 }

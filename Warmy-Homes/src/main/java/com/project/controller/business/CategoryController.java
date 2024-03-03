@@ -1,7 +1,9 @@
 package com.project.controller.business;
 
+import com.project.payload.request.business.CategoryPropertyKeyRequest;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.payload.response.business.Category_Property_Key_Response;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -84,12 +86,30 @@ public class CategoryController {
     //C07
 
     @GetMapping("/{id}/properties")
-    public ResponseEntity<List<PropertyKeyResponse>> getCategoryPropertyKeys(@PathVariable Long id) {
-        List<PropertyKeyResponse> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
+    public ResponseEntity<List<Category_Property_Key_Response>> getCategoryPropertyKeys(@PathVariable Long id) {
+        List<Category_Property_Key_Response> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
         return ResponseEntity.ok(propertyKeys);
     }
 
 
+    //C08
+    @PostMapping("/{id}/properties")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    public ResponseEntity<Category_Property_Key_Response> createPropertyKey(@PathVariable("id") Long categoryId,
+                                                                            @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
+        Category_Property_Key_Response response = categoryService.createPropertyKey(categoryId, propertyKeyRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    //c09
+
+    public ResponseEntity<Category_Property_Key_Response> updatePropertyKey(
+            @PathVariable Long id,
+            @RequestBody CategoryPropertyKeyRequest request) {
+
+        Category_Property_Key_Response response = categoryService.updatePropertyKey(id, request);
+        return ResponseEntity.ok(response);
+    }
 
 
 }
