@@ -21,7 +21,7 @@ public class Image {
 
     @Lob //büyük boyutlu datalar için sütun oluşmasını sağlar
     @Column(nullable = false)
-    private Byte[] data;
+    private byte[] data;
 
     @Column(nullable = false)
     private String name;

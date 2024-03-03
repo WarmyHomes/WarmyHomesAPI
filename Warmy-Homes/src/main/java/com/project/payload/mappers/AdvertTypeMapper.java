@@ -1,6 +1,7 @@
 package com.project.payload.mappers;
 
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.payload.request.business.AdvertTypeRequest;
 import com.project.payload.response.business.AdvertTypeResponse;
 import org.springframework.stereotype.Component;
 
@@ -15,5 +16,12 @@ public class AdvertTypeMapper {
                         .build();
     }
 
+
+    public Advert_Type mapadvertTypeRequestToAdvertType(AdvertTypeRequest advertTypeRequest) {
+        return Advert_Type.builder()
+                .id(advertTypeRequest.getId())
+                .title(advertTypeRequest.getTitle())
+                .build();
+    }
 
 }

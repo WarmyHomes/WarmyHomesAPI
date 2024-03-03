@@ -1,17 +1,18 @@
 package com.project.service.business;
 
 import com.project.entity.business.Image;
+import com.project.exception.CustomImageNotFoundException;
+import com.project.exception.DatabaseOperationException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.messages.ErrorMessages;
-import com.project.payload.response.business.ImageResponse;
 import com.project.repository.business.ImageRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.project.entity.enums.ImageType;
-
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
 
     //I-01 /images/:imageId-get
     public Image getImageById(Long imageId) {
@@ -74,18 +76,28 @@ public class ImageService {
 
 
     // I-04 /images/:imageId-put
-    public ImageResponse setFeaturedImage(Long imageId) {
-        Image image = imageRepository.findById(imageId)
-                .orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + imageId));
+    public void setFeaturedImage(Long imageId, boolean featured) {
+        if (imageId == null) {
+            throw new IllegalArgumentException("Image ID cannot be null.");
+        }
+        if (!(featured == true || featured == false)) {
+            throw new IllegalArgumentException("Invalid value for 'featured' parameter. 'featured' should be true or false.");
+        }
 
-        // İlgili işlemleri gerçekleştir, örneğin featured alanını ayarla
+        try {
+            Image image = imageRepository.findById(imageId).orElseThrow(() ->
+                    new ResourceNotFoundException("Image not found with id: " + imageId));
+            image.setFeatured(featured);
+            imageRepository.save(image);
+        } catch (ResourceNotFoundException ex) {
+            logger.error("Image not found with id: " + imageId, ex);
+            throw new CustomImageNotFoundException("Image not found with id: " + imageId, ex);
 
-        // Son olarak, güncellenmiş ImageResponse nesnesini döndür
-        return mapToImageResponse(image);
+        } catch (DataAccessException ex) {
+            logger.error("Error while accessing database", ex);
+            throw new DatabaseOperationException("Error while accessing database", ex);
+        }
     }
-
-    // Diğer yardımcı metotlar ve mapper fonksiyonları burada olacak
-}
 
 
 }

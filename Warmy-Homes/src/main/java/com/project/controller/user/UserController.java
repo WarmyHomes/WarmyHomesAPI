@@ -1,23 +1,30 @@
 package com.project.controller.user;
 
+import com.project.payload.messages.SuccessMessages;
+import com.project.payload.request.abstracts.AbstractUserRequest;
+import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.LoginRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
 import com.project.payload.response.user.UserResponse;
+import com.project.service.mail.MailService;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
 
     // F01 - login
     @PostMapping("/login") // http://localhost:8080/login
@@ -35,17 +42,65 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(userRequest,userRole));
     }
 
-    //F03
+    //F03 /forgot-password
+    @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+    public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
+        userService.sendResetPasswordCode(httpServletRequest);
 
-    //F04
+        return "Sent e-mail";
+    }
 
-    //F05
 
-    //F06
+    //F04 It will update password
+    @PostMapping("/reset-password") //http://localhost:8080/reset-password
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
+                                 HttpServletRequest servletRequest){
 
-    //F07
+       userService.updatePassword(request,servletRequest);
+       return null;
 
-    //F08
+    }
+
+    //F05 /users/auth http://localhost:8080/users/auth
+    @GetMapping("/users/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    public ResponseMessage<BaseUserResponse> getUser(HttpServletRequest request){
+
+        Long id = (Long) request.getAttribute("id");
+        return userService.getUserById(id);
+    }
+
+
+    //F06/users/auth It will update the authenticated user
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
+    @PutMapping("/users/auth")// http://localhost:8080/users/auth
+    public ResponseMessage<UserResponse> updateStudentForManagers(@RequestBody @Valid AbstractUserRequest userRequest,
+                                                                  HttpServletRequest servletRequest) {
+        return userService.updateUser(userRequest, servletRequest);
+    }
+
+    //F07 It will update the authenticated user’s password
+    @PatchMapping("/users/auth ") // http://localhost:8080/auth/users/auth
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
+    public ResponseEntity<String> updateUserPassword(HttpServletRequest request,
+                                                     @RequestBody @Valid BaseUserRequest baseUserRequest){
+
+        userService.updateUserPassword(request,baseUserRequest);
+        String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
+        return  ResponseEntity.ok(response);
+
+
+    }
+
+
+    //F08 /users/auth It will delete authenticated user
+    @DeleteMapping("/users/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseEntity<String> deleteUser(HttpServletRequest servletRequest) {
+        return ResponseEntity.ok(userService.deleteUser(servletRequest));
+    }
 
     //F09
 
