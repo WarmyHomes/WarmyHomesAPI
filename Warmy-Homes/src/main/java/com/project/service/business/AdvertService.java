@@ -1,6 +1,7 @@
 package com.project.service.business;
 
 import com.project.entity.business.Advert;
+import com.project.entity.enums.RoleType;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertMapper;
@@ -60,7 +61,7 @@ public class AdvertService {
     }
 
 
-    // ********************************************
+    // ***************** HELPER METHODE ************************
     private boolean isAdvertExistByAdvertSlug(String slug){
 
         boolean advertExist = advertRepository.existsAdvertBySlug(slug);
@@ -96,13 +97,15 @@ public class AdvertService {
         advertRepository.deleteById(advertId);
 
 
-        return null; /*ResponseMessage.builder()
+        return null;
+                /*ResponseMessage.builder()
                 .object(advertResponse)
                 .httpStatus(HttpStatus.OK)
                 .message(SuccessMessages.ADVERT_DELETED)
                 .build();*/
     }
 
+    // ****************HELPER METHODE*************
     private  Advert isAdvertExist(Long id){
         return advertRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.ADVERT_NOT_FOUND)));
@@ -123,6 +126,52 @@ public class AdvertService {
 
     public ResponseMessage<AdvertResponse> getAdvertById(Long id, AbstractAdvertRequest advertRequest) {
         isAdvertExist(id);
-        Advert advert = advertRepository.findBySlug(advertRequest.getSlug());
+
+        Advert advert = advertRepository.findBySlug();
+    }
+
+    // ****************************************** / A11
+    public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AbstractAdvertRequest advertRequest) {
+        // ! Boyle bir advert var mı ?
+        Advert advertCustomer = isAdvertExist(id);
+
+        // ! Role type kontrolu
+        if (advertCustomer.getUser().getUserRole().equals(RoleType.CUSTOMER)){
+            throw new ResourceNotFoundException(String.format(ErrorMessages.ROLE_NOT_FOUND));
+        }
+        // ! Advert Built-in mi ?
+        if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
+            throw new ConflictException(ErrorMessages.ADVERT_IS_BULT_IN);
+        }
+
+        // * PENDING islemi yapilacak
+
+        Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+        Advert updateAdvert = advertRepository.save(advertMap);
+
+
+        return ResponseMessage.<AdvertResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(advertMapper.mapAdvertToAdvertResponse(updateAdvert))
+                .message(SuccessMessages.ADVERT_UPDATED)
+                .build();
+    }
+
+    // ****************************************** / A12
+    public ResponseMessage<AdvertResponse> updateAdminAdvertById(Long id, AbstractAdvertRequest advertRequest) {
+        Advert advert = isAdvertExist(id);
+
+        // ! Advert Built-in mi ?
+        if (advert.getBuiltIn().equals(Boolean.TRUE)){
+            throw new ConflictException(ErrorMessages.ADVERT_IS_BULT_IN);
+        }
+        Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+        Advert updateAdvert = advertRepository.save(advertMap);
+
+        return ResponseMessage.<AdvertResponse>builder()
+                .message(SuccessMessages.ADVERT_UPDATED)
+                .object(advertMapper.mapAdvertToAdvertResponse(updateAdvert))
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
 }

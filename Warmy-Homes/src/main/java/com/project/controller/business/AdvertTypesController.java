@@ -1,6 +1,7 @@
 package com.project.controller.business;
 
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.payload.request.business.AdvertTypeRequest;
 import com.project.payload.response.business.AdvertTypeResponse;
 import com.project.service.business.AdvertTypesService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class AdvertTypesController {
     private final AdvertTypesService advertTypesService;
 
 
-    // T-01 /advert-types-Get
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    // T-01 /advert-types-Get Reklam türlerini döndürmelidir
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     @GetMapping
     public ResponseEntity<List<AdvertTypeResponse>> getAllAdvertTypes() {
         List<AdvertTypeResponse> advertTypes = advertTypesService.getAllAdvertTypes();
@@ -42,7 +43,7 @@ public class AdvertTypesController {
     // T-03 /advert-types Post
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody Advert_Type advertType) {
+    public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody AdvertTypeRequest advertType) {
         AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAdvertType);
     }
@@ -50,11 +51,10 @@ public class AdvertTypesController {
 
     // T-04 /advert-types/:id put
 
-
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AdvertTypeResponse> updateAdvertType(@PathVariable Long id,
-                                                               @RequestBody  @Valid Advert_Type advertType) {
+                                                               @RequestBody  @Valid AdvertTypeRequest advertType) {
         AdvertTypeResponse updatedAdvertType = advertTypesService.updateAdvertType(id, advertType);
         return ResponseEntity.ok(updatedAdvertType);
     }

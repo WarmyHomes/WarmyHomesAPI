@@ -82,6 +82,20 @@ public class AdvertController {
 
         return advertService.getAdvertById(id,advertRequest);
     }
+    //********************************************//A11
+    @PutMapping("/auth/{id}")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseMessage<AdvertResponse> updateAdvertById (@PathVariable Long id,
+                                                             AbstractAdvertRequest advertRequest){
+        return advertService.updateAdvertById(id,advertRequest);
+    }
+    //********************************************//A12
+    @PutMapping("/admin/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    public ResponseMessage<AdvertResponse> updateAdminAdvertById (@PathVariable Long id,
+                                                             AbstractAdvertRequest advertRequest){
+        return advertService.updateAdminAdvertById(id,advertRequest);
+    }
 
     //********************************************//A13
     @DeleteMapping("/adverts/admin/{advertId}")
