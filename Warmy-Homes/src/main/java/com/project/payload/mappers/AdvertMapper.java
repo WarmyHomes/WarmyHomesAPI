@@ -5,6 +5,7 @@ import com.project.entity.user.User;
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.response.business.AdvertResponse;
+import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,6 +38,14 @@ public class AdvertMapper {
                 .category_id(advert.getCategory_id())
                 .images(advert.getImages())
                 .location(advert.getLocation())
+                .build();
+    }
+
+    public CityForAdvertResponse mapCityForAdvertToCityForAdvertResponse(String city, Integer amount){
+
+        return CityForAdvertResponse.builder()
+                .city(city)
+                .amount(amount)
                 .build();
     }
 }

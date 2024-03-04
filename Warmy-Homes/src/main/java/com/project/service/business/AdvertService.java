@@ -12,6 +12,7 @@ import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.service.helper.PageableHelper;
@@ -73,16 +74,21 @@ public class AdvertService {
     }
 
     // ******************************************** // A01
-    public Page<AdvertResponse> allAdvertsByPage(int page, int size, String sort, String type, String userRole, AbstractAdvertRequest advertRequest) {
+    public Page<AdvertResponse> allAdvertsByPage(int page, int size, String sort, String type, AbstractAdvertRequest advertRequest) {
 
         return null;
     }
 
     // ******************************************** //A02
+    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities(String city, Integer amount) {
 
-    public ResponseEntity<List<CityResponse>> getCityByAdvert(Long id) {
+        advertRepository.getAdvertsDependingOnCities(city,amount);
 
-        return advertRepository.getCityByAdvert(id);
+        return ResponseMessage.builder()
+                .message(SuccessMessages.GET_CITIES)
+                .object()
+                .httpStatus(HttpStatus.OK).build();
+
     }
 
 
@@ -174,4 +180,6 @@ public class AdvertService {
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
+
+
 }

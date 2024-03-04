@@ -6,6 +6,7 @@ import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.service.business.AdvertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,7 +36,6 @@ public class AdvertController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
     public ResponseEntity<Page<AdvertResponse>> allAdvertsByPage (
-            @PathVariable String userRole,
             @RequestBody @Valid AbstractAdvertRequest advertRequest,
             @RequestParam(value = "q") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -48,10 +48,12 @@ public class AdvertController {
     }
 
     // ******************************************** //A02
-    @GetMapping("/advert/{city}") //normalde task'de cities yazıyor biz city yazdik
+    @GetMapping("/advert/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public ResponseEntity<List<CityResponse>> getCityByAdvert(@PathVariable Long id){
-        return advertService.getCityByAdvert(id);
+
+    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities (@RequestParam String city,
+                                                                                        @RequestParam Integer amount){
+        return advertService.getAdvertsDependingOnCities(city,amount);
     }
 
     //****************************************** //A03 yarım kaldı
@@ -74,7 +76,7 @@ public class AdvertController {
         return advertService.getAdvertByPageAll(page,size,sort,type);
     }
 
-    //********************************************//A09
+    //********************************************//A09 --- BURADA EKSİK VE HATALI YER VAR
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> getAdvertByID(@PathVariable Long id,
