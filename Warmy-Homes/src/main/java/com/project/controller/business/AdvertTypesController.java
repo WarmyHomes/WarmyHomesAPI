@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -40,11 +41,12 @@ public class AdvertTypesController {
     }
 
 
-    // T-03 /advert-types Post
+    // T-03 /advert-types Post  Bir reklam türü oluşturacak
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody AdvertTypeRequest advertType) {
-        AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType);
+    public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody AdvertTypeRequest advertType,
+                                                               HttpServletRequest request) {
+        AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAdvertType);
     }
 
