@@ -1,10 +1,7 @@
 package com.project.entity.business.helperentity;
 
 import com.project.entity.business.Category;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "category_property_keys")
+@Builder(toBuilder = true)
 public class Category_Property_Key {
     //SongulCelik
 
@@ -29,7 +27,10 @@ public class Category_Property_Key {
     private String name;
 
     //default olarak 0 degeri nasil verebilirim?
+    //defoult olarak 0 degilde false verilmesi gerekmiyor mu? (E.aktas)
+    //"private Boolean built_in1=false"; seklinde verilebilir. Booleanin defoult degeri de null mis bu arada(E.aktas)
     private Boolean built_in;
+
 
     @ManyToOne
     private Category category;

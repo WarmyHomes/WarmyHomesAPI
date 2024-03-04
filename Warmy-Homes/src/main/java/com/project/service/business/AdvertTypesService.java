@@ -4,6 +4,7 @@ import com.project.entity.business.helperentity.Advert_Type;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertTypeMapper;
 import com.project.payload.messages.ErrorMessages;
+import com.project.payload.request.business.AdvertTypeRequest;
 import com.project.payload.response.business.AdvertTypeResponse;
 import com.project.repository.business.AdvertTypesRepository;
 import com.project.repository.business.CategoryRepository;
@@ -52,19 +53,20 @@ public class AdvertTypesService {
 
 
     // T-03 /advert-types Post
-    public AdvertTypeResponse createAdvertType(Advert_Type advertType) {
+    public AdvertTypeResponse createAdvertType(AdvertTypeRequest advertTypeRequest) {
+        Advert_Type advertType = advertTypeMapper.mapadvertTypeRequestToAdvertType(advertTypeRequest);
         Advert_Type savedAdvertType = advertTypesRepository.save(advertType);
         return advertTypeMapper.mapAdverTypeToAdvertTypeResponse(savedAdvertType);
     }
 
-
     // T-04 /advert-types/:id put
-    public AdvertTypeResponse updateAdvertType(Long id, Advert_Type newAdvertType) {
+    public AdvertTypeResponse updateAdvertType(Long id, AdvertTypeRequest newAdvertType) {
         // Güncellenecek advert tipinin varlığını kontrol edin
         Advert_Type advert_type=isAdvertTypeExist(id);
 
         // Yeni advert tipi bilgilerini mevcut advert tipine kopyalayın
         advert_type.setTitle(newAdvertType.getTitle());
+        //Built-İn nasıl olacak
 
         // Güncellenmiş advert tipini kaydedin
         Advert_Type updatedAdvertType = advertTypesRepository.save(advert_type);

@@ -27,5 +27,7 @@ public class MethodHelper {
         return user;
     }
 
+    // * isSlug
+
 
 }
