@@ -1,6 +1,9 @@
 package com.project.service.business;
 
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.user.User;
+import com.project.exception.BadRequestException;
+import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertTypeMapper;
 import com.project.payload.messages.ErrorMessages;
@@ -11,6 +14,7 @@ import com.project.repository.business.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,9 +55,14 @@ public class AdvertTypesService {
 
     }
 
-
     // T-03 /advert-types Post
-    public AdvertTypeResponse createAdvertType(AdvertTypeRequest advertTypeRequest) {
+    public AdvertTypeResponse createAdvertType(AdvertTypeRequest advertTypeRequest, HttpServletRequest request) {
+        String email= (String) request.getAttribute("email");
+        User user = advertTypesRepository.findByEmail(email);
+        if (Boolean.TRUE.equals(user.getBuilt_in())){
+            throw  new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
         Advert_Type advertType = advertTypeMapper.mapadvertTypeRequestToAdvertType(advertTypeRequest);
         Advert_Type savedAdvertType = advertTypesRepository.save(advertType);
         return advertTypeMapper.mapAdverTypeToAdvertTypeResponse(savedAdvertType);
