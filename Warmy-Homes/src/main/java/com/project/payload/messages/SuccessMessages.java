@@ -1,6 +1,10 @@
 package com.project.payload.messages;
 
 public class SuccessMessages {
+    public static final String GET_CITIES = "Cities is got";
+    public static final String ADVERT_UPDATED = "Advert is updated";
+    public static final String GET_SLUG = "Slug is got" ;
+
     private SuccessMessages() {
     }
 

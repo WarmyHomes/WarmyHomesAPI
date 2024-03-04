@@ -22,7 +22,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     List<City> getCityByAdvert(Long id);
 
-    void findBySlug(String slug);
+    String findBySlug(String slug);
   
   
   // Use Method For Report 
@@ -32,5 +32,5 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                                      Advert_Type advertType);
 
     @Query("Select ")
-    void getAdvertsDependingOnCities(String city, Integer amount);
+    Advert getAdvertsDependingOnCities(String city, Integer amount);
 }
