@@ -51,11 +51,10 @@ public class AdvertTypesController {
 
     // T-04 /advert-types/:id put
 
-
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AdvertTypeResponse> updateAdvertType(@PathVariable Long id,
-                                                               @RequestBody  @Valid Advert_Type advertType) {
+                                                               @RequestBody  @Valid AdvertTypeRequest advertType) {
         AdvertTypeResponse updatedAdvertType = advertTypesService.updateAdvertType(id, advertType);
         return ResponseEntity.ok(updatedAdvertType);
     }

@@ -19,9 +19,11 @@ public class ErrorMessages {
     public static final String NOT_FOUND_USER_USERROLE_MESSAGE = "Error: User not found with user-role %s";
     public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with id %s";
     public static final String USER_CAN_NOT_DELETED = "Error: User cannot be deleted";
+    public static final String NOT_VALID_CODE= "The reset code is not valid.";
 
 
     public static final String NOT_PERMITTED_METHOD_MESSAGE = "You do not have any permission to do this operation";
+    public static final String PASSWORD_NOT_MATCHED = "Your passwords are not matched";
 
     public static final String IMAGE_NOT_FOUND_MESSAGE = "Image not found with id: %s";
 

@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class PropertyKeyResponse {
+public class Category_Property_Key_Response {
     private Long id;
     private String name;
 

@@ -42,7 +42,7 @@ public class ContactMessage {
     private String message;
 
     @NotNull
-    private int status;
+    private Integer status; //default 0 olmalı
     // status ; 0 => it is not opened by admins yet
     // status ; 1 => it was opened and read
 
