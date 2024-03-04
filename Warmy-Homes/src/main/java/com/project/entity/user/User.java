@@ -53,7 +53,7 @@ public class User {
     @Nullable
     private String reset_password_code;
 
-    private Boolean built_in;
+    private Boolean built_in=false;
 
     @NotNull(message = "Create date must not be empty!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")

@@ -9,8 +9,10 @@ import com.project.payload.mappers.UserMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractUserRequest;
+import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.LoginRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
@@ -127,6 +129,22 @@ public class UserService {
         mailService.sendMail(email,reset_password_code);
     }
 
+    //F04 It will update password
+    public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
+
+         String code= request.getReset_password_code();
+         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
+         if (!code.equals(reset_code)){
+             throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
+         }
+
+         User user= (User) servletRequest.getAttribute("email");
+         String new_password= passwordEncoder.encode(code);
+         user.setPassword_hash(new_password);
+         userRepository.save(user);
+
+    }
+
     //F06/users/auth It will update the authenticated user
     public ResponseMessage<UserResponse> updateUser(AbstractUserRequest userRequest, HttpServletRequest servletRequest) {
 
@@ -145,6 +163,23 @@ public class UserService {
                 .message(SuccessMessages.USER_UPDATE_MESSAGE)
                 .object(userMapper.mapUserToUserResponse(user))
                 .build();
+
+    }
+
+    //F07 It will update the authenticated user’s password
+    public void updateUserPassword(HttpServletRequest request, BaseUserRequest baseUserRequest) {
+        String email= (String) request.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (Boolean.TRUE.equals(user.getBuilt_in())){
+            throw  new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+        if(!passwordEncoder.matches(baseUserRequest.getPassword_hash(), user.getPassword_hash())){
+            throw  new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
+        }
+
+        String encodedPassword = passwordEncoder.encode(baseUserRequest.getPassword_hash());
+        user.setPassword_hash(encodedPassword);
+        userRepository.save(user);
 
     }
 

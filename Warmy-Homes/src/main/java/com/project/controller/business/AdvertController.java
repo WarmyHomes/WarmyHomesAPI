@@ -15,8 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -52,6 +50,7 @@ public class AdvertController {
     // ******************************************** //A02
     @GetMapping("/advert/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+
     public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities (@RequestParam String city,
                                                                                         @RequestParam Integer amount){
         return advertService.getAdvertsDependingOnCities(city,amount);
