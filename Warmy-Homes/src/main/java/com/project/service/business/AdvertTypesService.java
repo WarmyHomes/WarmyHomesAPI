@@ -56,19 +56,14 @@ public class AdvertTypesService {
     }
 
     // T-03 /advert-types Post
-    public AdvertTypeResponse createAdvertType(AdvertTypeRequest advertTypeRequest, HttpServletRequest request) {
-        String email= (String) request.getAttribute("email");
-        User user = advertTypesRepository.findByEmail(email);
-        if (Boolean.TRUE.equals(user.getBuilt_in())){
-            throw  new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
+    public AdvertTypeResponse createAdvertType(AdvertTypeRequest advertTypeRequest) {
 
         Advert_Type advertType = advertTypeMapper.mapadvertTypeRequestToAdvertType(advertTypeRequest);
         Advert_Type savedAdvertType = advertTypesRepository.save(advertType);
         return advertTypeMapper.mapAdverTypeToAdvertTypeResponse(savedAdvertType);
     }
 
-    // T-04 /advert-types/:id put
+    // T-04 /advert-types/:id put Bir reklam türünü güncelleyecek
     public AdvertTypeResponse updateAdvertType(Long id, AdvertTypeRequest newAdvertType) {
         // Güncellenecek advert tipinin varlığını kontrol edin
         Advert_Type advert_type=isAdvertTypeExist(id);
