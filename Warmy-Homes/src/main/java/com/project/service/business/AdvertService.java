@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -81,9 +82,10 @@ public class AdvertService {
     }
 
     // ******************************************** //A02
-    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities(String city, Integer amount) {
+    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities() {
 
-        advertRepository.getAdvertsDependingOnCities(city,amount);
+        advertRepository.getAdvertsDependingOnCities();
+
 
         return ResponseMessage.builder()
                 .message(SuccessMessages.GET_CITIES)
@@ -135,27 +137,28 @@ public class AdvertService {
     // *******************************************//A07
     public ResponseMessage<AdvertResponse> getAdvertBySlug(String slug) {
 
-        advertRepository.findBySlug(slug);
+        Advert advert = advertRepository.findBySlugContaining(slug);
+        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
 
         return ResponseMessage.<AdvertResponse>builder()
-                .object()
+                .object(advertResponse)
                 .message(SuccessMessages.GET_SLUG)
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
 
     //******************************************** //A09
-    public ResponseMessage<AdvertResponse> getAdvertById(String slug) {
+    public ResponseMessage<AdvertResponse> getAuthAdvertBySlug(Long id) {
 
-        String slugDB = advertRepository.findBySlug(slug);
-
+         Optional<Advert> advert = advertRepository.findById(id);
 
 
         return ResponseMessage.<AdvertResponse>builder()
-                .httpStatus(HttpStatus.OK)
-                .message(SuccessMessages.GET_SLUG)
                 .object()
+                .message(SuccessMessages.GET_SLUG)
+                .httpStatus(HttpStatus.OK)
                 .build();
+
     }
 
 
