@@ -5,6 +5,7 @@ import com.project.entity.business.Category;
 import com.project.entity.business.City;
 import com.project.entity.business.helperentity.Advert_Type;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.lang.reflect.Array;
@@ -29,4 +30,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                                      LocalDate endingDate,
                                      Category category,
                                      Advert_Type advertType);
+
+    @Query("Select ")
+    void getAdvertsDependingOnCities(String city, Integer amount);
 }
