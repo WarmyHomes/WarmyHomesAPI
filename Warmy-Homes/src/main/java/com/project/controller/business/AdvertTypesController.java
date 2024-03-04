@@ -44,14 +44,13 @@ public class AdvertTypesController {
     // T-03 /advert-types Post  Bir reklam türü oluşturacak
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
-    public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody AdvertTypeRequest advertType,
-                                                               HttpServletRequest request) {
-        AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType, request);
+    public ResponseEntity<AdvertTypeResponse> createAdvertType(@RequestBody AdvertTypeRequest advertType) {
+        AdvertTypeResponse createdAdvertType = advertTypesService.createAdvertType(advertType);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAdvertType);
     }
 
 
-    // T-04 /advert-types/:id put
+    // T-04 /advert-types/:id put Bir reklam türünü güncelleyecek
 
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")

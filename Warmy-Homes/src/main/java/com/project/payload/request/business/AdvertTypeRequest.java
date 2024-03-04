@@ -18,7 +18,6 @@ public class AdvertTypeRequest {
     @Size(max = 30, message = "Title cannot exceed 30 characters")
     private String title;
 
-    @Column(nullable = false)
-    private boolean builtIn;
+
 
 }
