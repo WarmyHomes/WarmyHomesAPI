@@ -2,6 +2,7 @@ package com.project.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.entity.business.Favorite;
 import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
 
@@ -106,6 +107,8 @@ public class User {
         reset_password_code=passwordBuilder.toString();
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Favorite> favoriteList;
 
 
 

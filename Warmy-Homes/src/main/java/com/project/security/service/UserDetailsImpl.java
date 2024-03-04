@@ -40,6 +40,10 @@ public class UserDetailsImpl implements UserDetails {
         this.userRole = userRole;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
