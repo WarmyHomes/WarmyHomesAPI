@@ -12,6 +12,7 @@ import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
@@ -38,7 +39,7 @@ public class AdvertService {
     private final PageableHelper pageableHelper;
     private final CategoryRepository categoryRepository;
     // ******************************************** // A10
-    public ResponseMessage<AdvertResponse> saveAdvert(Long id, BaseAdvertRequest advertRequest) {
+    public ResponseMessage<AdvertResponse> saveAdvert(Long id, AbstractAdvertRequest advertRequest) {
 
         //! Ayni id var mı?
         Advert advert = isAdvertExist(id);
@@ -97,7 +98,7 @@ public class AdvertService {
 
         Advert advert = isAdvertExist(advertId);
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
-            throw new ConflictException(ErrorMessages.ADVERT_IS_BULT_IN);
+            throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
         AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
         advertRepository.deleteById(advertId);
@@ -126,15 +127,37 @@ public class AdvertService {
 
     // ******************************************** //A03
 
-    public ResponseEntity<List<CategoryResponse>> getAdvertByCategory(Long id) {
-        categoryRepository.getAdvertByCategory();
+    public List<CategoryForAdvertResponse> getAdvertByCategory() {
+        //categoryRepository.getAdvertByCategory();
+        return null;
     }
 
-    public ResponseMessage<AdvertResponse> getAdvertById(Long id, AbstractAdvertRequest advertRequest) {
-        isAdvertExist(id);
+    // *******************************************//A07
+    public ResponseMessage<AdvertResponse> getAdvertBySlug(String slug) {
 
-        Advert advert = advertRepository.findBySlug();
+        advertRepository.findBySlug(slug);
+
+        return ResponseMessage.<AdvertResponse>builder()
+                .object()
+                .message(SuccessMessages.GET_SLUG)
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
+
+    //******************************************** //A09
+    public ResponseMessage<AdvertResponse> getAdvertById(String slug) {
+
+        String slugDB = advertRepository.findBySlug(slug);
+
+
+
+        return ResponseMessage.<AdvertResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .message(SuccessMessages.GET_SLUG)
+                .object()
+                .build();
+    }
+
 
     // ****************************************** / A11
     public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AbstractAdvertRequest advertRequest) {
@@ -147,7 +170,7 @@ public class AdvertService {
         }
         // ! Advert Built-in mi ?
         if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
-            throw new ConflictException(ErrorMessages.ADVERT_IS_BULT_IN);
+            throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
 
         // * PENDING islemi yapilacak
@@ -169,7 +192,7 @@ public class AdvertService {
 
         // ! Advert Built-in mi ?
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
-            throw new ConflictException(ErrorMessages.ADVERT_IS_BULT_IN);
+            throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
         Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
         Advert updateAdvert = advertRepository.save(advertMap);

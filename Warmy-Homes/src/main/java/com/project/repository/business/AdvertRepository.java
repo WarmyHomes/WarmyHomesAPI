@@ -22,9 +22,13 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     List<City> getCityByAdvert(Long id);
 
+<<<<<<< HEAD
+    String findBySlug(String slug);
+=======
     void findBySlug(String slug);
 
 
+>>>>>>> main
   
   // Use Method For Report
     List<Advert> findAdvertsByFilter(LocalDate beginningDate,
@@ -33,5 +37,5 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                                      Advert_Type advertType);
 
     @Query("Select ")
-    void getAdvertsDependingOnCities(String city, Integer amount);
+    Advert getAdvertsDependingOnCities(String city, Integer amount);
 }

@@ -6,6 +6,7 @@ import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.service.business.AdvertService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AdvertController {
     @PostMapping("/adverts")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@PathVariable Long id,
-                                                                       @RequestBody @Valid BaseAdvertRequest advertRequest){
+                                                                       @RequestBody @Valid AbstractAdvertRequest advertRequest){
         return ResponseEntity.ok(advertService.saveAdvert(id,advertRequest));
     }
 
@@ -59,9 +60,9 @@ public class AdvertController {
     //****************************************** //A03 yarım kaldı
     @GetMapping("/categories")
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public List<CategoryResponse> getAdvertByCategory(@PathVariable Long id){
+    public List<CategoryForAdvertResponse> getAdvertByCategory(){
 
-        return advertService.getAdvertByCategory(id);
+        return advertService.getAdvertByCategory();
     }
 
     // ******************************************** //A05
@@ -76,13 +77,19 @@ public class AdvertController {
         return advertService.getAdvertByPageAll(page,size,sort,type);
     }
 
+    // *******************************************//A07
+    @GetMapping("/{slug}")
+    public ResponseMessage<AdvertResponse> getAdvertBySlug(@PathVariable String slug){
+
+        return advertService.getAdvertBySlug(slug);
+    }
+
     //********************************************//A09 --- BURADA EKSİK VE HATALI YER VAR
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage<AdvertResponse> getAdvertByID(@PathVariable Long id,
-                                                         AbstractAdvertRequest advertRequest){
+    public ResponseMessage<AdvertResponse> getAdvertByID(@PathVariable String  slug){
 
-        return advertService.getAdvertById(id,advertRequest);
+        return advertService.getAdvertById(slug);
     }
     //********************************************//A11
     @PutMapping("/auth/{id}")
@@ -91,6 +98,8 @@ public class AdvertController {
                                                              AbstractAdvertRequest advertRequest){
         return advertService.updateAdvertById(id,advertRequest);
     }
+
+
     //********************************************//A12
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
