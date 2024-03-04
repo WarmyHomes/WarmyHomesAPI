@@ -8,47 +8,54 @@ import org.springframework.stereotype.Component;
 @Component
 public class TourRequestMapper {
 
-    public Tour_Request mapTourRequestRequestToTourRequest(TourRequestRequest tourRequestRequest){
-        return Tour_Request.builder()
-                .tour_date(tourRequestRequest.getTour_date())
-                .tour_time(tourRequestRequest.getTour_time())
-                .status(tourRequestRequest.getStatus())
-                .create_at(tourRequestRequest.getCreate_at())
-                .update_at(tourRequestRequest.getUpdate_at())
-                .build();
-    }
-    public TourRequestResponse mapTourRequestToTourRequestResponse(Tour_Request tourRequest){
+   public TourRequestResponse mapTourRequestToResponse(Tour_Request request){
+       return TourRequestResponse.builder()
+               .id(request.getId())
+               .tour_date(request.getTour_date())
+               .tour_time(request.getTour_time())
+               .status(request.getStatus().getStatusType().name())
+               .advert_id(request.getAdvert_id())
+               .guest_user(request.getGuest_user_id())
+               .owner_user(request.getOwner_user_id())
+               .build();
+   }
+
+    public TourRequestResponse mapTourRequestToResponseWithOutOwner(Tour_Request request){
         return TourRequestResponse.builder()
-                .id(tourRequest.getId())
-                .tour_date(tourRequest.getTour_date())
-                .tour_time(tourRequest.getTour_time())
-                .status(tourRequest.getStatus())
-                .create_at(tourRequest.getCreate_at())
-                .update_at(tourRequest.getUpdate_at())
+                .id(request.getId())
+                .tour_date(request.getTour_date())
+                .tour_time(request.getTour_time())
+                .status(request.getStatus().getStatusType().name())
+                .advert_id(request.getAdvert_id())
+                .guest_user(request.getGuest_user_id())
                 .build();
     }
 
-    public Tour_Request mapTourRequestToUpdatedTourRequest(Long id, TourRequestRequest tourRequestRequest){
-        return mapTourRequestRequestToTourRequest(tourRequestRequest)
-                .toBuilder()
-                .id(id)
+    public TourRequestResponse mapTourRequestToResponseWithOutGuest(Tour_Request request){
+        return TourRequestResponse.builder()
+                .id(request.getId())
+                .tour_date(request.getTour_date())
+                .tour_time(request.getTour_time())
+                .status(request.getStatus().getStatusType().name())
+                .advert_id(request.getAdvert_id())
+                .owner_user(request.getOwner_user_id())
                 .build();
     }
 
-    public Tour_Request createTourRequestToTourRequest(TourRequestRequest tourRequestRequest){
-        return Tour_Request.builder()
-                .tour_date(tourRequestRequest.getTour_date())
-                .tour_time(tourRequestRequest.getTour_time())
-                .status(0)
-                .build();
-
+    public Tour_Request mapTourRequestRequestToTour_Request(TourRequestRequest request){
+       return Tour_Request.builder()
+               .tour_date(request.getTour_date())
+               .tour_time(request.getTour_time())
+               .advert_id(request.getAdvert_id())
+               .build();
     }
 
-    public Tour_Request mapTourRequestRequestToUpdatedTourRequest(TourRequestRequest request, Long id){
-        Tour_Request tourRequest = mapTourRequestRequestToTourRequest(request);
-        tourRequest.setId(id);
-        return tourRequest;
+    public Tour_Request updateTourRequest(TourRequestRequest request){
+       return Tour_Request.builder()
+               .tour_date(request.getTour_date())
+               .tour_time(request.getTour_time())
+               .advert_id(request.getAdvert_id())
+               .build();
     }
-
 
 }
