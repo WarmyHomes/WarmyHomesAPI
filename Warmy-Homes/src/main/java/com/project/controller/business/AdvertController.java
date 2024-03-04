@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/advert")
+@RequestMapping("/adverts")
 @RequiredArgsConstructor
 public class AdvertController {
 
@@ -49,12 +49,12 @@ public class AdvertController {
     }
 
     // ******************************************** //A02
-    @GetMapping("/advert/cities") //normalde task'de cities yazıyor biz city yazdik
+    @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
 
-    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities (@RequestParam String city,
-                                                                                        @RequestParam Integer amount){
-        return advertService.getAdvertsDependingOnCities(city,amount);
+    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities (){
+
+        return advertService.getAdvertsDependingOnCities();
     }
 
     //****************************************** //A03 yarım kaldı
@@ -78,7 +78,7 @@ public class AdvertController {
     }
 
     // *******************************************//A07
-    @GetMapping("/{slug}")
+    @GetMapping("/{slug}/auth")
     public ResponseMessage<AdvertResponse> getAdvertBySlug(@PathVariable String slug){
 
         return advertService.getAdvertBySlug(slug);
@@ -87,9 +87,9 @@ public class AdvertController {
     //********************************************//A09 --- BURADA EKSİK VE HATALI YER VAR
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage<AdvertResponse> getAdvertByID(@PathVariable String  slug){
+    public ResponseMessage<AdvertResponse> getAuthAdvertById(@PathVariable Long  id){
 
-        return advertService.getAdvertById(slug);
+        return advertService.getAuthAdvertBySlug(id);
     }
     //********************************************//A11
     @PutMapping("/auth/{id}")
