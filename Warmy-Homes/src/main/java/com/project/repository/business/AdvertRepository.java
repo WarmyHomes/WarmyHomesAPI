@@ -5,6 +5,7 @@ import com.project.entity.business.Category;
 import com.project.entity.business.City;
 import com.project.entity.business.helperentity.Advert_Type;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.lang.reflect.Array;
@@ -21,12 +22,17 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     List<City> getCityByAdvert(Long id);
 
-    void findBySlug(String slug);
+
   
-  
-  // Use Method For Report 
+  // Use Method For Report
     List<Advert> findAdvertsByFilter(LocalDate beginningDate,
                                      LocalDate endingDate,
                                      Category category,
                                      Advert_Type advertType);
+
+    //@Query(value = "SELECT city, COUNT(*) AS amount FROM adverts GROUP BY city", nativeQuery = true)
+    Advert getAdvertsDependingOnCities();
+
+    @Query("SELECT a FROM Advert a WHERE a.slug= ?1")
+    Advert findBySlugContaining(String slug);
 }

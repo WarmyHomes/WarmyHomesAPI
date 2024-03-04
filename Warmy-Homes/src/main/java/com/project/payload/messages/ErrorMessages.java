@@ -1,6 +1,12 @@
 package com.project.payload.messages;
 
 public class ErrorMessages {
+
+
+    public static final String ADVERT_ALREADY_EXIST = "Error : Advert is already exist";
+
+    public static final String ADVERT_NOT_FOUND = "Error: Advert is not found" ;
+
     private ErrorMessages(){}
 
     public static final String EDUCATION_TERM_NOT_FOUND_MESSAGE = "Error: Education Term not found with id %s";
@@ -22,6 +28,8 @@ public class ErrorMessages {
     public static final String IMAGE_NOT_FOUND_MESSAGE = "Image not found with id: %s";
 
     public static final String FETCH_ADVERT_TYPES_ERROR_MESSAGE = "Error occurred while fetching advert types";
+
+    public static final String ADVERT_BUILD_IN = "Error Advert is Built-in";
 
     public static final String NOT_RETRIEVE_USER_ID = "Unable to retrieve authenticated user's ID";
 

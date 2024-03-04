@@ -6,6 +6,8 @@ import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
+import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.service.business.AdvertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,12 +16,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/advert")
+@RequestMapping("/adverts")
 @RequiredArgsConstructor
 public class AdvertController {
 
@@ -29,7 +29,7 @@ public class AdvertController {
     @PostMapping("/adverts")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@PathVariable Long id,
-                                                                       @RequestBody @Valid BaseAdvertRequest advertRequest){
+                                                                       @RequestBody @Valid AbstractAdvertRequest advertRequest){
         return ResponseEntity.ok(advertService.saveAdvert(id,advertRequest));
     }
 
@@ -37,7 +37,6 @@ public class AdvertController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
     public ResponseEntity<Page<AdvertResponse>> allAdvertsByPage (
-            @PathVariable String userRole,
             @RequestBody @Valid AbstractAdvertRequest advertRequest,
             @RequestParam(value = "q") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -50,18 +49,20 @@ public class AdvertController {
     }
 
     // ******************************************** //A02
-    @GetMapping("/advert/{city}") //normalde task'de cities yazıyor biz city yazdik
+    @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public ResponseEntity<ResponseMessage<List<CityResponse>>> getCityByAdvert(@PathVariable Long id){
-        return advertService.getCityByAdvert(id);
+
+    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities (){
+
+        return advertService.getAdvertsDependingOnCities();
     }
 
     //****************************************** //A03 yarım kaldı
     @GetMapping("/categories")
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public List<CategoryResponse> getAdvertByCategory(@PathVariable Long id){
+    public List<CategoryForAdvertResponse> getAdvertByCategory(){
 
-        return advertService.getAdvertByCategory(id);
+        return advertService.getAdvertByCategory();
     }
 
     // ******************************************** //A05
@@ -76,13 +77,19 @@ public class AdvertController {
         return advertService.getAdvertByPageAll(page,size,sort,type);
     }
 
-    //********************************************//A09
+    // *******************************************//A07
+    @GetMapping("/{slug}/auth")
+    public ResponseMessage<AdvertResponse> getAdvertBySlug(@PathVariable String slug){
+
+        return advertService.getAdvertBySlug(slug);
+    }
+
+    //********************************************//A09 --- BURADA EKSİK VE HATALI YER VAR
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage<AdvertResponse> getAdvertByID(@PathVariable Long id,
-                                                         AbstractAdvertRequest advertRequest){
+    public ResponseMessage<AdvertResponse> getAuthAdvertById(@PathVariable Long  id){
 
-        return advertService.getAdvertById(id,advertRequest);
+        return advertService.getAuthAdvertBySlug(id);
     }
     //********************************************//A11
     @PutMapping("/auth/{id}")
@@ -91,6 +98,8 @@ public class AdvertController {
                                                              AbstractAdvertRequest advertRequest){
         return advertService.updateAdvertById(id,advertRequest);
     }
+
+
     //********************************************//A12
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")

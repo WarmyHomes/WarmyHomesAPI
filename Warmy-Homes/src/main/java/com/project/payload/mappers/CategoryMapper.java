@@ -1,12 +1,19 @@
 package com.project.payload.mappers;
 
 import com.project.entity.business.Category;
+import com.project.entity.business.helperentity.Category_Property_Key;
+import com.project.payload.request.business.CategoryPropertyKeyRequest;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
+import com.project.payload.response.business.Category_Property_Key_Response;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class CategoryMapper {
 
-    public static Category mapCategoryDTOToEntity(CategoryRequest categoryDTO) {
+    public  Category mapCategoryDTOToEntity(@NotNull CategoryRequest categoryDTO) {
         return Category.builder()
                 .id(categoryDTO.getId())
                 .title(categoryDTO.getTitle())
@@ -22,7 +29,7 @@ public class CategoryMapper {
 
     }
 
-    public static CategoryResponse mapCategoryToResponse(Category category) {
+    public  CategoryResponse mapCategoryToResponse( Category category) {
         return CategoryResponse.builder()
                 .id(category.getId())
                 .title(category.getTitle())
@@ -35,4 +42,25 @@ public class CategoryMapper {
                 .updateAt(category.getUpdate_at() != null ? category.getUpdate_at() : null)
                 .build();
     }
+
+
+    public  Category_Property_Key Category_Property_KeyRequestToEntity(CategoryPropertyKeyRequest request) {
+        return  Category_Property_Key.builder()
+                .name(request.getName())
+
+                // Category ID set etme işlemi burada gerçekleştirilebilir.
+                .build();
+    }
+
+
+    public  Category_Property_Key_Response Category_Property_KeyToResponse(Category_Property_Key propertyKey) {
+        return Category_Property_Key_Response.builder()
+                .id(propertyKey.getId())
+                .name(propertyKey.getName())
+                // İlave dönüşümler gerekiyorsa burada ekleyebilirsiniz.
+                .build();
+     }
+
+
+
 }

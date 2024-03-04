@@ -1,6 +1,7 @@
 package com.project.payload.request.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.entity.business.Advert;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -24,7 +25,7 @@ public class TourRequestRequest {
     private LocalTime tour_time;
 
     @NotNull(message = "Tour Status must not be empty")
-    private Integer status;
+    private String status;
 
     @NotNull(message = "Create date must not be empty")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd:HH:mm:ss")
@@ -32,6 +33,9 @@ public class TourRequestRequest {
 
     @Null
     private LocalDateTime update_at;
+
+    @NotNull
+    private Advert advert_id;
 
 
 
