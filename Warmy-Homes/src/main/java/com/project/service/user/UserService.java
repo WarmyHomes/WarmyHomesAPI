@@ -3,6 +3,7 @@ package com.project.service.user;
 import com.project.entity.business.Tour_Request;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
+import com.project.entity.user.UserRole;
 import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.UserMapper;
@@ -34,10 +35,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -225,4 +224,29 @@ public class UserService {
     }
 
 
+    public String saveAdmin(UserRequest userRequest) {
+
+        Set<UserRole> userRole = new HashSet<>();
+
+        UserRole admin = userRoleService.getUserRole(RoleType.ADMIN);
+
+        userRole.add(admin);
+
+        User user = userMapper.mapUserRequestToUser(userRequest);
+
+        user.setBuilt_in(Boolean.TRUE);
+
+
+        user.setPassword_hash(passwordEncoder.encode(userRequest.getPassword_hash()));
+
+        user.setCreate_at(LocalDateTime.now());
+
+        userRepository.save(user);
+
+        return SuccessMessages.USER_CREATED;
+    }
+
+    public long countAllAdmins(){
+        return userRepository.countAdmin(RoleType.ADMIN);
+    }
 }
