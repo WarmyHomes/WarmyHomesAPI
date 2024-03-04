@@ -1,6 +1,9 @@
 package com.project.payload.messages;
 
 public class SuccessMessages {
+    public static final String PROPERTY_KEY_DELETE ="propertikey silindi" ;
+
+
     private SuccessMessages() {
     }
 

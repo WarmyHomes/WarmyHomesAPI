@@ -34,6 +34,7 @@ public class CategoryController {
         List<CategoryResponse> categories = categoryService.getCategories(query, page, size, sort, type);
         return ResponseEntity.ok(categories);
     }
+
     //C02
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
@@ -52,7 +53,7 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id,
                                                             HttpServletRequest httpServletRequest) {
-        CategoryResponse categoryResponse = categoryService.getCategoryById(id,httpServletRequest);
+        CategoryResponse categoryResponse = categoryService.getCategoryById(id, httpServletRequest);
         return ResponseEntity.ok(categoryResponse);
     }
 
@@ -111,5 +112,14 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
+    //C10
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @DeleteMapping("/delete/{Id}")
+    public ResponseMessage<Category_Property_Key_Response> deletePropertyKey(@PathVariable Long id) {
 
+        return categoryService.deletePropertyKey(id);
+
+    }
+
+    ;
 }

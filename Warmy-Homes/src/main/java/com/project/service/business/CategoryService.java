@@ -12,6 +12,8 @@ import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.repository.helperRepository.CategoryPropertyKeyRepository;
+import com.project.repository.helperRepository.CategoryPropertyValueRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,19 +29,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
+
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final AdvertRepository advertRepository;
     private final CategoryPropertyKeyRepository propertyKeyRepository;
     private final CategoryMapper categoryMapper;
+    private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
 
 
     public List<CategoryResponse> getCategories(String query, int page, int size, String sort, String type) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(type), sort));
         Page<Category> categoryPage = categoryRepository.findByTitleContainingAndIsActiveTrue(query, pageable);
-        return categoryPage.getContent().stream().map(CategoryMapper::mapCategoryToResponse).collect(Collectors.toList());
+        return categoryPage.getContent().stream()
+                .map(categoryMapper::mapCategoryToResponse)
+                .collect(Collectors.toList());
     }
 
     public List<CategoryResponse> getAllCategories(String query, int page, int size, String sort, String type) {
@@ -52,23 +58,23 @@ public class CategoryService {
             categoryPage = categoryRepository.findAll(pageable);
         }
         return categoryPage.getContent().stream()
-                .map(CategoryMapper::mapCategoryToResponse)
+                .map(categoryMapper::mapCategoryToResponse)
                 .collect(Collectors.toList());
     }
 
 
     public CategoryResponse getCategoryById(Long id,HttpServletRequest httpServletRequest) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id" , id));
-        return CategoryMapper.mapCategoryToResponse(category);
+        return categoryMapper.mapCategoryToResponse(category);
     }
 
     public ResponseMessage<CategoryResponse> createCategory(CategoryRequest request) {
        //todo ayni categoriden 1 tane mi olur?
-        Category category = CategoryMapper.mapCategoryDTOToEntity(request);
+        Category category = categoryMapper.mapCategoryDTOToEntity(request);
         category.setCreate_at(LocalDateTime.now());
 
         Category savedCategory = categoryRepository.save(category);
-        CategoryResponse categoryResponse= CategoryMapper.mapCategoryToResponse(savedCategory);
+        CategoryResponse categoryResponse= categoryMapper.mapCategoryToResponse(savedCategory);
 
 
         return  ResponseMessage.<CategoryResponse>builder()
@@ -102,7 +108,7 @@ public class CategoryService {
         category.setUpdate_at(LocalDateTime.now()); // Güncelleme tarihini şu anki zaman olarak ayarla
 
         Category savedCategory = categoryRepository.save(category);
-        return CategoryMapper.mapCategoryToResponse(savedCategory);
+        return categoryMapper.mapCategoryToResponse(savedCategory);
     }
 
     public CategoryResponse deleteCategory(Long id) {
@@ -113,13 +119,13 @@ public class CategoryService {
             throw new UnsupportedOperationException("Built-in category cannot be deleted.");
         }
 
-        //bagli ilan var mi ?
-        if (!advertRepository.findByCategoryId(category.getId()).isEmpty()) {
-            throw new UnsupportedOperationException("Category with related advertisements cannot be deleted.");
-        }
+      ////bagli ilan var mi ?
+      //if (!advertRepository.findByCategoryId(category.getId()).isEmpty()) {
+      //    throw new UnsupportedOperationException("Category with related advertisements cannot be deleted.");
+      //}
 
         categoryRepository.delete(category);
-        return CategoryMapper.mapCategoryToResponse(category);
+        return categoryMapper.mapCategoryToResponse(category);
     }
 
 
@@ -170,8 +176,38 @@ public class CategoryService {
 
         Category_Property_Key updatedPropertyKey = propertyKeyRepository.save(propertyKey);
 
-        return categoryMapper.Category_Property_KeyToResponse(updatedPropertyKey);
+
+        return  categoryMapper.Category_Property_KeyToResponse(updatedPropertyKey);
     }
+
+
+    public ResponseMessage<Category_Property_Key_Response> deletePropertyKey(Long id) {
+      Category_Property_Key propertyKey=  propertyKeyRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Property not found with id: " + id));
+
+        if (propertyKey.getBuilt_in()) {
+            throw new UnsupportedOperationException("Built-in category cannot be deleted.");
+        }
+            // İlk olarak ilişkili CategoryPropertyValue kayıtlarını sil
+            categoryPropertyValueRepository.deleteByCategoryPropertyKey(propertyKey);
+
+            // Sonra CategoryPropertyKey nesnesini sil
+            propertyKeyRepository.delete(propertyKey);
+
+        return ResponseMessage.<Category_Property_Key_Response>builder()
+                .object(categoryMapper.Category_Property_KeyToResponse(propertyKey))
+                .message(SuccessMessages.PROPERTY_KEY_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+        }
+
+
+
+
+
+
+
 
 
 }
