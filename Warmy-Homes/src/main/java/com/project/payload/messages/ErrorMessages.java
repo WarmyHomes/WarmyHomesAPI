@@ -31,6 +31,7 @@ public class ErrorMessages {
 
     public static final String ADVERT_BUILD_IN = "Error Advert is Built-in";
 
+    public static final String NOT_RETRIEVE_USER_ID = "Unable to retrieve authenticated user's ID";
 
 
 }

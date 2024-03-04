@@ -19,9 +19,11 @@ public class Favorite {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user", nullable = false)
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "advert", nullable = false)
     private Advert advert;
 
     private LocalDateTime create_at;

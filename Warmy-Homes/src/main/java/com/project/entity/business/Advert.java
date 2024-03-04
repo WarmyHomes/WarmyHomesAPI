@@ -87,4 +87,7 @@ public class Advert {
     @OneToMany(mappedBy = "advert_id", cascade = CascadeType.REMOVE)
     private List<Log> logList;
 
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.REMOVE)
+    private List<Favorite> favorites;
+
 }
