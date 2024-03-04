@@ -9,12 +9,11 @@ import com.project.payload.response.business.Category_Property_Key_Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import static ch.qos.logback.classic.spi.LoggingEventVO.build;
 
 @Component
 public class CategoryMapper {
 
-    public static   Category mapCategoryDTOToEntity(@NotNull CategoryRequest categoryDTO) {
+    public  Category mapCategoryDTOToEntity(@NotNull CategoryRequest categoryDTO) {
         return Category.builder()
                 .id(categoryDTO.getId())
                 .title(categoryDTO.getTitle())
@@ -30,7 +29,7 @@ public class CategoryMapper {
 
     }
 
-    public static   CategoryResponse mapCategoryToResponse( Category category) {
+    public  CategoryResponse mapCategoryToResponse( Category category) {
         return CategoryResponse.builder()
                 .id(category.getId())
                 .title(category.getTitle())
@@ -53,7 +52,8 @@ public class CategoryMapper {
                 .build();
     }
 
-    public Category_Property_Key_Response Category_Property_KeyToResponse(Category_Property_Key propertyKey) {
+
+    public  Category_Property_Key_Response Category_Property_KeyToResponse(Category_Property_Key propertyKey) {
         return Category_Property_Key_Response.builder()
                 .id(propertyKey.getId())
                 .name(propertyKey.getName())
