@@ -2,6 +2,8 @@ package com.project.entity.business;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.entity.business.helperentity.StatusRole;
+import com.project.entity.business.helperentity.TourStatusRole;
 import com.project.entity.user.User;
 import lombok.*;
 
@@ -31,8 +33,8 @@ public class Tour_Request {
     @NotNull(message = "You must enter tour time")
     private LocalTime tour_time;
 
-    @NotNull
-    private Integer status;
+    @OneToOne
+    private TourStatusRole status;
     //status:
     //0 Pending Initial value
     //1 Approved Can be approved by owner of property
