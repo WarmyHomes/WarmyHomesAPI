@@ -78,19 +78,31 @@ public class AdvertController {
     }
 
     // *******************************************//A07
-    @GetMapping("/{slug}/auth")
+    @GetMapping("/{slug}")
     public ResponseMessage<AdvertResponse> getAdvertBySlug(@PathVariable String slug){
 
         return advertService.getAdvertBySlug(slug);
     }
 
-    //********************************************//A09 --- BURADA EKSİK VE HATALI YER VAR
+    //********************************************//A08
+    @GetMapping("/{id}/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseMessage<AdvertResponse> getCustomerAdvertId(@PathVariable Long id){
+
+        return advertService.getCustomerAdvertId(id);
+    }
+
+
+    //********************************************//A09
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage<AdvertResponse> getAuthAdvertById(@PathVariable Long  id){
+    public ResponseMessage<AdvertResponse> getAdminAdvertById(@PathVariable Long  id){
 
-        return advertService.getAuthAdvertBySlug(id);
+        return advertService.getAdminAdvertBySlug(id);
     }
+
+
+
     //********************************************//A11
     @PutMapping("/auth/{id}")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
