@@ -35,4 +35,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     @Query("SELECT a FROM Advert a WHERE a.slug= ?1")
     Advert findBySlugContaining(String slug);
+
+    //bilgichoca
+    boolean existsByAdvert_Type_Id(Long advertTypeId);
 }

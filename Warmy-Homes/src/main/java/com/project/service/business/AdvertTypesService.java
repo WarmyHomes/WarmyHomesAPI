@@ -24,6 +24,7 @@ public class AdvertTypesService {
 
     private final AdvertTypesRepository advertTypesRepository;
     private final AdvertTypeMapper advertTypeMapper;
+    private  final AdvertService advertService;
 
 
 
@@ -86,13 +87,9 @@ public class AdvertTypesService {
 
         // İlişkili kayıtların kontrolü
         // Eğer ilişkili kayıtlar varsa, uygun bir hata fırlatılabilir veya hata mesajı döndürülebilir
-        // Burada ilişkili kayıtların kontrolü için örnek bir kod yok, çünkü bu bağlamda ne tür ilişkiler olduğunu bilemiyorum
 
-       /* public boolean isAdvertTypeUsed(Long advertTypeId) {
-            // Verilen Advert_Type ID'sine sahip advert var mı kontrol et
-            return advertRepository.existsByAdvertType_Id(advertTypeId);
-        }
-            */
+         advertService.isAdvertTypeUsed(id);
+
 
 
 
