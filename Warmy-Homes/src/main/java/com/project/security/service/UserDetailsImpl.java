@@ -40,6 +40,7 @@ public class UserDetailsImpl implements UserDetails {
         this.userRole = userRole;
     }
 
+    //bunu silmeyin pls
     public Long getId() {
         return id;
     }
