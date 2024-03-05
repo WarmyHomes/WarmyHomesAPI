@@ -22,5 +22,5 @@ public class Advert_Type {
     private String title;
 
     @Column(nullable = false)
-    private boolean builtIn;
+    private Boolean builtIn;
 }

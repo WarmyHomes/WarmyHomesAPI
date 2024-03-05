@@ -19,6 +19,7 @@ public class SettingsController {
     @DeleteMapping("/db-reset")
     public ResponseEntity<String> deleteAllAdverts() {
         settingsService.resetDatabase();
-        return ResponseEntity.status(HttpStatus.OK).body("All adverts deleted successfully.");
+        return ResponseEntity.status(HttpStatus.OK).body("All adverts deleted successfully");
     }
+
 }
