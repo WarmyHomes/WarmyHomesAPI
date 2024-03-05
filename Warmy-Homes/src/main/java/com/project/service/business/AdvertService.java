@@ -64,16 +64,7 @@ public class AdvertService {
     }
 
 
-    // ***************** HELPER METHODE ************************
-    private boolean isAdvertExistByAdvertSlug(String slug){
 
-        boolean advertExist = advertRepository.existsAdvertBySlug(slug);
-        if (advertExist){
-            throw  new ConflictException(ErrorMessages.ADVERT_ALREADY_EXIST);
-        }else {
-            return false;
-        }
-    }
 
     // ******************************************** // A01
     public Page<AdvertResponse> allAdvertsByPage(int page, int size, String sort, String type, AbstractAdvertRequest advertRequest) {
@@ -88,43 +79,16 @@ public class AdvertService {
 
 
         return ResponseMessage.builder()
-                .message(SuccessMessages.GET_CITIES)
+                .message()
                 .object()
                 .httpStatus(HttpStatus.OK).build();
 
-    }
-
-
-    // ******************************************** //A13
-    public ResponseMessage<AdvertResponse> deleteAdvertById(Long advertId) {
-
-        Advert advert = isAdvertExist(advertId);
-        if (advert.getBuiltIn().equals(Boolean.TRUE)){
-            throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
-        }
-        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
-        advertRepository.deleteById(advertId);
-
-
-        return null;
-                /*ResponseMessage.builder()
-                .object(advertResponse)
-                .httpStatus(HttpStatus.OK)
-                .message(SuccessMessages.ADVERT_DELETED)
-                .build();*/
     }
 
     // ****************HELPER METHODE*************
     private  Advert isAdvertExist(Long id){
         return advertRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.ADVERT_NOT_FOUND)));
-    }
-
-    // ******************************************** //A05
-    public Page<AdvertResponse> getAdvertByPageAll(int page, int size, String sort, String type) {
-        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
-
-        return advertRepository.findAll(pageable).map(advertMapper::mapAdvertToAdvertResponse);
     }
 
     // ******************************************** //A03
@@ -134,8 +98,20 @@ public class AdvertService {
         return null;
     }
 
+    // ******************************************** //A05
+    public Page<AdvertResponse> getAdvertByPageAll(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+
+        return advertRepository.findAll(pageable).map(advertMapper::mapAdvertToAdvertResponse);
+    }
+
+
+
     // *******************************************//A07
     public ResponseMessage<AdvertResponse> getAdvertBySlug(String slug) {
+
+        // ! Bu isim de bir slug var mi ?
+        isAdvertExistByAdvertSlug(slug);
 
         Advert advert = advertRepository.findBySlugContaining(slug);
         AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
@@ -146,16 +122,36 @@ public class AdvertService {
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
+    // ***************** HELPER METHODE ************************
+    private boolean isAdvertExistByAdvertSlug(String slug){
+
+        boolean advertExist = advertRepository.existsAdvertBySlug(slug);
+        if (advertExist){
+            throw  new ConflictException(ErrorMessages.ADVERT_ALREADY_EXIST);
+        }else {
+            return false;
+        }
+    }
+
+    // ****************************************** / A08
+    public ResponseMessage<AdvertResponse> getCustomerAdvertId(Long id) {
+        Advert advert = isAdvertExist(id);
+
+        return ResponseMessage.<AdvertResponse>builder()
+                .object(advertMapper.mapAdvertToAdvertResponse(advert))
+                .message(SuccessMessages.GET_ADVERT)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
 
     //******************************************** //A09
-    public ResponseMessage<AdvertResponse> getAuthAdvertBySlug(Long id) {
-
-         Optional<Advert> advert = advertRepository.findById(id);
+    public ResponseMessage<AdvertResponse> getAdminAdvertBySlug(Long id) {
+            Advert advert = isAdvertExist(id);
 
 
         return ResponseMessage.<AdvertResponse>builder()
-                .object()
-                .message(SuccessMessages.GET_SLUG)
+                .object(advertMapper.mapAdvertToAdvertResponse(advert))
+                .message(SuccessMessages.GET_ADVERT)
                 .httpStatus(HttpStatus.OK)
                 .build();
 
@@ -204,6 +200,24 @@ public class AdvertService {
                 .message(SuccessMessages.ADVERT_UPDATED)
                 .object(advertMapper.mapAdvertToAdvertResponse(updateAdvert))
                 .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+    // ******************************************** //A13
+    public ResponseMessage<AdvertResponse> deleteAdvertById(Long advertId) {
+
+        Advert advert = isAdvertExist(advertId);
+        if (advert.getBuiltIn().equals(Boolean.TRUE)){
+            throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
+        }
+        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
+        advertRepository.deleteById(advertId);
+
+
+        return ResponseMessage.<AdvertResponse>builder()
+                .object(advertResponse)
+                .httpStatus(HttpStatus.OK)
+                .message(SuccessMessages.ADVERT_DELETED)
                 .build();
     }
 
