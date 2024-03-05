@@ -19,7 +19,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    //I-01 /images/:imageId-get
+    //I-01 /images/:imageId-get Bir reklamın görüntüsünü alacak
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     @GetMapping("/{imageId}")
     public ResponseEntity<Image> getImageById(@PathVariable Long imageId) {
@@ -27,17 +27,17 @@ public class ImageController {
         return ResponseEntity.ok(image);
     }
 
-    //I-02 /images/:advertId-post
-    @PreAuthorize("hasAnyAuthority('MANEGER','ADMİN','CUSTOMER')")
+    //I-02 /images/:advertId-post Bir ürünün resim(ler)ini yükleyecektir
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN','CUSTOMER')")
     @PostMapping("/{advertId}")
-    public ResponseEntity<List<Long>> uploadImages(@PathVariable Long advertId,
+    public ResponseEntity<List<Long>> uploadImages(
                                                    @RequestParam("images") List<MultipartFile> images) {
-        List<Long> imageIds = imageService.uploadImages(advertId, images);
+        List<Long> imageIds = imageService.uploadImages(images);
         return ResponseEntity.status(HttpStatus.CREATED).body(imageIds);
     }
 
     //I-03 /images/:image_ids-delete
-    @PreAuthorize("hasAnyAuthority('MANEGER','ADMİN','CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN','CUSTOMER')")
     @DeleteMapping("/{imageIds}")
     public ResponseEntity<Void> deleteImages(@PathVariable List<Long> imageIds) {
         imageService.deleteImages(imageIds);
@@ -45,11 +45,12 @@ public class ImageController {
     }
 
 
-        // I-04 /images/:imageId-put
-    @PutMapping("/{imageId}")
-    public ImageResponse setFeaturedImage(@PathVariable Long imageId) {
-        return  imageService.setFeaturedImage(imageId);
-
-    }
+        // I-04 /images/:imageId-put Bir görüntünün öne çıkan alanını ayarlayacaktır
+        @PutMapping("/images/:imageId")
+        public ResponseEntity<String> setFeaturedImage(@PathVariable Long imageId
+                                                      ) {
+            imageService.setFeaturedImage(imageId);
+            return ResponseEntity.status(HttpStatus.OK).body("Image feature updated successfully.");
+        }
 
 }
