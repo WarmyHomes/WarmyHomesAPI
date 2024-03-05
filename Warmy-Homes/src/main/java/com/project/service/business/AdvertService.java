@@ -222,4 +222,14 @@ public class AdvertService {
     }
 
 
+    //bilgichoca
+    public boolean isAdvertTypeUsed(Long advertTypeId) {
+        // Check if there are adverts with the given Advert_Type ID
+        if (advertRepository.existsByAdvert_Type_Id(advertTypeId)) {
+            throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+
 }

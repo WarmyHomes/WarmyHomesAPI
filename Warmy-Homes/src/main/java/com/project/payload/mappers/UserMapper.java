@@ -2,6 +2,7 @@ package com.project.payload.mappers;
 
 import com.project.entity.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
+import com.project.payload.request.user.UserRequest;
 import com.project.payload.response.user.UserResponse;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,17 @@ public class UserMapper {
                 .email(userRequest.getEmail())
                 .build();
 
+    }
+    public User mapUserRequestToUpdatedUser(UserRequest userRequest, Long id){
+        return User.builder()
+                .id(id)
+                .first_name(userRequest.getFirst_name())
+                .last_name(userRequest.getLast_name())
+                .password_hash(userRequest.getPassword_hash())
+                .phone(userRequest.getPhone())
+                .email(userRequest.getEmail())
+                .built_in(userRequest.getBuilt_in())
+                .build();
     }
 
 }

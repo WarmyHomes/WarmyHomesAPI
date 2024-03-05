@@ -16,6 +16,7 @@ import com.project.entity.enums.ImageType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
 
-    //I-01 /images/:imageId-get
+    //I-01 /images/:imageId-get Bir reklamın görüntüsünü alacak
     public Image getImageById(Long imageId) {
         return imageRepository.findById(imageId).orElseThrow(() ->
                 new ResourceNotFoundException(String.format(ErrorMessages.IMAGE_NOT_FOUND_MESSAGE, imageId)));
@@ -33,7 +34,7 @@ public class ImageService {
 
 
 
-    public List<Long> uploadImages(Long advertId, List<MultipartFile> images) {
+    public List<Long> uploadImages(List<MultipartFile> images) {
         List<Long> uploadedImageIds = new ArrayList<>();
 
         for (MultipartFile imageFile : images) {
@@ -65,39 +66,43 @@ public class ImageService {
     //I-03 /images/:image_ids-delete
     public void deleteImages(List<Long> imageIds) {
         for (Long imageId : imageIds) {
-            if (imageRepository.existsById(imageId)) {
-                imageRepository.deleteById(imageId);
-            } else {
-                throw new ResourceNotFoundException(String.format(ErrorMessages.IMAGE_NOT_FOUND_MESSAGE, imageId));
-
+            if (imageId != null) { // ID'nin null olup olmadığını kontrol ediyoruz
+                Optional<Image> imageOptional = imageRepository.findById(imageId);
+                if (imageOptional.isPresent()) { // Veritabanında bu ID'ye sahip bir resim var mı kontrol ediyoruz
+                    imageRepository.deleteById(imageId); // Resmi sil
+                } else {
+                    throw new ResourceNotFoundException(String.format(ErrorMessages.IMAGE_NOT_FOUND_MESSAGE, imageId));
+                }
             }
         }
     }
 
 
+
     // I-04 /images/:imageId-put
-    public void setFeaturedImage(Long imageId, boolean featured) {
+    public void setFeaturedImage(Long imageId) {
         if (imageId == null) {
             throw new IllegalArgumentException("Image ID cannot be null.");
         }
-        if (!(featured == true || featured == false)) {
-            throw new IllegalArgumentException("Invalid value for 'featured' parameter. 'featured' should be true or false.");
-        }
 
         try {
-            Image image = imageRepository.findById(imageId).orElseThrow(() ->
-                    new ResourceNotFoundException("Image not found with id: " + imageId));
-            image.setFeatured(featured);
-            imageRepository.save(image);
+            Optional<Image> optionalImage = imageRepository.findById(imageId);
+            if (optionalImage.isPresent()) {
+                Image image = optionalImage.get();
+                image.setFeatured(true);
+                imageRepository.save(image);
+            } else {
+                throw new ResourceNotFoundException("Image not found with id: " + imageId);
+            }
         } catch (ResourceNotFoundException ex) {
             logger.error("Image not found with id: " + imageId, ex);
             throw new CustomImageNotFoundException("Image not found with id: " + imageId, ex);
-
         } catch (DataAccessException ex) {
             logger.error("Error while accessing database", ex);
             throw new DatabaseOperationException("Error while accessing database", ex);
         }
     }
+
 
 
 }
