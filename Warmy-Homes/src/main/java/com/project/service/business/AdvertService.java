@@ -242,9 +242,6 @@ public class AdvertService {
                 .build();
     }
 
-
-<<<<<<< HEAD
-=======
     //bilgichoca
     public boolean isAdvertTypeUsed(Long advertTypeId) {
         // Check if there are adverts with the given Advert_Type ID
@@ -253,7 +250,5 @@ public class AdvertService {
         }
         return false;
     }
-
->>>>>>> main
 
 }
