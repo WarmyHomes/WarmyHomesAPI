@@ -1,6 +1,7 @@
 package com.project.entity.business.helperentity;
 
 import com.project.entity.enums.StatusType;
+import com.project.entity.enums.TourStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,9 @@ public class TourStatusRole {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    private StatusType statusType;
+    private TourStatus tourStatus;
 
     private String statusName;
+
+
 }

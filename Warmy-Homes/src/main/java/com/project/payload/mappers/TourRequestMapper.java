@@ -1,6 +1,9 @@
 package com.project.payload.mappers;
 
 import com.project.entity.business.Tour_Request;
+import com.project.entity.business.helperentity.TourStatusRole;
+import com.project.entity.enums.StatusType;
+import com.project.entity.enums.TourStatus;
 import com.project.payload.request.business.TourRequestRequest;
 import com.project.payload.response.business.TourRequestResponse;
 import org.springframework.stereotype.Component;
@@ -55,6 +58,7 @@ public class TourRequestMapper {
                .tour_date(request.getTour_date())
                .tour_time(request.getTour_time())
                .advert_id(request.getAdvert_id())
+               .status()
                .build();
     }
 
