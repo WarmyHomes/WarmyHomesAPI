@@ -21,9 +21,12 @@ import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.security.jwt.JwtUtils;
 import com.project.security.service.UserDetailsImpl;
+import com.project.service.helper.PageableHelper;
 import com.project.service.mail.MailService;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,6 +54,7 @@ public class UserService {
     private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final PageableHelper pageableHelper;
 
 
 
@@ -206,6 +210,12 @@ public class UserService {
 
     }
 
+    //F09 /users/admin  It will return users
+    public Page<UserResponse> getUserByPage(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
+        return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
+    }
+
 
     ///F10 -  getUserById
     public ResponseMessage<BaseUserResponse> getUserById(Long id) {
@@ -220,6 +230,27 @@ public class UserService {
                         .httpStatus(HttpStatus.OK)
                 .object(baseUserResponse)
                 .build();
+
+    }
+
+    //F11 /users/4/admin It will update the user
+    public ResponseMessage<BaseUserResponse> updateUserById(UserRequest userRequest, Long id) {
+        User user= isUserExist(id);
+        if (user.getBuilt_in().equals(true)){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+        uniquePropertyValidator.checkUniqueProperties(user,userRequest);
+        User updatedUser = userMapper.mapUserRequestToUpdatedUser(userRequest, id);
+
+        User savedUser = userRepository.save(updatedUser);
+
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_UPDATE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(userMapper.mapUserToUserResponse(savedUser))
+                .build();
+
+
 
     }
 
@@ -249,4 +280,12 @@ public class UserService {
     public long countAllAdmins(){
         return userRepository.countAdmin(RoleType.ADMIN);
     }
+
+    public User isUserExist(Long id){
+        return userRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
+    }
+
+
+
 }

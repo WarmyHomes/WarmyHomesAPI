@@ -2,6 +2,7 @@ package com.project.service.business;
 
 import com.project.entity.business.Tour_Request;
 import com.project.entity.business.helperentity.TourStatusRole;
+import com.project.entity.enums.StatusType;
 import com.project.entity.enums.TourStatus;
 import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
@@ -28,6 +29,7 @@ public class TourRequestService {
     private final TourRequestRepository tourRequestRepository;
     private final PageableHelper pageableHelper;
     private final TourRequestMapper tourRequestMapper;
+
 
     //*S01
     public List<TourRequestResponse> getUsersTourRequest(int page, int size, String sort, String type) {
@@ -77,9 +79,10 @@ public class TourRequestService {
     public ResponseEntity<TourRequestResponse> updateTourRequest(Long id, TourRequestRequest request) {
         if(tourRequestRepository.existsById(id)){
             String status = request.getStatus();
-            if(status.equals("pending") || status.equals("declined")){
+            if(status.equalsIgnoreCase("pending") || status.equalsIgnoreCase("declined")){
                 Tour_Request updatedRequest = tourRequestMapper.
                         updateTourRequest(request);
+                updatedRequest.getStatus().setStatusName(TourStatus.PENDING.getStatusName());
                 Tour_Request savedRequest = tourRequestRepository.
                         save(updatedRequest);
                 return ResponseEntity.ok(tourRequestMapper.

@@ -33,5 +33,5 @@ public class ErrorMessages {
 
     public static final String NOT_RETRIEVE_USER_ID = "Unable to retrieve authenticated user's ID";
 
-
+    public static final String ADVERT_TYPE_IN_USE_ERROR_MESSAGE="Deletion cannot be performed because this advert type is currently in use";
 }

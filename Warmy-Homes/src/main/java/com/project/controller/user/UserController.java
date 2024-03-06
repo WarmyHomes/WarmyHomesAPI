@@ -13,6 +13,8 @@ import com.project.payload.response.user.UserResponse;
 import com.project.service.mail.MailService;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -76,7 +78,7 @@ public class UserController {
     //F06/users/auth It will update the authenticated user
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
     @PutMapping("/users/auth")// http://localhost:8080/users/auth
-    public ResponseMessage<UserResponse> updateStudentForManagers(@RequestBody @Valid AbstractUserRequest userRequest,
+    public ResponseMessage<UserResponse> updateUser(@RequestBody @Valid AbstractUserRequest userRequest,
                                                                   HttpServletRequest servletRequest) {
         return userService.updateUser(userRequest, servletRequest);
     }
@@ -102,7 +104,18 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUser(servletRequest));
     }
 
-    //F09
+    //F09 /users/admin  It will return users
+    @GetMapping("/users/admin")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<Page<UserResponse>> getUserByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "create_at") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type
+    ) {
+        Page<UserResponse> getUserByPage = userService.getUserByPage(page,size,sort,type);
+        return new ResponseEntity<>(getUserByPage, HttpStatus.OK);
+    }
 
 
     ///F10 -  getUserById
@@ -112,7 +125,13 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    //F11
+    //F11 /users/4/admin It will update the user
+    @PutMapping("/users/{id}/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    public ResponseMessage<BaseUserResponse> updateUserById(@RequestBody @Valid UserRequest userRequest,
+                                                                         @PathVariable Long id) {
+        return userService.updateUserById(userRequest, id);
+    }
 
     //F12
 

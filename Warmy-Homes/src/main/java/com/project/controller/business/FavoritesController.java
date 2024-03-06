@@ -6,10 +6,7 @@ import com.project.service.business.FavoritesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,15 +28,30 @@ public class FavoritesController {
     }
 
 
-
-
     //K02: It will get user`s favorites
-
+    @GetMapping("/favorites/admin/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<List<AdvertResponse>> getUserFavorites(@PathVariable Long id) {
+        List<AdvertResponse> userFavorites = favoritesService.getUserFavorites(id);
+        return ResponseEntity.ok(userFavorites);
+    }
 
 
 
 
     //K03: It will add/remove an advert to/from authenticated user`s favorites
+    @PostMapping("/favorites/{advertId}/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseEntity<AdvertResponse> addOrRemoveAdvertFromFavorites(@PathVariable Long advertId){ //?requestbody
+
+        AdvertResponse advert=favoritesService.addOrRemoveAdvertFromFavorites(advertId);
+        return ResponseEntity.ok(advert);
+    }
+
+
+
+
+    //K04: It will remove all favorites of authenticated user
 
 
 }
