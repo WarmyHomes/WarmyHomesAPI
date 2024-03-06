@@ -26,7 +26,7 @@ public class AdvertMapper {
                 .category_id(advertForQueryRequest.getCategory_id())
                 .price(advertForQueryRequest.getPrice_start())
                 .price(advertForQueryRequest.getPrice_end())
-                .status(advertForQueryRequest.getStatus())
+                //.status(advertForQueryRequest.getStatus())
                 .build();
     }
 
