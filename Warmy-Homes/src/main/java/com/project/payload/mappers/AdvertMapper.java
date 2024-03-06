@@ -9,6 +9,9 @@ import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class AdvertMapper {
 
@@ -70,4 +73,28 @@ public class AdvertMapper {
                 .amount(amount)
                 .build();
     }
+
+
+    public List<AdvertResponse> mapAdvertToAdvertResponse(List<Advert> adverts) {
+        List<AdvertResponse> responses = new ArrayList<>();
+        for (Advert advert : adverts) {
+            AdvertResponse response = AdvertResponse.builder()
+                    .title(advert.getTitle())
+                    .description(advert.getDescription())
+                    .price(advert.getPrice())
+                    .advert_type_id(advert.getAdvert_type_id())
+                    .country_id(advert.getCountry_id())
+                    .city_id(advert.getCity_id())
+                    .id(advert.getId())
+                    .district(advert.getDistrict())
+                    .category_id(advert.getCategory_id())
+                    //.images(advert.getImages())
+                    .location(advert.getLocation())
+                    .build();
+            responses.add(response);
+        }
+        return responses;
+    }
+
+
 }
