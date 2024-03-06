@@ -1,6 +1,7 @@
 package com.project.controller.business;
 
 
+import com.project.entity.business.Advert;
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
@@ -126,6 +127,15 @@ public class AdvertController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> advertDeleteById(@PathVariable Long advertId){
         return advertService.deleteAdvertById(advertId);
+    }
+
+
+
+    //hocabilgic
+    @GetMapping("/popular/{amount}")
+    public ResponseEntity<List<Advert>> getPopularAdverts(@PathVariable int amount) {
+        List<Advert> popularAdverts = advertService.getPopularAdverts(amount);
+        return ResponseEntity.ok(popularAdverts);
     }
 
 }
