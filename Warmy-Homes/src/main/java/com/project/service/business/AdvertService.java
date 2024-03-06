@@ -257,12 +257,17 @@ public class AdvertService {
     public List<AdvertResponse> getPopularAdverts(int amount) {
         // Popüler reklamları almak için gerekli hesaplama yapılır
         List<Advert> popularAdverts = advertRepository.findAll();
-        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
-        if (amount >= popularAdverts.size()) {
-            return advertMapper.mapAdvertToAdvertResponse(popularAdverts);
-        } else {
-            return advertMapper.mapAdvertToAdvertResponse(popularAdverts.subList(0, amount));
+        if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
+            throw new IllegalArgumentException("There are no popular adverts to retrieve.");
         }
+
+
+        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
+
+        int endIndex = Math.min(amount, popularAdverts.size());
+        List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
+
+        return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
     }
 
     private int calculatePopularity(Advert advert) {
