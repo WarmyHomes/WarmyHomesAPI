@@ -9,8 +9,8 @@ public enum TourStatus {
     public final String tourStatusName;
 
 
-    TourStatus(String tourstatusName) {
-        this.tourStatusName = tourstatusName;
+    TourStatus(String tourStatusName) {
+        this.tourStatusName = tourStatusName;
     }
     public String getStatusName(){
         return tourStatusName;
