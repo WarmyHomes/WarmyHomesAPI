@@ -48,7 +48,7 @@ public class ImageController {
         // I-04 /images/:imageId-put
     @PutMapping("/{imageId}")
     public ImageResponse setFeaturedImage(@PathVariable Long imageId) {
-        return  imageService.setFeaturedImage(imageId);
+        return  null;// imageService.setFeaturedImage(imageId);
 
     }
 

@@ -4,6 +4,7 @@ import com.project.entity.business.Advert;
 import com.project.entity.user.User;
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
+import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import org.springframework.stereotype.Component;
@@ -18,11 +19,23 @@ public class AdvertMapper {
                 .replaceAll("^-|-$", ""); // Baştaki ve sondaki tireleri kaldır
     }
 
+    public Advert mapAdvertQueryToAdvert(AdvertForQueryRequest advertForQueryRequest){
+        return Advert.builder()
+                .title(advertForQueryRequest.getQ())
+                .advert_type_id(advertForQueryRequest.getAdvert_type_id())
+                .category_id(advertForQueryRequest.getCategory_id())
+                .price(advertForQueryRequest.getPrice_start())
+                .price(advertForQueryRequest.getPrice_end())
+                .status(advertForQueryRequest.getStatus())
+                .build();
+    }
+
     public Advert mapAdvertRequestToAdvert(AbstractAdvertRequest advertRequest){
 
 
         return Advert.builder()
                 .title(advertRequest.getTitle())
+              //  .slug(advertRequest.getTitle()) create ve update isleminde kullanilmasi gerek sadece
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
                 .advert_type_id(advertRequest.getAdvert_type_id())
@@ -30,7 +43,7 @@ public class AdvertMapper {
                 .city_id(advertRequest.getCity_id())
                 .district(advertRequest.getDistrict())
                 .category_id(advertRequest.getCategory_id())
-                .images(advertRequest.getImages())
+                //.images(advertRequest.getImages())
                 .location(advertRequest.getLocation())
                 .build();
     }
@@ -45,7 +58,7 @@ public class AdvertMapper {
                 .id(advert.getId())
                 .district(advert.getDistrict())
                 .category_id(advert.getCategory_id())
-                .images(advert.getImages())
+                //.images(advert.getImages())
                 .location(advert.getLocation())
                 .build();
     }

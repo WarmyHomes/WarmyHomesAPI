@@ -1,7 +1,6 @@
 package com.project.payload.request.business;
 
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +8,9 @@ import javax.validation.constraints.Size;
 
 // Data olur mu araştır
 @Data
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 public class AdvertTypeRequest {
 
     private Long id;

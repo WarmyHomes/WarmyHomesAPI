@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @SuperBuilder
 public class BaseAdvertRequest extends AbstractAdvertRequest{
 
