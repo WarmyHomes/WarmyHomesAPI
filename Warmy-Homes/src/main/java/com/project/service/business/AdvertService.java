@@ -20,6 +20,7 @@ import com.project.payload.response.business.helperresponse.CityForAdvertRespons
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.CityRepository;
+import com.project.repository.business.TourRequestRepository;
 import com.project.service.helper.PageableHelper;
 import com.project.service.user.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -250,5 +252,25 @@ public class AdvertService {
         }
         return false;
     }
+
+    private final TourRequestRepository tourRequestRepository;
+    public List<Advert> getPopularAdverts(int amount) {
+        // Popüler reklamları almak için gerekli hesaplama yapılır
+        List<Advert> popularAdverts = advertRepository.findAll();
+        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
+        if (amount >= popularAdverts.size()) {
+            return popularAdverts;
+        } else {
+            return popularAdverts.subList(0, amount);
+        }
+    }
+
+    private int calculatePopularity(Advert advert) {
+        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
+        int totalViews = advert.getViewCount();
+        // Popülerlik puanı hesaplaması
+        return 3 * totalTourRequests + totalViews;
+    }
+
 
 }
