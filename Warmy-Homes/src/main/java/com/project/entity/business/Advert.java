@@ -52,7 +52,7 @@ public class Advert {
 
 
     @OneToOne
-    private Integer status;
+    private AdvertStatusRole status;
 
     @ManyToOne
     private User user;

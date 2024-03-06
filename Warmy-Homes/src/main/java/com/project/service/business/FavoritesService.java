@@ -2,11 +2,15 @@ package com.project.service.business;
 
 import com.project.entity.business.Advert;
 import com.project.entity.business.Favorite;
+import com.project.entity.user.User;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.response.business.AdvertResponse;
+import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.FavoritesRepository;
+import com.project.repository.user.UserRepository;
+import com.project.repository.user.UserRoleRepository;
 import com.project.security.service.UserDetailsImpl;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +32,10 @@ public class FavoritesService {
     private final UserDetailsImpl userDetails;
 
     private final UserService userService;
+
+    private final UserRepository userRepository;
+
+    private final AdvertRepository advertRepository;
 
 
 
@@ -113,7 +122,7 @@ public class FavoritesService {
             // If the advert is in favorites, remove it
             favoritesRepository.delete(favorite);
             // Optionally, you can return a response indicating that the advert is removed
-            return new AdvertResponse("Advert removed from favorites");
+            return null;//new AdvertResponse("Advert removed from favorites");
         } else {
             // If the advert is not in favorites, add it
             Advert advert = advertRepository.findById(advertId)
@@ -126,7 +135,7 @@ public class FavoritesService {
                     .build();
             favoritesRepository.save(favorite);
             // Optionally, you can return a response indicating that the advert is added
-            return new AdvertResponse("Advert added to favorites");
+            return null;//new AdvertResponse("Advert added to favorites");
         }
 
     }
