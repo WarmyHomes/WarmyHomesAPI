@@ -56,7 +56,7 @@ public class Advert {
     private User user;
 
 
-    private Boolean builtIn;
+    private Boolean builtIn = false;
 
     @ManyToOne
     private Category category_id;

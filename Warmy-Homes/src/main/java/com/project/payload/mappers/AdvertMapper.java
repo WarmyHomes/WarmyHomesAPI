@@ -11,7 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdvertMapper {
 
+    // * title i slug a cevirirken kullanacagiz
+    public String slugBuilt (String title) {
+        return title.toLowerCase() // Küçük harfe çevir
+                .replaceAll("[^a-z0-9]+", "-") // harf veya rakam olmayan karakterleri tire ile değiştir
+                .replaceAll("^-|-$", ""); // Baştaki ve sondaki tireleri kaldır
+    }
+
     public Advert mapAdvertRequestToAdvert(AbstractAdvertRequest advertRequest){
+
+
         return Advert.builder()
                 .title(advertRequest.getTitle())
                 .description(advertRequest.getDescription())
