@@ -254,14 +254,14 @@ public class AdvertService {
     }
 
     private final TourRequestRepository tourRequestRepository;
-    public List<Advert> getPopularAdverts(int amount) {
+    public List<AdvertResponse> getPopularAdverts(int amount) {
         // Popüler reklamları almak için gerekli hesaplama yapılır
         List<Advert> popularAdverts = advertRepository.findAll();
         popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
         if (amount >= popularAdverts.size()) {
-            return popularAdverts;
+            return advertMapper.mapAdvertToAdvertResponse(popularAdverts);
         } else {
-            return popularAdverts.subList(0, amount);
+            return advertMapper.mapAdvertToAdvertResponse(popularAdverts.subList(0, amount));
         }
     }
 
