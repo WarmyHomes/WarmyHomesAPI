@@ -13,25 +13,15 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
-    boolean existsAdvertById(Long id);
 
     boolean existsAdvertBySlug(String slug);
 
 
-    City getCityByAdvert(String request);
-
-    List<City> getCityByAdvert(Long id);
-
-
-  
   // Use Method For Report
     List<Advert> findAdvertsByFilter(LocalDate beginningDate,
                                      LocalDate endingDate,
                                      Category category,
                                      Advert_Type advertType);
-
-    //@Query(value = "SELECT city, COUNT(*) AS amount FROM adverts GROUP BY city", nativeQuery = true)
-    Advert getAdvertsDependingOnCities();
 
     @Query("SELECT a FROM Advert a WHERE a.slug= ?1")
     Advert findBySlugContaining(String slug);

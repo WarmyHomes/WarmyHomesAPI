@@ -52,7 +52,7 @@ public class AdvertController {
     @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
 
-    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities (){
+    public List<CityForAdvertResponse> getAdvertsDependingOnCities (){
 
         return advertService.getAdvertsDependingOnCities();
     }

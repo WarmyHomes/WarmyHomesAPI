@@ -16,6 +16,7 @@ import com.project.payload.response.business.helperresponse.CategoryForAdvertRes
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
+import com.project.repository.business.CityRepository;
 import com.project.service.helper.PageableHelper;
 import com.project.service.user.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +41,7 @@ public class AdvertService {
     private final UserRoleService userRoleService;
     private final PageableHelper pageableHelper;
     private final CategoryRepository categoryRepository;
+    private final CityRepository cityRepository;
     // ******************************************** // A10
     public ResponseMessage<AdvertResponse> saveAdvert(Long id, AbstractAdvertRequest advertRequest) {
 
@@ -73,17 +76,19 @@ public class AdvertService {
     }
 
     // ******************************************** //A02
-    public ResponseMessage<List<CityForAdvertResponse>> getAdvertsDependingOnCities() {
+    public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
 
-        advertRepository.getAdvertsDependingOnCities();
+            List<Object[]> cities = cityRepository.countCities();
 
 
-        return ResponseMessage.builder()
-                .message()
-                .object()
-                .httpStatus(HttpStatus.OK).build();
+           return cities.stream().map(objects -> CityForAdvertResponse.builder()
+                   .city((String) objects[0])
+                   .amount((Integer) objects[1])
+                   .build()).collect(Collectors.toList());
 
-    }
+            };
+
+
 
     // ****************HELPER METHODE*************
     private  Advert isAdvertExist(Long id){
@@ -94,8 +99,12 @@ public class AdvertService {
     // ******************************************** //A03
 
     public List<CategoryForAdvertResponse> getAdvertByCategory() {
-        //categoryRepository.getAdvertByCategory();
-        return null;
+         List<Object[]> categories = categoryRepository.countCategories();
+
+        return categories.stream().map(objects -> CategoryForAdvertResponse.builder()
+                .category((String) objects[0])
+                .amount((Integer) objects[1])
+                .build()).collect(Collectors.toList());
     }
 
     // ******************************************** //A05
