@@ -1,7 +1,9 @@
 package com.project.service.business;
 
 import com.project.entity.business.Advert;
+import com.project.entity.enums.AdvertStatusType;
 import com.project.entity.enums.RoleType;
+import com.project.entity.enums.StatusType;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertMapper;
@@ -9,6 +11,7 @@ import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
+import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -27,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +48,8 @@ public class AdvertService {
     private final CityRepository cityRepository;
     // ******************************************** // A10
     public ResponseMessage<AdvertResponse> saveAdvert(Long id, AbstractAdvertRequest advertRequest) {
+
+        URLEncoder.encode(advertRequest.getSlug());
 
         //! Ayni id var mı?
         Advert advert = isAdvertExist(id);
@@ -70,10 +76,14 @@ public class AdvertService {
 
 
     // ******************************************** // A01
-    public Page<AdvertResponse> allAdvertsByPage(int page, int size, String sort, String type, AbstractAdvertRequest advertRequest) {
+    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage(AdvertForQueryRequest advertRequest, String q, int page, int size, String sort, String type) {
+        if (!q.isEmpty()){
+            Advert advertQuery = advertMapper.mapAdvertQueryToAdvert(advertRequest);
 
+        }
         return null;
     }
+
 
     // ******************************************** //A02
     public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
@@ -181,10 +191,12 @@ public class AdvertService {
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
 
-        // * PENDING islemi yapilacak
-
         Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+
+        // * PENDING islemi yapilacak
+//        advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId());
         Advert updateAdvert = advertRepository.save(advertMap);
+
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -231,6 +243,8 @@ public class AdvertService {
     }
 
 
+<<<<<<< HEAD
+=======
     //bilgichoca
     public boolean isAdvertTypeUsed(Long advertTypeId) {
         // Check if there are adverts with the given Advert_Type ID
@@ -240,5 +254,6 @@ public class AdvertService {
         return false;
     }
 
+>>>>>>> main
 
 }

@@ -3,6 +3,7 @@ package com.project.controller.business;
 
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
+import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -36,8 +37,8 @@ public class AdvertController {
     // ******************************************** //A01
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
-    public ResponseEntity<Page<AdvertResponse>> allAdvertsByPage (
-            @RequestBody @Valid AbstractAdvertRequest advertRequest,
+    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage (
+            @RequestBody @Valid AdvertForQueryRequest advertRequest,
             @RequestParam(value = "q") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -45,7 +46,7 @@ public class AdvertController {
             @RequestParam(value = "type", defaultValue = "desc") String type
 
     ){
-        return  null; //new ResponseEntity(advertService.allAdvertsByPage(page,size,sort,type,userRole,advertRequest), HttpStatus.OK);
+        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
     }
 
     // ******************************************** //A02

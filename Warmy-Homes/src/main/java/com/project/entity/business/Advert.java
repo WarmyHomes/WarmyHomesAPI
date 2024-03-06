@@ -1,6 +1,7 @@
 package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.entity.business.helperentity.AdvertStatusRole;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
@@ -50,7 +51,8 @@ public class Advert {
     private District district;
 
 
-    private Integer status=0;
+    @OneToOne
+    private Integer status;
 
     @ManyToOne
     private User user;
@@ -71,8 +73,8 @@ public class Advert {
 
     private Integer viewCount;
 
-    @OneToMany
-    private Image images;
+    @OneToMany(mappedBy = "advert",cascade = CascadeType.REMOVE)
+    private List<Image> images;
 
     @Column(name = "update_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
