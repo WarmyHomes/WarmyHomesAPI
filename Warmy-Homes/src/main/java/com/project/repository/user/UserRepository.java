@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     long countAdmin(RoleType roleType);
 
     List<Advert> findByAdvertList(Long id);
+
+    List<Tour_Request> findByTourRequest(Long id);
 }
