@@ -22,6 +22,8 @@ public class SuccessMessages {
     public static final String PROPERTY_KEY_DELETE ="propertikey silindi" ;
     public static final String GET_ADVERT = "Advert is got";
 
+    public static final String ADVERT_REMOVED= "Advert is Removed From Favorites";
+
 
 
 }
