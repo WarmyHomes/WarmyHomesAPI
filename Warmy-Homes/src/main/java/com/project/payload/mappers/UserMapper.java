@@ -30,7 +30,6 @@ public class UserMapper {
                 .last_name(userRequest.getLast_name())
                 .password_hash(userRequest.getPassword_hash())
                 .phone(userRequest.getPhone())
-                .built_in(userRequest.getBuilt_in())
                 .email(userRequest.getEmail())
                 .build();
 
@@ -43,7 +42,7 @@ public class UserMapper {
                 .password_hash(userRequest.getPassword_hash())
                 .phone(userRequest.getPhone())
                 .email(userRequest.getEmail())
-                .built_in(userRequest.getBuilt_in())
+
                 .build();
     }
 

@@ -5,16 +5,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 public abstract class BaseUserRequest extends AbstractUserRequest {
-    @NotNull(message = "Please enter your password")
-    @Size(min = 8, max = 60,message = "Your password should be at least 8 chars or maximum 60 characters")
-    //password syntax validation could be a good feature.
-   // @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[-+_!@#$%^&*., ?]).+$")
+    @NotEmpty(message = "Password must not be empty")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern.List({
+            @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one digit"),
+            @Pattern(regexp = ".*[a-zA-Z].*", message = "Password must contain at least one letter"),
+            @Pattern(regexp = ".*[@#$%^&+=!].*", message = "Password must contain at least one special character")
+    })
     private String password_hash;
 }

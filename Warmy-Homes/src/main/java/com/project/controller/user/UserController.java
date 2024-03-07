@@ -39,15 +39,15 @@ public class UserController {
     //F02 - register
     @PostMapping("/register") // http://localhost:8080/register
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public ResponseEntity<ResponseMessage<UserResponse>> saveUser(@PathVariable String userRole,
-                                                                  @RequestBody @Valid UserRequest userRequest) {
-        return ResponseEntity.ok(userService.saveUser(userRequest,userRole));
+    public ResponseEntity<ResponseMessage<UserResponse>> saveUser( @RequestBody @Valid UserRequest userRequest) {
+        return ResponseEntity.ok(userService.saveUser(userRequest));
     }
 
     //F03 /forgot-password
     @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
+
         userService.sendResetPasswordCode(httpServletRequest);
 
         return "Sent e-mail";
@@ -68,10 +68,11 @@ public class UserController {
     //F05 /users/auth http://localhost:8080/users/auth
     @GetMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    public ResponseMessage<BaseUserResponse> getUser(HttpServletRequest request){
+    public ResponseEntity<UserResponse> getUser(HttpServletRequest request){
 
-        Long id = (Long) request.getAttribute("id");
-        return userService.getUserById(id);
+        String email = (String) request.getAttribute("email");
+        UserResponse userResponse= userService.getUser(email);
+        return ResponseEntity.ok(userResponse);
     }
 
 

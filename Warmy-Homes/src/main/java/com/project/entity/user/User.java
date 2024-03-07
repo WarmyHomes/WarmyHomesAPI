@@ -8,14 +8,13 @@ import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+import com.project.entity.enums.RoleType;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -48,8 +47,14 @@ public class User extends EntryDate {
     @NotNull(message = "Phone number must not be empty!")
     private String phone;
 
-    @NotNull(message = "Phone number must not be empty!")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)//Sadece DB'e kayit yaptik ve Response'da password DTO class'da olmasin diye yaptim
+
+    @NotEmpty(message = "Password must not be empty")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern.List({
+            @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one digit"),
+            @Pattern(regexp = ".*[a-zA-Z].*", message = "Password must contain at least one letter"),
+            @Pattern(regexp = ".*[@#$%^&+=!].*", message = "Password must contain at least one special character")
+    })
     private String password_hash;
 
     @Nullable
@@ -62,7 +67,8 @@ public class User extends EntryDate {
     //----- Relations ------
     @OneToOne
     //@JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
-    private UserRole userRole;
+
+    private UserRole userRole ;
 
     @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
     private List<Tour_Request> tourRequests;
