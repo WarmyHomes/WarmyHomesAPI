@@ -13,6 +13,8 @@ import com.project.payload.response.business.helperresponse.CityForAdvertRespons
 import com.project.service.business.AdvertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -136,6 +138,24 @@ public class AdvertController {
     public ResponseEntity<List<AdvertResponse>> getPopularAdverts(@PathVariable int amount) {
         List<AdvertResponse> popularAdverts = advertService.getPopularAdverts(amount);
         return ResponseEntity.ok(popularAdverts);
+    }
+
+    @GetMapping("/adverts")
+    public ResponseEntity<List<AdvertResponse>> getAdverts(
+            @RequestParam(required = false) String q,
+            @RequestParam Long category_id,
+            @RequestParam Long advert_type_id,
+            @RequestParam(required = false) Double price_start,
+            @RequestParam(required = false) Double price_end,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "category_id") String sort,
+            @RequestParam(defaultValue = "asc") String type
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, pageable, sort, type);
+        return ResponseEntity.ok(adverts.getContent());
     }
 
 }

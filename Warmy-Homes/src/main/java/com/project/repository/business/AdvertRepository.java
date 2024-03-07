@@ -4,6 +4,8 @@ import com.project.entity.business.Advert;
 import com.project.entity.business.Category;
 import com.project.entity.business.City;
 import com.project.entity.business.helperentity.Advert_Type;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
@@ -28,4 +30,8 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     //bilgichoca
     boolean existsByAdvert_Type_Id(Long advertTypeId);
+
+    Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String q, String q1, Pageable pageable);
+
+  Page<Advert> findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(Pageable pageable, Long categoryId, Long advertTypeId, Double priceStart, Double priceEnd, Integer status, String sort, String type);
 }

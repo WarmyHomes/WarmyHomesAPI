@@ -7,6 +7,7 @@ import com.project.payload.request.abstracts.BaseAdvertRequest;
 import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -94,6 +95,22 @@ public class AdvertMapper {
             responses.add(response);
         }
         return responses;
+    }
+
+    public Page<AdvertResponse> mapAdvertToAdvertResponse(Page<Advert> adverts) {
+        return adverts.map(advert -> AdvertResponse.builder()
+                .title(advert.getTitle())
+                .description(advert.getDescription())
+                .price(advert.getPrice())
+                .advert_type_id(advert.getAdvert_type_id())
+                .country_id(advert.getCountry_id())
+                .city_id(advert.getCity_id())
+                .id(advert.getId())
+                .district(advert.getDistrict())
+                .category_id(advert.getCategory_id())
+                //.images(advert.getImages())
+                .location(advert.getLocation())
+                .build());
     }
 
 
