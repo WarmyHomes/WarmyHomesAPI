@@ -2,6 +2,7 @@ package com.project.payload.request.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.business.Advert;
+import com.project.entity.business.helperentity.TourStatusRole;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;

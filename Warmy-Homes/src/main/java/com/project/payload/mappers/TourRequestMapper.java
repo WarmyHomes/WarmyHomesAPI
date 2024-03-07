@@ -1,6 +1,9 @@
 package com.project.payload.mappers;
 
 import com.project.entity.business.Tour_Request;
+import com.project.entity.business.helperentity.TourStatusRole;
+import com.project.entity.enums.StatusType;
+import com.project.entity.enums.TourStatus;
 import com.project.payload.request.business.TourRequestRequest;
 import com.project.payload.response.business.TourRequestResponse;
 import org.springframework.stereotype.Component;
@@ -13,7 +16,7 @@ public class TourRequestMapper {
                .id(request.getId())
                .tour_date(request.getTour_date())
                .tour_time(request.getTour_time())
-               .status(request.getStatus().getStatusType().name())
+               //.status(request.getStatus().getStatusType().name)
                .advert_id(request.getAdvert_id())
                .guest_user(request.getGuest_user_id())
                .owner_user(request.getOwner_user_id())
@@ -25,7 +28,7 @@ public class TourRequestMapper {
                 .id(request.getId())
                 .tour_date(request.getTour_date())
                 .tour_time(request.getTour_time())
-                .status(request.getStatus().getStatusType().name())
+                //.status(request.getStatus().getStatusType().name())
                 .advert_id(request.getAdvert_id())
                 .guest_user(request.getGuest_user_id())
                 .build();
@@ -36,7 +39,7 @@ public class TourRequestMapper {
                 .id(request.getId())
                 .tour_date(request.getTour_date())
                 .tour_time(request.getTour_time())
-                .status(request.getStatus().getStatusType().name())
+                //.status(request.getStatus().getStatusType().name())
                 .advert_id(request.getAdvert_id())
                 .owner_user(request.getOwner_user_id())
                 .build();
@@ -55,6 +58,7 @@ public class TourRequestMapper {
                .tour_date(request.getTour_date())
                .tour_time(request.getTour_time())
                .advert_id(request.getAdvert_id())
+               //.status()
                .build();
     }
 

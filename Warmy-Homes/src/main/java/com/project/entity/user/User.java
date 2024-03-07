@@ -2,6 +2,7 @@ package com.project.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.entity.abstracts.EntryDate;
 import com.project.entity.business.Favorite;
 import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
@@ -23,7 +24,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @Entity
 @Builder(toBuilder = true)
-public class User {
+public class User extends EntryDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,13 +62,7 @@ public class User {
 
     private Boolean built_in=false;
 
-    @NotNull(message = "Create date must not be empty!")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime create_at;
 
-    @Nullable
-    private LocalDateTime update_at;
 
     //----- Relations ------
     @OneToOne
@@ -84,14 +79,7 @@ public class User {
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.REMOVE)
     private List<Log> logs;
 
-    @PrePersist
-    private void createAt() {
-        create_at = LocalDateTime.now();
-    }
-    @PreUpdate
-    private void updateAt() {
-        update_at = LocalDateTime.now();
-    }
+
 
     @PrePersist
     private void resetPasswordCode(){
