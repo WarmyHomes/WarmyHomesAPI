@@ -3,8 +3,12 @@ package com.project.service.business;
 import com.project.entity.business.Advert;
 import com.project.entity.business.Category;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.business.helperentity.Category_Property_Key;
+import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
-import com.project.entity.user.UserRole;
+import com.project.payload.messages.SuccessMessages;
+import com.project.payload.response.business.AdvertResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.*;
 
 import com.project.repository.helperRepository.CategoryPropertyKeyRepository;
@@ -12,6 +16,7 @@ import com.project.repository.helperRepository.CategoryPropertyValueRepository;
 import com.project.repository.user.UserRepository;
 import com.project.repository.user.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
@@ -29,7 +34,6 @@ public class SettingsService {
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
     private final FavoritesRepository favoritesRepository;
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
     private final AddressCountryRepository addressCountryRepository;
     private final AddressCityRepository addressCityRepository;
     private final AddressDistrictRepository addressDistrictRepository;
@@ -38,14 +42,25 @@ public class SettingsService {
 
 
 
-    public void resetDatabase() {
+    public String resetDatabase() {
         // Tüm tablolardaki kayıtları sıfırlamak ve "built-in" alanı true olanları
         // korumak için gerekli işlemleri burada gerçekleştirin
         // Gerekirse ilgili repository sınıflarını kullanarak veritabanı işlemlerini yapın
 
+        categoryPropertyValueRepository.deleteAll();
+        favoritesRepository.deleteAll();
+        imageRepository.deleteAll();
+        advertTypesRepository.deleteAll();
+        addressCountryRepository.deleteAll();
+        addressCityRepository.deleteAll();
+        addressDistrictRepository.deleteAll();
+        tourRequestRepository.deleteAll();
+
+
+
+
         // Tüm advert kayıtlarını getir
         List<Advert> allAdverts = advertRepository.findAll();
-
         // Her advert için kontrol et
         for (Advert advert : allAdverts) {
             if (!advert.getBuiltIn()) {
@@ -54,7 +69,7 @@ public class SettingsService {
             }
         }
 
-        imageRepository.deleteAll();
+
 
         List<Category> allCategory=categoryRepository.findAll();
         for (Category category:allCategory){
@@ -63,7 +78,9 @@ public class SettingsService {
             }
         }
 
-        advertTypesRepository.deleteAll();
+
+
+
 
         List<Advert_Type> allAdvertType=advertTypesRepository.findAll();
         for (Advert_Type advertType:allAdvertType){
@@ -73,8 +90,30 @@ public class SettingsService {
         }
 
 
+        List<Category_Property_Key> allCategoryPropertyKeyRepository=categoryPropertyKeyRepository.findAll();
+            for(Category_Property_Key category_property_key:allCategoryPropertyKeyRepository){
+                if (!category_property_key.getBuilt_in()){
+                    categoryRepository.deleteAll();
+                }
+            }
+
+
+
+
+        List<User> allUser=userRepository.findAll();
+        for (User user:allUser){
+            if (!user.getBuilt_in()){
+                userRepository.deleteAll();
+            }
+        }
+
+
+
+        return "All adverts deleted successfully";
 
     }
+
+
 
 
 

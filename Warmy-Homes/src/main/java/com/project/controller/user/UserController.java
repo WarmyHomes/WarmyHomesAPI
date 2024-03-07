@@ -9,6 +9,7 @@ import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
+import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
 import com.project.service.mail.MailService;
 import com.project.service.user.UserService;
@@ -39,15 +40,15 @@ public class UserController {
     //F02 - register
     @PostMapping("/register") // http://localhost:8080/register
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public ResponseEntity<ResponseMessage<UserResponse>> saveUser(@PathVariable String userRole,
-                                                                  @RequestBody @Valid UserRequest userRequest) {
-        return ResponseEntity.ok(userService.saveUser(userRequest,userRole));
+    public ResponseEntity<ResponseMessage<UserResponse>> saveUser( @RequestBody @Valid UserRequest userRequest) {
+        return ResponseEntity.ok(userService.saveUser(userRequest));
     }
 
     //F03 /forgot-password
     @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
+
         userService.sendResetPasswordCode(httpServletRequest);
 
         return "Sent e-mail";
@@ -68,10 +69,11 @@ public class UserController {
     //F05 /users/auth http://localhost:8080/users/auth
     @GetMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    public ResponseMessage<BaseUserResponse> getUser(HttpServletRequest request){
+    public ResponseEntity<UserResponse> getUser(HttpServletRequest request){
 
-        Long id = (Long) request.getAttribute("id");
-        return userService.getUserById(id);
+        String email = (String) request.getAttribute("email");
+        UserResponse userResponse= userService.getUser(email);
+        return ResponseEntity.ok(userResponse);
     }
 
 
@@ -100,8 +102,9 @@ public class UserController {
     //F08 /users/auth It will delete authenticated user
     @DeleteMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<String> deleteUser(HttpServletRequest servletRequest) {
-        return ResponseEntity.ok(userService.deleteUser(servletRequest));
+    public ResponseEntity<String> deleteUser(HttpServletRequest request,
+                                             @RequestBody @Valid BaseUserRequest baseUserRequest) {
+        return ResponseEntity.ok(userService.deleteUser(request,baseUserRequest));
     }
 
     //F09 /users/admin  It will return users
@@ -118,8 +121,8 @@ public class UserController {
     }
 
 
-    ///F10 -  getUserById
-    @GetMapping("/users/{userId}/admin") //http://localhost:8080/users/:id/admin
+    ///F10 -  It will return a user
+    @GetMapping("/users/{id}/admin") //http://localhost:8080/users/:id/admin
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<BaseUserResponse> getUserById(@PathVariable Long id){
         return userService.getUserById(id);
@@ -133,6 +136,11 @@ public class UserController {
         return userService.updateUserById(userRequest, id);
     }
 
-    //F12
+    //F12 /users/4/admin It will delete the user
+    @DeleteMapping("/users/{id}/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    public ResponseMessage<BaseUserResponse> deleteUser(@PathVariable Long id,HttpServletRequest servletRequest) {
+        return userService.deleteUserById(id,servletRequest);
+    }
 
 }

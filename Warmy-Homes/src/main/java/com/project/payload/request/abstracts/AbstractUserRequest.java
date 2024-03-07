@@ -39,7 +39,6 @@ public abstract class AbstractUserRequest {
     private String phone;
 
 
-    private Boolean built_in;
 
 
 

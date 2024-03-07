@@ -2,19 +2,20 @@ package com.project.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.entity.abstracts.EntryDate;
+import com.project.entity.business.Advert;
 import com.project.entity.business.Favorite;
 import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+import com.project.entity.enums.RoleType;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -24,7 +25,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @Entity
 @Builder(toBuilder = true)
-public class User {
+public class User extends EntryDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +48,14 @@ public class User {
     @NotNull(message = "Phone number must not be empty!")
     private String phone;
 
-    @NotNull(message = "Phone number must not be empty!")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)//Sadece DB'e kayit yaptik ve Response'da password DTO class'da olmasin diye yaptim
+
+    @NotEmpty(message = "Password must not be empty")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern.List({
+            @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one digit"),
+            @Pattern(regexp = ".*[a-zA-Z].*", message = "Password must contain at least one letter"),
+            @Pattern(regexp = ".*[@#$%^&+=!].*", message = "Password must contain at least one special character")
+    })
     private String password_hash;
 
     @Nullable
@@ -56,18 +63,13 @@ public class User {
 
     private Boolean built_in=false;
 
-    @NotNull(message = "Create date must not be empty!")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime create_at;
 
-    @Nullable
-    private LocalDateTime update_at;
 
     //----- Relations ------
     @OneToOne
     //@JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
-    private UserRole userRole;
+
+    private UserRole userRole ;
 
     @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
     private List<Tour_Request> tourRequests;
@@ -78,14 +80,10 @@ public class User {
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.REMOVE)
     private List<Log> logs;
 
-    @PrePersist
-    private void createAt() {
-        create_at = LocalDateTime.now();
-    }
-    @PreUpdate
-    private void updateAt() {
-        update_at = LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Advert> advertList;
+
+
 
     @PrePersist
     private void resetPasswordCode(){

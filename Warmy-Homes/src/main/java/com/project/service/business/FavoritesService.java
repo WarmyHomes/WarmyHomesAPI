@@ -29,6 +29,7 @@ public class FavoritesService {
     private final UserRepository userRepository;
 
 
+
     //*** K01, K02
     public List<AdvertResponse> getUserFavorites(Long userId) {
 
@@ -77,12 +78,15 @@ public class FavoritesService {
             favorite.setAdvert(advert);
             favorite.setCreate_at(LocalDateTime.now());
             favoritesRepository.save(favorite);
+
             return ResponseMessage.<AdvertResponse>builder()
                     .httpStatus(HttpStatus.CREATED)
                     .message(SuccessMessages.ADVERT_SAVE)
                     .object(advertMapper.mapAdvertToAdvertResponse(advert))
                     .build();
+
         }
+
     }
 
 
