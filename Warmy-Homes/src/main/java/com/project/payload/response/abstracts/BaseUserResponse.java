@@ -1,5 +1,6 @@
 package com.project.payload.response.abstracts;
 
+import com.project.payload.response.user.UserAllFieldsResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

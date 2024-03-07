@@ -3,6 +3,7 @@ package com.project.payload.mappers;
 import com.project.entity.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,21 @@ public class UserMapper {
                 .email(user.getEmail())
                 .role(user.getUserRole().getRoleType().name())
                 .build();
+    }
+
+    public UserAllFieldsResponse mapUserToUserAllFieldsResponse(User user){
+     return    UserAllFieldsResponse.builder()
+                .id(user.getId())
+                .first_name(user.getFirst_name())
+                .last_name(user.getLast_name())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .tour_requestList(user.getTour_requestList())
+                .logs(user.getLogs())
+                .advertList(user.getAdvertList())
+                .favoriteList(user.getFavoriteList())
+                .build();
+
     }
 
     public User mapUserRequestToUser(BaseUserRequest userRequest){

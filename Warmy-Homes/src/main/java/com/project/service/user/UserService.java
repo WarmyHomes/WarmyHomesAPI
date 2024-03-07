@@ -1,5 +1,6 @@
 package com.project.service.user;
 
+import com.project.entity.business.Advert;
 import com.project.entity.business.Tour_Request;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
@@ -17,6 +18,7 @@ import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
+import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.security.jwt.JwtUtils;
@@ -183,22 +185,23 @@ public class UserService {
     }
 
     //F08 /users/auth It will delete authenticated user
-    public String deleteUser(HttpServletRequest servletRequest) {
+    public String deleteUser(HttpServletRequest servletRequest, BaseUserRequest baseUserRequest) {
         //biult_in control
         Boolean isBuiltlIn = (Boolean) servletRequest.getAttribute("built_in");
         if (Boolean.TRUE.equals(isBuiltlIn)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
 
-        Long id = (Long) servletRequest.getAttribute("id");
+        User user = (User) servletRequest.getAttribute("password_hash");
+        Long id= user.getId();
 
         //isadvert and tour request
+        List<Advert> advertList= userRepository.findByAdvertList(id);
+
         List<Tour_Request> tourRequestList = userRepository.findByTourRequestList(id);
-        if (!tourRequestList.isEmpty()){
+        if (!tourRequestList.isEmpty() || !advertList.isEmpty()){
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
-
-
 
         userRepository.deleteById(id);
         return SuccessMessages.USER_DELETE;
@@ -212,19 +215,21 @@ public class UserService {
         return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
     }
 
-
-    ///F10 -  getUserById
+    ///F10 -  It will return a user
     public ResponseMessage<BaseUserResponse> getUserById(Long id) {
-        BaseUserResponse baseUserResponse = null;
+        UserAllFieldsResponse response=null;
 
         User user = userRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
 
-        baseUserResponse = userMapper.mapUserToUserResponse(user);
+      response= userMapper.mapUserToUserAllFieldsResponse(user);
+
+
+
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_FOUND)
-                        .httpStatus(HttpStatus.OK)
-                .object(baseUserResponse)
+                .httpStatus(HttpStatus.OK)
+                .object(response)
                 .build();
 
     }
@@ -244,6 +249,38 @@ public class UserService {
                 .message(SuccessMessages.USER_UPDATE_MESSAGE)
                 .httpStatus(HttpStatus.OK)
                 .object(userMapper.mapUserToUserResponse(savedUser))
+                .build();
+
+    }
+
+    //F12 /users/4/admin It will delete the user
+    public ResponseMessage<BaseUserResponse> deleteUserById(Long id, HttpServletRequest servletRequest) {
+        User user = userRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
+       Boolean isBuiltlIn= user.getBuilt_in();
+        if (Boolean.TRUE.equals(isBuiltlIn)){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
+        List<Advert> advertList= userRepository.findByAdvertList(id);
+
+        List<Tour_Request> tourRequestList = userRepository.findByTourRequestList(id);
+        if (!tourRequestList.isEmpty() || !advertList.isEmpty()){
+            throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
+        }
+
+        User authorized = (User) servletRequest.getAttribute("email");
+
+        if (authorized.getUserRole().getRoleType()==RoleType.MANAGER){
+            if (!(user.getUserRole().getRoleType()==RoleType.CUSTOMER)){
+                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+            }
+        }
+        userRepository.deleteById(id);
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .object(userMapper.mapUserToUserResponse(user))
                 .build();
 
 
