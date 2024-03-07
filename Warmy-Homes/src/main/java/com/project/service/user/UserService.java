@@ -92,25 +92,10 @@ public class UserService {
     }
 
     //F02 - register
-    public ResponseMessage<UserResponse> saveUser(UserRequest userRequest, String userRole) {
+    public ResponseMessage<UserResponse> saveUser(UserRequest userRequest) {
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail());
         User user = userMapper.mapUserRequestToUser(userRequest);
-
-        if(userRole.equalsIgnoreCase(RoleType.ADMIN.name())){
-
-            if(Objects.equals(userRequest.getEmail(),"Admin")){
-                user.setBuilt_in(true);
-            }
-            user.setUserRole(userRoleService.getUserRole(RoleType.ADMIN));
-        } else if (userRole.equalsIgnoreCase("Manager")) {
-            user.setUserRole(userRoleService.getUserRole(RoleType.MANAGER));
-        } else if (userRole.equalsIgnoreCase("Customer")) {
-            user.setUserRole(userRoleService.getUserRole(RoleType.CUSTOMER));
-        } else if (userRole.equalsIgnoreCase("Anonymous")) {
-            user.setUserRole(userRoleService.getUserRole(RoleType.ANONYMOUS));
-        } else {
-            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE, userRole));
-        }
+        user.setUserRole(userRoleService.getUserRole(RoleType.CUSTOMER));
 
         user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
 
@@ -125,7 +110,7 @@ public class UserService {
     }
 
 
-    //F03
+    //F03 /forgot-password
     public void sendResetPasswordCode(HttpServletRequest servletRequest) {
         String email= (String) servletRequest.getAttribute("email");
         String reset_password_code= (String) servletRequest.getAttribute("reset_password_code");

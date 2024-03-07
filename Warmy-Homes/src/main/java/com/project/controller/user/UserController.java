@@ -39,15 +39,15 @@ public class UserController {
     //F02 - register
     @PostMapping("/register") // http://localhost:8080/register
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public ResponseEntity<ResponseMessage<UserResponse>> saveUser(@PathVariable String userRole,
-                                                                  @RequestBody @Valid UserRequest userRequest) {
-        return ResponseEntity.ok(userService.saveUser(userRequest,userRole));
+    public ResponseEntity<ResponseMessage<UserResponse>> saveUser( @RequestBody @Valid UserRequest userRequest) {
+        return ResponseEntity.ok(userService.saveUser(userRequest));
     }
 
     //F03 /forgot-password
     @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
+
         userService.sendResetPasswordCode(httpServletRequest);
 
         return "Sent e-mail";
