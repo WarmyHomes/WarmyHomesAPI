@@ -30,7 +30,7 @@ public class AdvertMapper {
                 .category_id(advertForQueryRequest.getCategory_id())
                 .price(advertForQueryRequest.getPrice_start())
                 .price(advertForQueryRequest.getPrice_end())
-                //.status(advertForQueryRequest.getStatus())
+                .status(advertForQueryRequest.getStatus())
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class AdvertMapper {
 
         return Advert.builder()
                 .title(advertRequest.getTitle())
-              //  .slug(advertRequest.getTitle()) create ve update isleminde kullanilmasi gerek sadece
+                .slug(advertRequest.getTitle()) //create ve update isleminde kullanilmasi gerek sadece
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
                 .advert_type_id(advertRequest.getAdvert_type_id())
@@ -47,7 +47,7 @@ public class AdvertMapper {
                 .city_id(advertRequest.getCity_id())
                 .district(advertRequest.getDistrict())
                 .category_id(advertRequest.getCategory_id())
-                //.images(advertRequest.getImages())
+                .images(advertRequest.getImages())
                 .location(advertRequest.getLocation())
                 .build();
     }
@@ -62,7 +62,7 @@ public class AdvertMapper {
                 .id(advert.getId())
                 .district(advert.getDistrict())
                 .category_id(advert.getCategory_id())
-                //.images(advert.getImages())
+                .images(advert.getImages())
                 .location(advert.getLocation())
                 .build();
     }
@@ -89,7 +89,7 @@ public class AdvertMapper {
                     .id(advert.getId())
                     .district(advert.getDistrict())
                     .category_id(advert.getCategory_id())
-                    //.images(advert.getImages())
+                    .images(advert.getImages())
                     .location(advert.getLocation())
                     .build();
             responses.add(response);
@@ -108,7 +108,7 @@ public class AdvertMapper {
                 .id(advert.getId())
                 .district(advert.getDistrict())
                 .category_id(advert.getCategory_id())
-                //.images(advert.getImages())
+                .images(advert.getImages())
                 .location(advert.getLocation())
                 .build());
     }

@@ -56,7 +56,7 @@ public class AdvertResponse {
     private District district;
 
 
-    private Image images;
+    private List<Image> images;
 
     private Category category_id;
 
