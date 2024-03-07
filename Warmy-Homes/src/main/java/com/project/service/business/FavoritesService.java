@@ -64,7 +64,7 @@ public class FavoritesService {
         Favorite favorite = favoritesRepository.findByUserIdAndAdvertId(userId, advertId);
 
         if (favorite != null) {
-            // If the advert is in favorites, remove it
+            // If the advert is in favorites, delete it
             favoritesRepository.delete(favorite);
             return ResponseMessage.<AdvertResponse>builder()
                     .httpStatus(HttpStatus.OK)
@@ -74,7 +74,8 @@ public class FavoritesService {
         } else {
             // If the advert is not in favorites, add it
             favorite = new Favorite();
-            favorite.setUser(userRepository.getById(userId));
+            favorite.setUser(userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE,userId))));
             favorite.setAdvert(advert);
             favorite.setCreate_at(LocalDateTime.now());
             favoritesRepository.save(favorite);
@@ -91,5 +92,31 @@ public class FavoritesService {
 
 
 
+    //*** K04, K05:
+    public String deleteAllFavorites(Long userId) {
+
+        List<Favorite> favorites = favoritesRepository.findByUserId(userId);
+        if (favorites.isEmpty()) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_FAVORITES, userId));
+        }
+        favoritesRepository.deleteAllByUserId(userId); //deleteAll(favorites)
+        return SuccessMessages.FAVORITES_DELETED;
+    }
+
+
+
+    //*** K06
+    public String deleteFavorite(Long userId, Long favoriteId) {
+
+        Favorite favorite = favoritesRepository.findByIdAndUserId(favoriteId, userId);
+        if (favorite == null) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_FAVORITES, userId));
+        }
+
+        favoritesRepository.delete(favorite);
+
+        return SuccessMessages.FAVORITE_DELETED;
+
+    }
 
 }
