@@ -2,12 +2,14 @@ package com.project.controller.business;
 
 import com.project.entity.business.Advert;
 import com.project.payload.response.business.AdvertResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.FavoritesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -17,12 +19,14 @@ public class FavoritesController {
 
     private final FavoritesService favoritesService;
 
+
     //K01: It will get authenticated user`s favorites
     @GetMapping("/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<List<AdvertResponse>> getAuthenticatedUsersFavorites(){
+    public ResponseEntity<List<AdvertResponse>> getAuthenticatedUsersFavorites(HttpServletRequest request){
 
-        List<AdvertResponse> favorites = favoritesService.getAuthenticatedUserFavorites();
+        Long id = (Long) request.getAttribute("id");
+        List<AdvertResponse> favorites = favoritesService.getUserFavorites(id);
         return ResponseEntity.ok(favorites);
 
     }
@@ -42,16 +46,22 @@ public class FavoritesController {
     //K03: It will add/remove an advert to/from authenticated user`s favorites
     @PostMapping("/favorites/{advertId}/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<AdvertResponse> addOrRemoveAdvertFromFavorites(@PathVariable Long advertId){ //?requestbody
+    public ResponseMessage<AdvertResponse> addOrRemoveAdvertFromFavorites(@PathVariable Long advertId,
+                                                                          HttpServletRequest request){ //?requestbody
 
-        AdvertResponse advert=favoritesService.addOrRemoveAdvertFromFavorites(advertId);
-        return ResponseEntity.ok(advert);
+        Long userId = (Long) request.getAttribute("id");
+
+        return favoritesService.addOrRemoveAdvertFromFavorites(userId,advertId);
     }
 
 
 
 
+
+
+
     //K04: It will remove all favorites of authenticated user
+    //K05: It will remove all favorites of a user
 
 
 }
