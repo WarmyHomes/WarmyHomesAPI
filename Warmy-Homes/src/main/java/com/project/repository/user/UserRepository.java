@@ -1,5 +1,6 @@
 package com.project.repository.user;
 
+import com.project.entity.business.Advert;
 import com.project.entity.business.Tour_Request;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
@@ -21,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
     long countAdmin(RoleType roleType);
+
+    List<Advert> findByAdvertList(Long id);
 }

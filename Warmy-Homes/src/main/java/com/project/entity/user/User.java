@@ -3,6 +3,7 @@ package com.project.entity.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.abstracts.EntryDate;
+import com.project.entity.business.Advert;
 import com.project.entity.business.Favorite;
 import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
@@ -78,6 +79,9 @@ public class User extends EntryDate {
 
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.REMOVE)
     private List<Log> logs;
+
+    @OneToMany(mappedBy = "user")
+    private List<Advert> advertList;
 
 
 

@@ -9,6 +9,7 @@ import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
+import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
 import com.project.service.mail.MailService;
 import com.project.service.user.UserService;
@@ -101,8 +102,9 @@ public class UserController {
     //F08 /users/auth It will delete authenticated user
     @DeleteMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<String> deleteUser(HttpServletRequest servletRequest) {
-        return ResponseEntity.ok(userService.deleteUser(servletRequest));
+    public ResponseEntity<String> deleteUser(HttpServletRequest request,
+                                             @RequestBody @Valid BaseUserRequest baseUserRequest) {
+        return ResponseEntity.ok(userService.deleteUser(request,baseUserRequest));
     }
 
     //F09 /users/admin  It will return users
@@ -119,8 +121,8 @@ public class UserController {
     }
 
 
-    ///F10 -  getUserById
-    @GetMapping("/users/{userId}/admin") //http://localhost:8080/users/:id/admin
+    ///F10 -  It will return a user
+    @GetMapping("/users/{id}/admin") //http://localhost:8080/users/:id/admin
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<BaseUserResponse> getUserById(@PathVariable Long id){
         return userService.getUserById(id);
@@ -134,6 +136,11 @@ public class UserController {
         return userService.updateUserById(userRequest, id);
     }
 
-    //F12
+    //F12 /users/4/admin It will delete the user
+    @DeleteMapping("/users/{id}/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    public ResponseMessage<BaseUserResponse> deleteUser(@PathVariable Long id,HttpServletRequest servletRequest) {
+        return userService.deleteUserById(id,servletRequest);
+    }
 
 }
