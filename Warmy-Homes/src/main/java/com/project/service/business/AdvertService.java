@@ -276,6 +276,13 @@ public class AdvertService {
         // Popülerlik puanı hesaplaması
         return 3 * totalTourRequests + totalViews;
     }
-
+    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
+                                   Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
+        if (q != null) {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
+        } else {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
+        }
+    }
 
 }
