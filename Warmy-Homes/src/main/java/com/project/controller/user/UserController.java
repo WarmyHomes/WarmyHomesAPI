@@ -68,10 +68,11 @@ public class UserController {
     //F05 /users/auth http://localhost:8080/users/auth
     @GetMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    public ResponseMessage<BaseUserResponse> getUser(HttpServletRequest request){
+    public ResponseEntity<UserResponse> getUser(HttpServletRequest request){
 
-        Long id = (Long) request.getAttribute("id");
-        return userService.getUserById(id);
+        String email = (String) request.getAttribute("email");
+        UserResponse userResponse= userService.getUser(email);
+        return ResponseEntity.ok(userResponse);
     }
 
 

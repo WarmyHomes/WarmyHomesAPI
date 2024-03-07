@@ -133,6 +133,13 @@ public class UserService {
 
     }
 
+
+    //F05 /users/auth http://localhost:8080/users/auth
+    public UserResponse getUser(String email) {
+        User user= userRepository.findByEmail(email);
+        return userMapper.mapUserToUserResponse(user);
+    }
+
     //F06/users/auth It will update the authenticated user
     public ResponseMessage<UserResponse> updateUser(AbstractUserRequest userRequest, HttpServletRequest servletRequest) {
 
@@ -140,6 +147,10 @@ public class UserService {
         User user = userRepository.findByEmail(email);
 
         uniquePropertyValidator.checkUniqueProperties(user, userRequest );
+
+        if (Boolean.TRUE.equals(user.getBuilt_in())){
+            throw  new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
 
         user.setFirst_name(userRequest.getFirst_name());
         user.setLast_name(userRequest.getLast_name());
@@ -270,7 +281,5 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
     }
-
-
 
 }

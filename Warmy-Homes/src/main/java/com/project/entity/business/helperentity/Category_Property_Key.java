@@ -29,7 +29,7 @@ public class Category_Property_Key {
     //default olarak 0 degeri nasil verebilirim?
     //defoult olarak 0 degilde false verilmesi gerekmiyor mu? (E.aktas)
     //"private Boolean built_in1=false"; seklinde verilebilir. Booleanin defoult degeri de null mis bu arada(E.aktas)
-    private Boolean built_in;
+    private Boolean built_in =false;
 
 
     @ManyToOne
