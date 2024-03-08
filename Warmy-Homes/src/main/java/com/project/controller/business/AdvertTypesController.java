@@ -50,7 +50,7 @@ public class AdvertTypesController {
     }
 
 
-    // T-04 /advert-types/:id put Bir reklam türünü güncelleyecek
+    // T-04 /advert-types/:id put Bir reklam türünü güncelleyecek rr
 
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
