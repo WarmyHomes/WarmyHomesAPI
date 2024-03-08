@@ -2,10 +2,7 @@ package com.project.contactmessage.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -18,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 
 @Builder(toBuilder = true)
+@Table(name = "t_contact_message")
 public class ContactMessage {
     //Yunus_Emre_AKKAS
 
@@ -26,19 +24,15 @@ public class ContactMessage {
     private Long id;
 
     @NotNull
-    @Max(30)
     private String first_name;
 
     @NotNull
-    @Max(30)
     private String last_name;
 
     @NotNull
-    @Max(60)
     private String email;
 
     @NotNull
-    @Max(300)
     private String message;
 
     @NotNull
