@@ -25,6 +25,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @Entity
 @Builder(toBuilder = true)
+@Table(name="t_user")
 public class User extends EntryDate {
 
     @Id
