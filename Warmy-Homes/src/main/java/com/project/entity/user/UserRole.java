@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Getter
@@ -28,4 +29,7 @@ public class UserRole {
 
     @NotNull
     private String name;
+
+    @ManyToMany(mappedBy = "userRoleList", fetch = FetchType.EAGER)
+    private List<User> userList ;
 }
