@@ -1,5 +1,6 @@
 package com.project.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -28,4 +31,8 @@ public class UserRole {
 
     @NotNull
     private String name;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ManyToMany(mappedBy = "userRoleList", fetch = FetchType.EAGER)
+    private List<User> userList ;
 }

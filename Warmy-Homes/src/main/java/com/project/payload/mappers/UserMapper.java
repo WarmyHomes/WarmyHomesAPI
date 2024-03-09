@@ -19,7 +19,7 @@ public class UserMapper {
                 .create_at(user.getCreate_at())
                 .update_at(user.getUpdate_at())
                 .email(user.getEmail())
-                .role(user.getUserRole().getRoleType().name())
+                .role(user.getUserRoleList().toString())
                 .build();
     }
 

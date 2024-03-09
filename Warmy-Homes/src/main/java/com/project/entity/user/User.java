@@ -1,6 +1,7 @@
 package com.project.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.abstracts.EntryDate;
 import com.project.entity.business.Advert;
@@ -27,6 +28,8 @@ import org.springframework.lang.Nullable;
 @Builder(toBuilder = true)
 @Table(name="t_user")
 public class User extends EntryDate {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,10 +70,15 @@ public class User extends EntryDate {
 
 
     //----- Relations ------
-    @OneToOne
-    //@JsonProperty(access = JsonProperty.Access.READ_WRITE)//Sadece DB'ye kayit yaptik Response'da Role donmeyecek
 
-    private UserRole userRole ;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<UserRole> userRoleList;
 
     @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
     private List<Tour_Request> tourRequests;
