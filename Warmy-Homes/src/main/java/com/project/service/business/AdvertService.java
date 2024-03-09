@@ -276,6 +276,8 @@ public class AdvertService {
         // Popülerlik puanı hesaplaması
         return 3 * totalTourRequests + totalViews;
     }
+
+    // ***************************************** A01
     public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
                                    Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
         if (q != null) {
