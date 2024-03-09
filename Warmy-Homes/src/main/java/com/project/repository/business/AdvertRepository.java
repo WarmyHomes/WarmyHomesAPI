@@ -25,7 +25,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                                      Category category,
                                      Advert_Type advertType);
 
-    @Query("SELECT a FROM Advert a WHERE a.slug= ?1")
+    @Query("SELECT a FROM Advert a WHERE a.slug: slug")
     Advert findBySlugContaining(String slug);
 
     //bilgichoca
