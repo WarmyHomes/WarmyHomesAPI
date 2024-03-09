@@ -109,6 +109,6 @@ public class User extends EntryDate {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Favorite> favoriteList;
 
-
+///// deneme
 
 }
