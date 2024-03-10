@@ -185,7 +185,7 @@ public class AdvertService {
         Advert advertCustomer = isAdvertExist(id);
 
         // ! Role type kontrolu
-        if (advertCustomer.getUser().getUserRole().equals(RoleType.CUSTOMER)){
+        if (advertCustomer.getUser().getUserRoleList().contains(RoleType.CUSTOMER)){
             throw new ResourceNotFoundException(String.format(ErrorMessages.ROLE_NOT_FOUND));
         }
         // ! Advert Built-in mi ?

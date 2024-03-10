@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 @Table(name="t_user")
 public class User extends EntryDate {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
