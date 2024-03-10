@@ -1,6 +1,7 @@
 package com.project.payload.request.business.helperrequest;
 
 import com.project.entity.business.Category;
+import com.project.entity.business.helperentity.AdvertStatusRole;
 import com.project.entity.business.helperentity.Advert_Type;
 import lombok.*;
 
@@ -25,6 +26,6 @@ public class AdvertForQueryRequest {
 
     private Double price_end;
 
-    private Integer status;
+    private AdvertStatusRole status;
 
 }

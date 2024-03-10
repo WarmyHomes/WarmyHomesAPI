@@ -33,8 +33,8 @@ public class Category {
     @Size(max = 50,message = "Icon must be maximum 50 characters")
     private String icon;
 
-    //default olarak 0 degeri nasil verebilirim?
-    private Boolean built_in;
+
+    private Boolean built_in=false;
 
     @NotNull(message = "Please enter seq")
     private Integer seq;

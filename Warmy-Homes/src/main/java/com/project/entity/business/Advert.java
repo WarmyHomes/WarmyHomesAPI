@@ -1,6 +1,7 @@
 package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.entity.business.helperentity.AdvertStatusRole;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.user.User;
@@ -28,31 +29,32 @@ public class Advert {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Advert_Type advert_type_id;
 
 
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Country country_id;
 
 
     private String slug;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private City city_id;
 
 
     private Double price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private District district;
 
 
-    private Integer status=0;
+    @OneToOne
+    private AdvertStatusRole status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
 
@@ -71,8 +73,8 @@ public class Advert {
 
     private Integer viewCount;
 
-    @OneToMany
-    private Image images;
+    @OneToMany(mappedBy = "advert_id",cascade = CascadeType.REMOVE)
+    private List<Image> images;
 
     @Column(name = "update_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")

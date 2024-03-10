@@ -1,8 +1,10 @@
 package com.project.controller.business;
 
 
+import com.project.entity.business.Advert;
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
+import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -11,6 +13,8 @@ import com.project.payload.response.business.helperresponse.CityForAdvertRespons
 import com.project.service.business.AdvertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +38,28 @@ public class AdvertController {
     }
 
     // ******************************************** //A01
+    // ********************************************* A01
+    @GetMapping("/adverts")
+    public ResponseEntity<List<AdvertResponse>> getAdverts(
+            @RequestParam(required = false) String q,
+            @RequestParam Long category_id,
+            @RequestParam Long advert_type_id,
+            @RequestParam(required = false) Double price_start,
+            @RequestParam(required = false) Double price_end,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "category_id") String sort,
+            @RequestParam(defaultValue = "asc") String type
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, pageable, sort, type);
+        return ResponseEntity.ok(adverts.getContent());
+    }
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
-    public ResponseEntity<Page<AdvertResponse>> allAdvertsByPage (
-            @RequestBody @Valid AbstractAdvertRequest advertRequest,
+    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage (
+            @RequestBody @Valid AdvertForQueryRequest advertRequest,
             @RequestParam(value = "q") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -45,7 +67,7 @@ public class AdvertController {
             @RequestParam(value = "type", defaultValue = "desc") String type
 
     ){
-        return  null; //new ResponseEntity(advertService.allAdvertsByPage(page,size,sort,type,userRole,advertRequest), HttpStatus.OK);
+        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
     }
 
     // ******************************************** //A02
@@ -126,5 +148,16 @@ public class AdvertController {
     public ResponseMessage<AdvertResponse> advertDeleteById(@PathVariable Long advertId){
         return advertService.deleteAdvertById(advertId);
     }
+
+
+
+    //hocabilgic
+    @GetMapping("/popular/{amount}")
+    public ResponseEntity<List<AdvertResponse>> getPopularAdverts(@PathVariable int amount) {
+        List<AdvertResponse> popularAdverts = advertService.getPopularAdverts(amount);
+        return ResponseEntity.ok(popularAdverts);
+    }
+
+
 
 }

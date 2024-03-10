@@ -21,6 +21,8 @@ public class SuccessMessages {
     public static final String GET_SLUG = "Slug is got" ;
     public static final String PROPERTY_KEY_DELETE ="propertikey silindi" ;
     public static final String GET_ADVERT = "Advert is got";
+    public static final String FAVORITES_DELETED = "All favorites of the user are deleted";
+    public static final String FAVORITE_DELETED = "Favorite of the user is deleted";
 
 
 

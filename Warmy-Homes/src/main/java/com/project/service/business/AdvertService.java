@@ -3,7 +3,9 @@ package com.project.service.business;
 import com.project.entity.business.Advert;
 import com.project.entity.business.Category;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.enums.AdvertStatusType;
 import com.project.entity.enums.RoleType;
+import com.project.entity.enums.StatusType;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertMapper;
@@ -11,6 +13,7 @@ import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractAdvertRequest;
 import com.project.payload.request.abstracts.BaseAdvertRequest;
+import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -19,6 +22,7 @@ import com.project.payload.response.business.helperresponse.CityForAdvertRespons
 import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.CityRepository;
+import com.project.repository.business.TourRequestRepository;
 import com.project.service.helper.PageableHelper;
 import com.project.service.user.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +34,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +53,8 @@ public class AdvertService {
     private final CityRepository cityRepository;
     // ******************************************** // A10
     public ResponseMessage<AdvertResponse> saveAdvert(Long id, AbstractAdvertRequest advertRequest) {
+
+        URLEncoder.encode(advertRequest.getSlug());
 
         //! Ayni id var mı?
         Advert advert = isAdvertExist(id);
@@ -73,10 +81,14 @@ public class AdvertService {
 
 
     // ******************************************** // A01
-    public Page<AdvertResponse> allAdvertsByPage(int page, int size, String sort, String type, AbstractAdvertRequest advertRequest) {
+    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage(AdvertForQueryRequest advertRequest, String q, int page, int size, String sort, String type) {
+        if (!q.isEmpty()){
+            Advert advertQuery = advertMapper.mapAdvertQueryToAdvert(advertRequest);
 
+        }
         return null;
     }
+
 
     // ******************************************** //A02
     public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
@@ -176,7 +188,7 @@ public class AdvertService {
         Advert advertCustomer = isAdvertExist(id);
 
         // ! Role type kontrolu
-        if (advertCustomer.getUser().getUserRole().equals(RoleType.CUSTOMER)){
+        if (advertCustomer.getUser().getUserRoleList().contains(RoleType.CUSTOMER)){
             throw new ResourceNotFoundException(String.format(ErrorMessages.ROLE_NOT_FOUND));
         }
         // ! Advert Built-in mi ?
@@ -184,10 +196,12 @@ public class AdvertService {
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
 
-        // * PENDING islemi yapilacak
-
         Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+
+        // * PENDING islemi yapilacak
+//        advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId());
         Advert updateAdvert = advertRepository.save(advertMap);
+
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -233,7 +247,6 @@ public class AdvertService {
                 .build();
     }
 
-
     //bilgichoca
     public boolean isAdvertTypeUsed(Long advertTypeId) {
         // Check if there are adverts with the given Advert_Type ID
@@ -243,7 +256,41 @@ public class AdvertService {
         return false;
     }
 
-    // NOT: This method wrote for Report.
+    private final TourRequestRepository tourRequestRepository;
+    public List<AdvertResponse> getPopularAdverts(int amount) {
+        // Popüler reklamları almak için gerekli hesaplama yapılır
+        List<Advert> popularAdverts = advertRepository.findAll();
+        if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
+            throw new IllegalArgumentException("There are no popular adverts to retrieve.");
+        }
+
+
+        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
+
+        int endIndex = Math.min(amount, popularAdverts.size());
+        List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
+
+        return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
+    }
+
+    private int calculatePopularity(Advert advert) {
+        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
+        int totalViews = advert.getViewCount();
+        // Popülerlik puanı hesaplaması
+        return 3 * totalTourRequests + totalViews;
+    }
+
+    // ***************************************** A01
+    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
+                                   Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
+        if (q != null) {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
+        } else {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
+        }
+    }
+
+      // NOT: This method wrote for Report.
     public Long countAllAdvert() {
        return advertRepository.count();
     }

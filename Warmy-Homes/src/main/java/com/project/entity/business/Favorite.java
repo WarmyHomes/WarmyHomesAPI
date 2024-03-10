@@ -1,5 +1,6 @@
 package com.project.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.user.User;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Builder(toBuilder = true)
+@Table(name="t_favorite")
 public class Favorite {
 
     @Id
@@ -19,13 +21,12 @@ public class Favorite {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "advert", nullable = false)
     private Advert advert;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
     private LocalDateTime create_at;
 
 

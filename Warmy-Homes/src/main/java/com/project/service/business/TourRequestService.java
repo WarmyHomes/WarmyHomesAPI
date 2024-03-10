@@ -126,7 +126,7 @@ public class TourRequestService {
     public ResponseMessage  deleteTourRequest(Long id) {
         tourRequestRepository.delete(isTourRequestExistById(id));
         return ResponseMessage.builder()
-                .message("deleted successfully")
+                .message("deleted ")
                 .httpStatus(HttpStatus.OK)
                 .build();
     }

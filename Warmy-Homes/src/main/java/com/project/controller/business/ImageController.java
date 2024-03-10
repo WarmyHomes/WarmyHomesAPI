@@ -45,12 +45,17 @@ public class ImageController {
     }
 
 
+        // I-04 /images/:imageId-put
+    @PutMapping("/{imageId}")
+    public ImageResponse setFeaturedImage(@PathVariable Long imageId) {
+        return  null;// imageService.setFeaturedImage(imageId);
+
+    }
+
         // I-04 /images/:imageId-put Bir görüntünün öne çıkan alanını ayarlayacaktır
         @PutMapping("/images/:imageId")
-        public ResponseEntity<String> setFeaturedImage(@PathVariable Long imageId
-                                                      ) {
+        public ResponseEntity<String> setFeaturedImage1(@PathVariable Long imageId) {
             imageService.setFeaturedImage(imageId);
             return ResponseEntity.status(HttpStatus.OK).body("Image feature updated successfully.");
         }
-
 }

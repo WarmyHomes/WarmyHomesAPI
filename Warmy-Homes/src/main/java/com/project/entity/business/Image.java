@@ -39,7 +39,7 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "advert_id", nullable = false)
-    private Advert advert;
+    private Advert advert_id;
 
 
 }

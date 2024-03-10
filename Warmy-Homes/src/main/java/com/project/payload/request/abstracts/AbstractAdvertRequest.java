@@ -70,7 +70,7 @@ public class AbstractAdvertRequest extends BaseUserRequest {
     private Category category_id;
 
     @NotNull(message = "Please enter your advert type")
-    private Image images;
+    private List<Image> images;
 
 
     @NotNull
