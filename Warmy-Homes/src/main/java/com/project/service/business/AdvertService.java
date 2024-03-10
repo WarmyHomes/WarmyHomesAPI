@@ -1,6 +1,8 @@
 package com.project.service.business;
 
 import com.project.entity.business.Advert;
+import com.project.entity.business.Category;
+import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.enums.RoleType;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
@@ -27,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -240,5 +243,16 @@ public class AdvertService {
         return false;
     }
 
+    // NOT: This method wrote for Report.
+    public Long countAllAdvert() {
+       return advertRepository.count();
+    }
 
+    // NOT: This method wrote for Report.
+    public List<Advert> findAdvertsByFilter(LocalDate beginningDate,
+                                            LocalDate endingDate,
+                                            Category category, Advert_Type advertType) {
+
+       return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
+    }
 }
