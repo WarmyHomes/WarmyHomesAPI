@@ -19,7 +19,7 @@ public class GetAllReportResponse {
 
     private Long advert_type;
 
-    private Long tour_requests;
+    // private Long tour_requests;
 
     private Long customers;
 
