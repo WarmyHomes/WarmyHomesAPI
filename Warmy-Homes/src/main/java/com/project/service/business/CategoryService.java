@@ -203,6 +203,12 @@ public class CategoryService {
         }
 
 
+    // NOT: This method wrote for Report.
+    public Long countAllCategories(){
+        return categoryRepository.count();
+    }
+
+
 
 
 

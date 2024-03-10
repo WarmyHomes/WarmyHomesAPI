@@ -319,4 +319,11 @@ public class UserService {
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
     }
 
+
+    // NOT: This method wrote for Report.
+    public Long countAllUser() {
+        return userRepository.count();
+    }
+
+
 }

@@ -12,6 +12,7 @@ import com.project.repository.business.AdvertTypesRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.TourRequestRepository;
 import com.project.repository.user.UserRepository;
+import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportService {
 
-    private final AdvertRepository advertRepository;
-    private final AdvertTypesRepository advertTypeRepository;
-    private final CategoryRepository categoryRepository;
-    private final TourRequestRepository tourRequestRepository;
-    private final UserRepository userRepository;
+    private final AdvertService advertService;
+    private final AdvertTypesService advertTypesService;
+    private final CategoryService categoryService;
+    private final TourRequestService tourRequestService;
+    private final UserService userService;
 
 
     // G01
@@ -34,17 +35,16 @@ public class ReportService {
     // http://localhost:8080/report
     public ResponseMessage<GetAllReportResponse> getAllReport() {
 
-        Long publishedCategories = categoryRepository.count();
-        Long publishedAdverts = advertRepository.count();
-        Long advertTypeCount = advertTypeRepository.count();
-        Long tourRequestCount = tourRequestRepository.count();
-        Long customerCount = userRepository.count();
+        Long publishedCategories = categoryService.countAllCategories();
+        Long publishedAdverts = advertService.countAllAdvert();
+        Long advertTypeCount = advertTypesService.countAllAdvertType();
+        // Long tourRequestCount = tourRequestService.countAllTour();
+        Long customerCount = userService.countAllUser();
 
         GetAllReportResponse reportResponse = new GetAllReportResponse(
                 publishedCategories,
                 publishedAdverts,
                 advertTypeCount,
-                tourRequestCount,
                 customerCount
         );
 
@@ -57,7 +57,7 @@ public class ReportService {
     // G02
     public ResponseMessage<GetAdvertsReportResponse> getAdvertReport(GetAdvertsReportRequest request) {
 
-        List<Advert> adverts = advertRepository
+        List<Advert> adverts = advertService
                 .findAdvertsByFilter(request.getBeginningDate(),
                                      request.getEndingDate(),
                                      request.getCategory(),
