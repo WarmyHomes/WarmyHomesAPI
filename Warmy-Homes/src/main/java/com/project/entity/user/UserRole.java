@@ -10,7 +10,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
+
+
 
 
 @Getter
@@ -32,7 +33,9 @@ public class UserRole {
     @NotNull
     private String name;
 
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     @ManyToMany(mappedBy = "userRoleList", fetch = FetchType.EAGER)
     private List<User> userList ;
 }

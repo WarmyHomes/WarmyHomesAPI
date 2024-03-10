@@ -69,8 +69,6 @@ public class User extends EntryDate {
 
 
 
-    //----- Relations ------
-
     @JsonIgnore
     @ManyToMany
     @JoinTable(
