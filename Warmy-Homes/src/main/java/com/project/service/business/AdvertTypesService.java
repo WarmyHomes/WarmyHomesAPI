@@ -107,4 +107,9 @@ public class AdvertTypesService {
         return advertTypesRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.EDUCATION_TERM_NOT_FOUND_MESSAGE, id)));
     }
+
+    // NOT: This method wrote for Report.
+    public Long countAllAdvertType() {
+        return advertTypesRepository.count();
+    }
 }

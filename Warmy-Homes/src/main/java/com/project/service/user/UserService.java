@@ -97,7 +97,9 @@ public class UserService {
     public ResponseMessage<UserResponse> saveUser(UserRequest userRequest) {
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail());
         User user = userMapper.mapUserRequestToUser(userRequest);
-        user.setUserRole(userRoleService.getUserRole(RoleType.CUSTOMER));
+        UserRole userRole= new UserRole();
+        userRole.setRoleType(RoleType.CUSTOMER);
+        user.getUserRoleList().add(userRole);
 
         user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
 
@@ -196,10 +198,9 @@ public class UserService {
         Long id= user.getId();
 
         //isadvert and tour request
-        List<Advert> advertList= userRepository.findByAdvertList(id);
 
-        List<Tour_Request> tourRequestList = userRepository.findByTourRequestList(id);
-        if (!tourRequestList.isEmpty() || !advertList.isEmpty()){
+
+        if (!( user.getTour_requestList().isEmpty()) || !(user.getAdvertList().isEmpty())){
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
 
@@ -262,17 +263,16 @@ public class UserService {
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
 
-        List<Advert> advertList= userRepository.findByAdvertList(id);
 
-        List<Tour_Request> tourRequestList = userRepository.findByTourRequestList(id);
-        if (!tourRequestList.isEmpty() || !advertList.isEmpty()){
+
+        if (!( user.getTour_requestList().isEmpty()) || !(user.getAdvertList().isEmpty())){
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
 
         User authorized = (User) servletRequest.getAttribute("email");
 
-        if (authorized.getUserRole().getRoleType()==RoleType.MANAGER){
-            if (!(user.getUserRole().getRoleType()==RoleType.CUSTOMER)){
+        if (authorized.getUserRoleList().contains(RoleType.MANAGER)){
+            if (!(user.getUserRoleList().contains(RoleType.CUSTOMER))){
                 throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
             }
         }
@@ -318,5 +318,12 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, id)));
     }
+
+
+    // NOT: This method wrote for Report.
+    public Long countAllUser() {
+        return userRepository.count();
+    }
+
 
 }

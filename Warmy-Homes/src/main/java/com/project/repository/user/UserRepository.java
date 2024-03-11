@@ -18,12 +18,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmailEquals(String email);
 
-    List<Tour_Request> findByTourRequestList(Long id);
+
 
     @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
     long countAdmin(RoleType roleType);
 
-    List<Advert> findByAdvertList(Long id);
+
 
     List<Tour_Request> findByTourRequest(Long id);
 }
