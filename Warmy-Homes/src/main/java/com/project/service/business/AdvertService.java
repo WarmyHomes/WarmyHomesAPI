@@ -290,9 +290,9 @@ public class AdvertService {
         }
     }
 
-      // NOT: This method wrote for Report.
+    // NOT: This method wrote for Report.
     public Long countAllAdvert() {
-       return advertRepository.count();
+       return advertRepository.countAllAdvert();
     }
 
     // NOT: This method wrote for Report.

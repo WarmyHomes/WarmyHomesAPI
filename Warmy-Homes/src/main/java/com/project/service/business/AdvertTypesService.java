@@ -110,6 +110,6 @@ public class AdvertTypesService {
 
     // NOT: This method wrote for Report.
     public Long countAllAdvertType() {
-        return advertTypesRepository.count();
+        return advertTypesRepository.countAllAdvertType();
     }
 }

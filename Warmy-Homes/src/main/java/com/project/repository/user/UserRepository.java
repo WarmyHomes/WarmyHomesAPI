@@ -20,10 +20,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
-    @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
+    @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRoleList r WHERE r.roleType =?1")
     long countAdmin(RoleType roleType);
 
 
 
     List<Tour_Request> findByTourRequest(Long id);
+
+
+    // NOT: This method wrote for Report.
+    @Query("SELECT COUNT (id) FROM User ")
+    Long countAllUser();
 }
