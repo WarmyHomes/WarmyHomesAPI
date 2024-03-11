@@ -1,10 +1,12 @@
 package com.project.service.business;
 
+import com.project.entity.business.Advert;
 import com.project.entity.business.Image;
 import com.project.exception.CustomImageNotFoundException;
 import com.project.exception.DatabaseOperationException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.messages.ErrorMessages;
+import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -13,6 +15,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.project.entity.enums.ImageType;
+
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ import java.util.Optional;
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private final AdvertRepository advertRepository;
     private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
 
     //I-01 /images/:imageId-get Bir reklamın görüntüsünü alacak
@@ -34,8 +39,10 @@ public class ImageService {
 
 
 
-    public List<Long> uploadImages(List<MultipartFile> images) {
+    public List<Long> uploadImages(List<MultipartFile> images , long advertId) {
         List<Long> uploadedImageIds = new ArrayList<>();
+        Advert advert = advertRepository.findById(advertId)
+                .orElseThrow(() -> new EntityNotFoundException("Reklam bulunamadı"));
 
         for (MultipartFile imageFile : images) {
             try {
@@ -46,7 +53,7 @@ public class ImageService {
                 image.setType(ImageType.IMAGE); // Varsayılan olarak IMAGE tipinde
                 image.setFeatured(false); // Öne çıkan özelliği belirleme
                 // İlgili reklamı set etmek gerekirse
-                // image.setAdvert(advert);
+                image.setAdvert_id(advert);
                 // Burada ilgili reklama ait olan image'ı kaydedin
                 Image savedImage = imageRepository.save(image);
                 uploadedImageIds.add(savedImage.getId());
@@ -61,7 +68,6 @@ public class ImageService {
 
         return uploadedImageIds;
     }
-
 
     //I-03 /images/:image_ids-delete
     public void deleteImages(List<Long> imageIds) {
