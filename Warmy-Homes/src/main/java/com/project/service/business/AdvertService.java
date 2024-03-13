@@ -5,18 +5,19 @@ import com.project.entity.business.Category;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.enums.AdvertStatusType;
 import com.project.entity.enums.RoleType;
-import com.project.entity.enums.StatusType;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
-import com.project.payload.request.abstracts.AbstractAdvertRequest;
-import com.project.payload.request.abstracts.BaseAdvertRequest;
+import com.project.payload.request.business.AdvertRequestCreate;
+import com.project.payload.request.business.AdvertRequestUpdateAdmin;
+import com.project.payload.request.business.AdvertRequestUpdateAuth;
 import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
+import com.project.payload.response.business.AdvertPageableResponse;
 import com.project.payload.response.business.AdvertResponse;
-import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.AdvertForSlugResponse;
 import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.repository.business.AdvertRepository;
@@ -24,7 +25,6 @@ import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.CityRepository;
 import com.project.repository.business.TourRequestRepository;
 import com.project.service.helper.PageableHelper;
-import com.project.service.user.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,13 +32,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,28 +43,18 @@ public class AdvertService {
 
     private final AdvertRepository advertRepository;
     private final AdvertMapper advertMapper;
-    private final UserRoleService userRoleService;
     private final PageableHelper pageableHelper;
     private final CategoryRepository categoryRepository;
     private final CityRepository cityRepository;
     // ******************************************** // A10
-    public ResponseMessage<AdvertResponse> saveAdvert(Long id, AbstractAdvertRequest advertRequest) {
+    public ResponseMessage<AdvertResponse> saveAdvert( AdvertRequestCreate advertRequest ) {
 
-        URLEncoder.encode(advertRequest.getSlug());
-
-        //! Ayni id var mı?
-        Advert advert = isAdvertExist(id);
-
-        // ! isBuiltin
-        if (advert.getBuiltIn().equals(Boolean.TRUE)){
-            throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
-        }else {
-            Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+            Advert advertMap = advertMapper.mapSaveAdvertRequestToAdvert(advertRequest);
             Advert savedAdvert = advertRepository.save(advertMap);
-        }
 
-        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
-        //isAdvertExistByAdvertSlug(AbstractAdvertRequest)
+
+        AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvert);
+
 
         return ResponseMessage.<AdvertResponse>builder()
                 .object(advertResponse)
@@ -77,13 +63,25 @@ public class AdvertService {
                 .build();
     }
 
+    // ***************************************** A01
+    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
+                                           Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
+        if (q != null) {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
+        } else {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
+        }
+    }
+
 
 
 
     // ******************************************** // A01
     public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage(AdvertForQueryRequest advertRequest, String q, int page, int size, String sort, String type) {
-        if (!q.isEmpty()){
+        if (q != null){
             Advert advertQuery = advertMapper.mapAdvertQueryToAdvert(advertRequest);
+            Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+            //advertRepository.findByTitle(q,pageable);
 
         }
         return null;
@@ -123,24 +121,30 @@ public class AdvertService {
     }
 
     // ******************************************** //A05
-    public Page<AdvertResponse> getAdvertByPageAll(int page, int size, String sort, String type) {
+    public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type) {
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
 
-        return advertRepository.findAll(pageable).map(advertMapper::mapAdvertToAdvertResponse);
+        return advertRepository.findAll(pageable).map(advertMapper::mapPageAdvertToAdvertResponse);
+    }
+
+    // *******************************************//A06
+    public Page<AdvertPageableResponse> getAdvertsAdminByPage(String q, Long categoryId, Long advertTypeId, Integer status, Pageable pageable, String sort, String type) {
+
+        return null;
     }
 
 
 
     // *******************************************//A07
-    public ResponseMessage<AdvertResponse> getAdvertBySlug(String slug) {
+    public ResponseMessage<AdvertForSlugResponse> getAdvertBySlug(String slug) {
 
         // ! Bu isim de bir slug var mi ?
         isAdvertExistByAdvertSlug(slug);
 
         Advert advert = advertRepository.findBySlugContaining(slug);
-        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
+        AdvertForSlugResponse advertResponse = advertMapper.mapAdvertGetSlugToAdvertResponse(advert);
 
-        return ResponseMessage.<AdvertResponse>builder()
+        return ResponseMessage.<AdvertForSlugResponse>builder()
                 .object(advertResponse)
                 .message(SuccessMessages.GET_SLUG)
                 .httpStatus(HttpStatus.OK)
@@ -169,7 +173,7 @@ public class AdvertService {
     }
 
     //******************************************** //A09
-    public ResponseMessage<AdvertResponse> getAdminAdvertBySlug(Long id) {
+    public ResponseMessage<AdvertResponse> getAdminAdvertById(Long id) {
             Advert advert = isAdvertExist(id);
 
 
@@ -183,7 +187,7 @@ public class AdvertService {
 
 
     // ****************************************** / A11
-    public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AbstractAdvertRequest advertRequest) {
+    public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AdvertRequestUpdateAuth advertRequest) {
         // ! Boyle bir advert var mı ?
         Advert advertCustomer = isAdvertExist(id);
 
@@ -196,10 +200,10 @@ public class AdvertService {
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
 
-        Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+        Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
 
         // * PENDING islemi yapilacak
-//        advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId());
+        advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId()); // * Çalışması kontrol edilmesi gerek
         Advert updateAdvert = advertRepository.save(advertMap);
 
 
@@ -212,14 +216,14 @@ public class AdvertService {
     }
 
     // ****************************************** / A12
-    public ResponseMessage<AdvertResponse> updateAdminAdvertById(Long id, AbstractAdvertRequest advertRequest) {
+    public ResponseMessage<AdvertResponse> updateAdminAdvertById(Long id, AdvertRequestUpdateAdmin advertRequest) {
         Advert advert = isAdvertExist(id);
 
         // ! Advert Built-in mi ?
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
-        Advert advertMap = advertMapper.mapAdvertRequestToAdvert(advertRequest);
+        Advert advertMap = advertMapper.mapAdvertUpdateAdminRequestToAdvert(advertRequest);
         Advert updateAdvert = advertRepository.save(advertMap);
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -257,6 +261,8 @@ public class AdvertService {
     }
 
     private final TourRequestRepository tourRequestRepository;
+
+    // *************************************** // A04
     public List<AdvertResponse> getPopularAdverts(int amount) {
         // Popüler reklamları almak için gerekli hesaplama yapılır
         List<Advert> popularAdverts = advertRepository.findAll();
@@ -280,15 +286,7 @@ public class AdvertService {
         return 3 * totalTourRequests + totalViews;
     }
 
-    // ***************************************** A01
-    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
-                                   Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
-        if (q != null) {
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
-        } else {
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
-        }
-    }
+
 
     // NOT: This method wrote for Report.
     public Long countAllAdvert() {
@@ -302,4 +300,6 @@ public class AdvertService {
 
        return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
     }
+
+
 }
