@@ -322,7 +322,7 @@ public class UserService {
 
     // NOT: This method wrote for Report.
     public Long countAllUser() {
-        return userRepository.count();
+        return userRepository.countAllUser();
     }
 
 
