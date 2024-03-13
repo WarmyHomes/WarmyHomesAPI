@@ -1,17 +1,14 @@
 package com.project.payload.request.abstracts;
 
-import com.project.entity.business.Image;
-import lombok.AllArgsConstructor;
+import com.project.payload.request.business.AdvertRequestCreate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotNull;
-
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class BaseAdvertRequest extends AbstractAdvertRequest{
+public class BaseAdvertRequest extends AdvertRequestCreate {
 
 
 }
