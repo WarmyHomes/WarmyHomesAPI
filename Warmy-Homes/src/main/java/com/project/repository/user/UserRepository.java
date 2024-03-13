@@ -4,6 +4,8 @@ import com.project.entity.business.Advert;
 import com.project.entity.business.Tour_Request;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -31,4 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // NOT: This method wrote for Report.
     @Query("SELECT COUNT (id) FROM User ")
     Long countAllUser();
+
+    @Query("SELECT tr FROM User tr WHERE  tr.tourRequests = ?1")
+    Page<Tour_Request>findTourRequestByUserId(Long userid, Pageable pageable);
 }

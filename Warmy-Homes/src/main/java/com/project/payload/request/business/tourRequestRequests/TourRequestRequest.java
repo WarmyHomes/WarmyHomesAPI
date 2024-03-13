@@ -1,4 +1,4 @@
-package com.project.payload.request.business;
+package com.project.payload.request.business.tourRequestRequests;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.business.Advert;
