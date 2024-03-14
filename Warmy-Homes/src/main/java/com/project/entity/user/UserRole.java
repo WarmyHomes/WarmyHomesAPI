@@ -34,8 +34,8 @@ public class UserRole {
     private String name;
 
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+   // @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 
-    @ManyToMany(mappedBy = "userRoleList", fetch = FetchType.EAGER)
-    private List<User> userList ;
+  // @ManyToMany(mappedBy = "userRoleList", fetch = FetchType.EAGER)
+  // private List<User> userList ;
 }

@@ -18,11 +18,6 @@ public class CategoryPropertyKeyRequest {
     @Size(min = 2, max = 80, message = "Name must be between 2 and 80 characters")
     private String name;
 
-
-
-    @NotNull(message = "Category ID must be provided")
-    private Long categoryId;
-
     private Category category;
 
 }
