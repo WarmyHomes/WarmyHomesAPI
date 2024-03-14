@@ -9,7 +9,7 @@ public interface TourRequestRepository extends JpaRepository<Tour_Request,Long> 
     @Override
     boolean existsById(Long id);
 
-    int countByAdvert(Advert advert);
+   // int countByAdvert(Advert advert);
 
     long countTour_RequestById(Long id);
 }

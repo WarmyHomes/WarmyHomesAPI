@@ -36,4 +36,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT tr FROM User tr WHERE  tr.tourRequests = ?1")
     Page<Tour_Request>findTourRequestByUserId(Long userid, Pageable pageable);
+
 }
