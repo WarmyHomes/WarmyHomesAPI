@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.lang.reflect.Array;
@@ -31,8 +32,8 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     //bilgichoca
     boolean existsByAdvert_Type_Id(Long advertTypeId);
 
-  @Query("SELECT e FROM Entity e WHERE LOWER(e.title) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :q, '%'))")
-    Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String q, String q1, Pageable pageable);
+  @Query("SELECT e FROM Advert e WHERE LOWER(e.title) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :q, '%'))")
+  Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("q") String title, @Param("q") String description, Pageable pageable);
 
   @Query("SELECT a FROM Advert a " +
           "WHERE a.category_id = :categoryId " +
@@ -48,4 +49,6 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
   // NOT: This method wrote for Report.
   @Query("SELECT COUNT(id) FROM Advert ")
   Long countAllAdvert();
+
+  //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
 }

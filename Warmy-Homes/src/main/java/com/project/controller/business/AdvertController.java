@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class AdvertController {
         return ResponseEntity.ok(advertService.saveAdvert(advertRequest));
     }
 
-    // ********************************************* //A01
+    // ********************************************* //A01 chatgpt
     @GetMapping("/adverts")
     public ResponseEntity<List<AdvertResponse>> allAdvertsQueryByPage(
             @RequestParam(required = false) String q,
@@ -54,13 +55,12 @@ public class AdvertController {
             @RequestParam(defaultValue = "category_id") String sort,
             @RequestParam(defaultValue = "asc") String type
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, pageable, sort, type);
+        Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, page, size, sort, type);
         return ResponseEntity.ok(adverts.getContent());
     }
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
-    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPageOld (
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')") // * A01 Benim yazdığım
+    public Page<AdvertPageableResponse> allAdvertsQueryByPageOld (
             @RequestBody @Valid AdvertForQueryRequest advertRequest,
             @RequestParam(value = "q") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -96,25 +96,28 @@ public class AdvertController {
     public Page<AdvertPageableResponse> getAdvertByPageAll(@RequestParam(value = "page", defaultValue = "0") int page,
                                                            @RequestParam(value = "size", defaultValue = "10") int size,
                                                            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
-                                                           @RequestParam(value = "type", defaultValue = "asc") String type
+                                                           @RequestParam(value = "type", defaultValue = "asc") String type,
+                                                           HttpServletRequest httpServletRequest
     ){
-        return advertService.getAdvertByPageAll(page,size,sort,type);
+        return advertService.getAdvertByPageAll(page,size,sort,type, httpServletRequest);
     }
 
     // *******************************************//A06
-    @GetMapping("/adverts")
+    @GetMapping("/adverts/admin")
     public ResponseEntity<List<AdvertPageableResponse>> allAdvertsQueryByPageAdmin(
             @RequestParam(required = false) String q,
             @RequestParam Long category_id,
             @RequestParam Long advert_type_id,
+            @RequestParam(required = false) Double price_start,
+            @RequestParam(required = false) Double price_end,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "category_id") String sort,
             @RequestParam(defaultValue = "asc") String type
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<AdvertPageableResponse> adverts = advertService.getAdvertsAdminByPage(q, category_id, advert_type_id, status, pageable, sort, type);
+
+        Page<AdvertPageableResponse> adverts = advertService.getAdvertsAdminByPage(q, category_id, advert_type_id, price_start, price_end, status, page, size, sort, type);
         return ResponseEntity.ok(adverts.getContent());
     }
 
@@ -128,9 +131,10 @@ public class AdvertController {
     //********************************************//A08
     @GetMapping("/{id}/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseMessage<AdvertResponse> getCustomerAdvertId(@PathVariable Long id){
+    public ResponseMessage<AdvertResponse> getCustomerAdvertId(@PathVariable Long id,
+                                                               HttpServletRequest httpServletRequest){
 
-        return advertService.getCustomerAdvertId(id);
+        return advertService.getCustomerAdvertId(id,httpServletRequest);
     }
 
 
