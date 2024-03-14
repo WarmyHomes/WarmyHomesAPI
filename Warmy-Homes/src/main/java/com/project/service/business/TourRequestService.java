@@ -46,8 +46,8 @@ public class TourRequestService {
     public ResponseEntity<List<TourRequestResponse>> getUsersTourRequest(int page, int size, String sort, String type, HttpServletRequest servletRequest) {
         String email =(String) servletRequest.getAttribute("email");
         User user =  userService.findUserByEmail(email);
-        List< UserRole> roles = user.getUserRoleList();
-        if (roles.isEmpty() && roles.contains(RoleType.ANONYMOUS)){
+        UserRole roles = user.getUserRole();
+        if (roles.getRoleType().equals(RoleType.ANONYMOUS)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         Pageable pageable =pageableHelper.getPageableWithProperties(page,size,sort,type);
@@ -59,9 +59,9 @@ public class TourRequestService {
 
     //*S02
     public List<TourRequestResponse> getAllTourRequestWithPage(int page, int size, String sort, String type, HttpServletRequest servletRequest) {
-        List<UserRole> roles = getUsersRole(servletRequest);
+        UserRole roles = getUsersRole(servletRequest);
 
-        if (!roles.contains(RoleType.MANAGER) || !roles.contains(RoleType.ADMIN)){
+        if (!roles.equals(RoleType.MANAGER) || !roles.equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
 
@@ -75,8 +75,8 @@ public class TourRequestService {
     //*S03
     public TourRequestResponse getUsersTourRequestDetails(Long id, HttpServletRequest servletRequest) {
 
-        List<UserRole> roles = getUsersRole(servletRequest);
-        if (!roles.contains(RoleType.CUSTOMER)){
+        UserRole roles = getUsersRole(servletRequest);
+        if (!roles.equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         Tour_Request req = isTourRequestExistById(id);
@@ -85,8 +85,8 @@ public class TourRequestService {
 
     //*S04
     public TourRequestResponse getUsersTourRequestDetailsForAdmin(Long id, HttpServletRequest servletRequest) {
-        List<UserRole> roles = getUsersRole(servletRequest);
-        if (!roles.contains(RoleType.ADMIN)|| !roles.contains(RoleType.MANAGER)){
+        UserRole roles = getUsersRole(servletRequest);
+        if (!roles.equals(RoleType.ADMIN)|| !roles.equals(RoleType.MANAGER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         Tour_Request request = isTourRequestExistById(id);
@@ -99,7 +99,7 @@ public class TourRequestService {
         //*tetikleyen kullanicinin user bilgilerine erismek icin unique degerini aldık ve userrepository e gidip ariyicaz.
         String email =(String) servletRequest.getAttribute("email");
         User guestUser =  userService.findUserByEmail(email);
-        if (!guestUser.getUserRoleList().equals(RoleType.CUSTOMER)){
+        if (!guestUser.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         //*ownerUser icin request den algımız advert id ile owner user a ulasıcaz.
@@ -133,8 +133,8 @@ public class TourRequestService {
     //*S07
     public ResponseEntity<TourRequestResponse> cancelTourRequest(Long id, HttpServletRequest servletRequest) {
         Tour_Request request = isTourRequestExistById(id);
-        List<UserRole> roles = getUsersRole(servletRequest);
-        if (!roles.contains(RoleType.CUSTOMER)){
+        UserRole roles = getUsersRole(servletRequest);
+        if (!roles.equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         request.getStatus().setStatusName(TourStatus.CANCELED.getStatusName());
@@ -145,8 +145,8 @@ public class TourRequestService {
     //*S08
     public ResponseEntity<TourRequestResponse> approveTourRequest(Long id, HttpServletRequest servletRequest) {
         Tour_Request request = isTourRequestExistById(id);
-        List<UserRole> roles = getUsersRole(servletRequest);
-        if (!roles.contains(RoleType.CUSTOMER)){
+        UserRole roles = getUsersRole(servletRequest);
+        if (!roles.equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         request.getStatus().setStatusName(TourStatus.APPROVED.getStatusName());
@@ -156,8 +156,8 @@ public class TourRequestService {
 
     public ResponseEntity<TourRequestResponse> declineTourRequest(Long id, HttpServletRequest servletRequest) {
         Tour_Request request = isTourRequestExistById(id);
-        List<UserRole> roles = getUsersRole(servletRequest);
-        if (!roles.contains(RoleType.CUSTOMER)){
+        UserRole roles = getUsersRole(servletRequest);
+        if (!roles.equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         request.getStatus().setStatusName(TourStatus.DECLINED.getStatusName());
@@ -179,10 +179,10 @@ public class TourRequestService {
                 .orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.TOUR_REQUEST_NOT_FOUND,id)));
     }
 
-    public List<UserRole> getUsersRole(HttpServletRequest servletRequest){
+    public UserRole getUsersRole(HttpServletRequest servletRequest){
         String email =(String) servletRequest.getAttribute("email");
         User user =  userService.findUserByEmail(email);
-        List< UserRole> role = user.getUserRoleList();
+        UserRole role = user.getUserRole();
         return role;
     }
 

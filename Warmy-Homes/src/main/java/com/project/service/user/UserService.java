@@ -99,7 +99,7 @@ public class UserService {
         User user = userMapper.mapUserRequestToUser(userRequest);
         UserRole userRole= new UserRole();
         userRole.setRoleType(RoleType.CUSTOMER);
-        user.getUserRoleList().add(userRole);
+
 
         user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
 
@@ -271,8 +271,8 @@ public class UserService {
 
         User authorized = (User) servletRequest.getAttribute("email");
 
-        if (authorized.getUserRoleList().contains(RoleType.MANAGER)){
-            if (!(user.getUserRoleList().contains(RoleType.CUSTOMER))){
+        if (authorized.getUserRole().equals(RoleType.MANAGER)){
+            if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
                 throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
             }
         }
