@@ -253,38 +253,43 @@ public class AdvertService {
 
     //bilgichoca
     public boolean isAdvertTypeUsed(Long advertTypeId) {
-        // Check if there are adverts with the given Advert_Type ID
-        if (advertRepository.existsByAdvert_Type_Id(advertTypeId)) {
-            throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+
+        List<Advert> adverts = advertRepository.findAll();
+
+        for(Advert advert:adverts){
+            if (advert.getAdvert_type_id().getId()==advertTypeId){
+                throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+            }
         }
+
         return false;
     }
 
     private final TourRequestRepository tourRequestRepository;
 
     // *************************************** // A04
-    public List<AdvertResponse> getPopularAdverts(int amount) {
-        // Popüler reklamları almak için gerekli hesaplama yapılır
-        List<Advert> popularAdverts = advertRepository.findAll();
-        if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
-            throw new IllegalArgumentException("There are no popular adverts to retrieve.");
-        }
+  //  public List<AdvertResponse> getPopularAdverts(int amount) {
+  //      // Popüler reklamları almak için gerekli hesaplama yapılır
+  //      List<Advert> popularAdverts = advertRepository.findAll();
+  //      if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
+  //          throw new IllegalArgumentException("There are no popular adverts to retrieve.");
+  //      }
+//
+//
+  //      popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
+//
+  //      int endIndex = Math.min(amount, popularAdverts.size());
+  //      List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
+//
+  //      return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
+  //  }
 
-
-        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
-
-        int endIndex = Math.min(amount, popularAdverts.size());
-        List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
-
-        return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
-    }
-
-    private int calculatePopularity(Advert advert) {
-        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
-        int totalViews = advert.getViewCount();
-        // Popülerlik puanı hesaplaması
-        return 3 * totalTourRequests + totalViews;
-    }
+  // private int calculatePopularity(Advert advert) {
+  //     int totalTourRequests = tourRequestRepository.countByAdvert(advert);
+  //     int totalViews = advert.getViewCount();
+  //     // Popülerlik puanı hesaplaması
+  //     return 3 * totalTourRequests + totalViews;
+  // }
 
 
 
