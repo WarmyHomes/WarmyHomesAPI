@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     user.getEmail(),
                     user.getFirst_name(),
                     user.getLast_name(),
-                    user.getUserRoleList().toString()
+                    user.getUserRole().getName()
                     );
         }throw new UsernameNotFoundException("User : "+ email + "not found");
 
