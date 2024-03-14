@@ -92,7 +92,7 @@ public class AdvertService {
             return null;
 
         }
-
+            return null;
     }
 
 
@@ -145,7 +145,7 @@ public class AdvertService {
                                                               Double price_start, Double price_end, Integer status, int page, int size, String sort, String type) {
         Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
 
-
+        return null;
     }
 
 
