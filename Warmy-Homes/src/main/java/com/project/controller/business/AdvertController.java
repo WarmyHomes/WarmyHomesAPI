@@ -1,13 +1,17 @@
 package com.project.controller.business;
 
 
-import com.project.entity.business.Advert;
-import com.project.payload.request.abstracts.AbstractAdvertRequest;
-import com.project.payload.request.abstracts.BaseAdvertRequest;
+
+import com.project.payload.request.business.AdvertRequestCreate;
+
+import com.project.payload.request.business.AdvertRequestUpdateAdmin;
+import com.project.payload.request.business.AdvertRequestUpdateAuth;
 import com.project.payload.request.business.helperrequest.AdvertForQueryRequest;
+import com.project.payload.response.business.AdvertPageableResponse;
 import com.project.payload.response.business.AdvertResponse;
-import com.project.payload.response.business.CategoryResponse;
+
 import com.project.payload.response.business.ResponseMessage;
+import com.project.payload.response.business.helperresponse.AdvertForSlugResponse;
 import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
 import com.project.service.business.AdvertService;
@@ -29,18 +33,16 @@ public class AdvertController {
 
     private final AdvertService advertService;
 
-    // ******************************************** //A10 -- You must check at statements
+    // ******************************************** //A10 Finished
     @PostMapping("/adverts")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@PathVariable Long id,
-                                                                       @RequestBody @Valid AbstractAdvertRequest advertRequest){
-        return ResponseEntity.ok(advertService.saveAdvert(id,advertRequest));
+    public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@RequestBody @Valid AdvertRequestCreate advertRequest){
+        return ResponseEntity.ok(advertService.saveAdvert(advertRequest));
     }
 
-    // ******************************************** //A01
-    // ********************************************* A01
+    // ********************************************* //A01
     @GetMapping("/adverts")
-    public ResponseEntity<List<AdvertResponse>> getAdverts(
+    public ResponseEntity<List<AdvertResponse>> allAdvertsQueryByPage(
             @RequestParam(required = false) String q,
             @RequestParam Long category_id,
             @RequestParam Long advert_type_id,
@@ -58,19 +60,19 @@ public class AdvertController {
     }
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
-    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage (
+    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPageOld (
             @RequestBody @Valid AdvertForQueryRequest advertRequest,
             @RequestParam(value = "q") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sort", defaultValue = "name") String sort,
-            @RequestParam(value = "type", defaultValue = "desc") String type
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+            @RequestParam(value = "type", defaultValue = "asc") String type
 
     ){
         return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
     }
 
-    // ******************************************** //A02
+    // ******************************************** //A02 Finished
     @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
 
@@ -79,7 +81,7 @@ public class AdvertController {
         return advertService.getAdvertsDependingOnCities();
     }
 
-    //****************************************** //A03 yarım kaldı
+    //****************************************** //A03 Finished
     @GetMapping("/categories")
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public List<CategoryForAdvertResponse> getAdvertByCategory(){
@@ -87,21 +89,38 @@ public class AdvertController {
         return advertService.getAdvertByCategory();
     }
 
-    // ******************************************** //A05
+    // ******************************************** //A05 Finished
 
     @GetMapping("/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public Page<AdvertResponse> getAdvertByPageAll(@RequestParam(value = "page", defaultValue = "0") int page,
+    public Page<AdvertPageableResponse> getAdvertByPageAll(@RequestParam(value = "page", defaultValue = "0") int page,
                                                            @RequestParam(value = "size", defaultValue = "10") int size,
-                                                           @RequestParam(value = "sort", defaultValue = "name") String sort,
-                                                           @RequestParam(value = "type", defaultValue = "desc") String type
+                                                           @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+                                                           @RequestParam(value = "type", defaultValue = "asc") String type
     ){
         return advertService.getAdvertByPageAll(page,size,sort,type);
     }
 
+    // *******************************************//A06
+    @GetMapping("/adverts")
+    public ResponseEntity<List<AdvertPageableResponse>> allAdvertsQueryByPageAdmin(
+            @RequestParam(required = false) String q,
+            @RequestParam Long category_id,
+            @RequestParam Long advert_type_id,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "category_id") String sort,
+            @RequestParam(defaultValue = "asc") String type
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AdvertPageableResponse> adverts = advertService.getAdvertsAdminByPage(q, category_id, advert_type_id, status, pageable, sort, type);
+        return ResponseEntity.ok(adverts.getContent());
+    }
+
     // *******************************************//A07
     @GetMapping("/{slug}")
-    public ResponseMessage<AdvertResponse> getAdvertBySlug(@PathVariable String slug){
+    public ResponseMessage<AdvertForSlugResponse> getAdvertBySlug(@PathVariable String slug){
 
         return advertService.getAdvertBySlug(slug);
     }
@@ -120,7 +139,7 @@ public class AdvertController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> getAdminAdvertById(@PathVariable Long  id){
 
-        return advertService.getAdminAdvertBySlug(id);
+        return advertService.getAdminAdvertById(id);
     }
 
 
@@ -129,7 +148,7 @@ public class AdvertController {
     @PutMapping("/auth/{id}")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseMessage<AdvertResponse> updateAdvertById (@PathVariable Long id,
-                                                             AbstractAdvertRequest advertRequest){
+                                                             AdvertRequestUpdateAuth advertRequest){
         return advertService.updateAdvertById(id,advertRequest);
     }
 
@@ -138,7 +157,7 @@ public class AdvertController {
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> updateAdminAdvertById (@PathVariable Long id,
-                                                             AbstractAdvertRequest advertRequest){
+                                                             AdvertRequestUpdateAdmin advertRequest){
         return advertService.updateAdminAdvertById(id,advertRequest);
     }
 
@@ -151,6 +170,7 @@ public class AdvertController {
 
 
 
+    // ******************************************* // A04
     //hocabilgic
     @GetMapping("/popular/{amount}")
     public ResponseEntity<List<AdvertResponse>> getPopularAdverts(@PathVariable int amount) {

@@ -25,7 +25,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                                      Category category,
                                      Advert_Type advertType);
 
-    @Query("SELECT a FROM Advert a WHERE a.slug: slug")
+    @Query("SELECT a FROM Advert a WHERE a.slug =: slug")
     Advert findBySlugContaining(String slug);
 
     //bilgichoca
@@ -35,8 +35,8 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String q, String q1, Pageable pageable);
 
   @Query("SELECT a FROM Advert a " +
-          "WHERE a.categoryId = :categoryId " +
-          "AND a.advertTypeId = :advertTypeId " +
+          "WHERE a.category_id = :categoryId " +
+          "AND a.advert_type_id= :advertTypeId " +
           "AND a.price BETWEEN :priceStart AND :priceEnd " +
           "AND a.status = :status " +
           "ORDER BY CASE WHEN :sort = 'price' AND :type = 'asc' THEN a.price END ASC, " +
@@ -44,4 +44,8 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
           "CASE WHEN :sort = 'status' AND :type = 'asc' THEN a.status END ASC, " +
           "CASE WHEN :sort = 'status' AND :type = 'desc' THEN a.status END DESC")
   Page<Advert> findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(Pageable pageable, Long categoryId, Long advertTypeId, Double priceStart, Double priceEnd, Integer status, String sort, String type);
+
+  // NOT: This method wrote for Report.
+  @Query("SELECT COUNT(id) FROM Advert ")
+  Long countAllAdvert();
 }

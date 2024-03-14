@@ -322,8 +322,20 @@ public class UserService {
 
     // NOT: This method wrote for Report.
     public Long countAllUser() {
-        return userRepository.count();
+        return userRepository.countAllUser();
     }
 
 
+    public User findUserByEmail(String email){
+        User user = userRepository.findByEmailEquals(email);
+        if (user != null){
+            return user;
+        }else {
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_MESSAGE);
+        }
+    }
+
+    public Page<Tour_Request>getUsersTourRequestById(Long id, Pageable pageable){
+        return userRepository.findTourRequestByUserId(id,pageable);
+    }
 }
