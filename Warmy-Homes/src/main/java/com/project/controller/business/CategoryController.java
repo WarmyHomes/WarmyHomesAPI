@@ -119,10 +119,12 @@ public class CategoryController {
 
     }
 
+
+
     //C11
 
     @GetMapping("/categories/{slug}")
-    public ResponseEntity<CategoryResponse> getCategoryBySlug(@RequestParam(value = "slug", required = false) String slug) {
+    public ResponseEntity<CategoryResponse> getCategoryBySlug(@PathVariable String slug) {
         CategoryResponse category = categoryService.getCategoryBySlug(slug);
         return ResponseEntity.ok(category);
     }
