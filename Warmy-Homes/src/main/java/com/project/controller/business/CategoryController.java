@@ -7,12 +7,10 @@ import com.project.payload.response.business.Category_Property_Key_Response;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class CategoryController {
     }
 
     //C02
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
     public ResponseEntity<List<CategoryResponse>> getAllCategories(
 
@@ -51,33 +49,33 @@ public class CategoryController {
 
     //C03
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id,
-                                                            HttpServletRequest httpServletRequest) {
-        CategoryResponse categoryResponse = categoryService.getCategoryById(id, httpServletRequest);
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
+        CategoryResponse categoryResponse = categoryService.getCategoryById(id);
         return ResponseEntity.ok(categoryResponse);
     }
 
     //C04
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    // @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
     public ResponseMessage<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest category) {
 
         return categoryService.createCategory(category);
+
     }
 
     //C05
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    // @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id,
-                                                           @RequestBody @Valid CategoryRequest request) {
-        CategoryResponse updatedCategory = categoryService.updateCategory(id, request);
-        return ResponseEntity.ok(updatedCategory);
+    public ResponseMessage<CategoryResponse> updateCategory(@PathVariable Long id,
+                                                            @RequestBody @Valid CategoryRequest request) {
+        return  categoryService.updateCategory(id, request);
+
     }
 
     //C06
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    // @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable Long id) {
         CategoryResponse deletedCategory = categoryService.deleteCategory(id);
         return ResponseEntity.ok(deletedCategory);
@@ -87,7 +85,7 @@ public class CategoryController {
     //C07
 
     @GetMapping("/{id}/properties")
-    public ResponseEntity<List<Category_Property_Key_Response>> getCategoryPropertyKeys(@PathVariable Long id) {
+    public ResponseEntity<List<Category_Property_Key_Response>>  getCategoryPropertyKeys(@PathVariable Long id) {
         List<Category_Property_Key_Response> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
         return ResponseEntity.ok(propertyKeys);
     }
@@ -95,31 +93,38 @@ public class CategoryController {
 
     //C08
     @PostMapping("/{id}/properties")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
-    public ResponseEntity<Category_Property_Key_Response> createPropertyKey(@PathVariable("id") Long categoryId,
-                                                                            @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
-        Category_Property_Key_Response response = categoryService.createPropertyKey(categoryId, propertyKeyRequest);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    //@PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    public ResponseMessage<Category_Property_Key_Response>  createPropertyKey(@PathVariable("id") Long categoryId,
+                                                                              @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
+
+        return categoryService.createPropertyKey(categoryId, propertyKeyRequest);
     }
 
     //c09
-
-    public ResponseEntity<Category_Property_Key_Response> updatePropertyKey(
+    @PutMapping("/properties/{id}")
+    public ResponseMessage<Category_Property_Key_Response>  updatePropertyKey(
             @PathVariable Long id,
             @RequestBody CategoryPropertyKeyRequest request) {
 
-        Category_Property_Key_Response response = categoryService.updatePropertyKey(id, request);
-        return ResponseEntity.ok(response);
+        return categoryService.updatePropertyKey(id, request);
+
     }
 
     //C10
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
-    @DeleteMapping("/delete/{Id}")
+    // @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @DeleteMapping("/properties/{id}")
     public ResponseMessage<Category_Property_Key_Response> deletePropertyKey(@PathVariable Long id) {
 
         return categoryService.deletePropertyKey(id);
 
     }
 
-    ;
+    //C11
+
+    @GetMapping("/categories/{slug}")
+    public ResponseEntity<CategoryResponse> getCategoryBySlug(@RequestParam(value = "slug", required = false) String slug) {
+        CategoryResponse category = categoryService.getCategoryBySlug(slug);
+        return ResponseEntity.ok(category);
+    }
+
 }

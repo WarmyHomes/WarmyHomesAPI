@@ -7,21 +7,42 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-   // Page<Category> findByTitleContainingAndIsctiveTrue(String title, Pageable pageable);
 
-    Page<Category> findByIsActiveTrue(Pageable pageable);
 
+    // ID'ye göre Category nesnesini getiren özel sorgu
+    @Query("SELECT c FROM Category c WHERE c.id = :id")
+    Optional<Category> findCategoryById(Long id);
+
+    // Aktif olan kategorileri başlık içeriğine göre filtreleyip sayfalandırarak döndürür
+    @Query("SELECT c FROM Category c WHERE c.title LIKE %:query% AND c.is_active = TRUE")
     Page<Category> findByTitleContainingAndIsActiveTrue(String query, Pageable pageable);
 
+    // Sadece aktif olan kategorileri sayfalandırarak döndürür
+    @Query("SELECT c FROM Category c WHERE c.is_active = TRUE")
+    Page<Category> findByIsActiveTrue(Pageable pageable);
+
+    // Başlık içeriğine göre tüm kategorileri sayfalandırarak döndürür (aktiflik durumundan bağımsız)
+    @Query("SELECT c FROM Category c WHERE c.title LIKE %:query%")
     Page<Category> findByTitleContaining(String query, Pageable pageable);
 
-    @Query("SELECT title, COUNT(title)= ?1 FROM City GROUP BY title = ?2")
-    List<Object[]> countCategories();
+    // Kategori başlıklarına göre gruplandırılmış ve her bir başlık için kategori sayısını döndüren özel sorgu
+    @Query("SELECT c.title, COUNT(c) FROM Category c GROUP BY c.title")
+    List<Object[]> countTitleGroupedByTitle();
 
-    // NOT: This method wrote for Report.
-    @Query("SELECT COUNT (DISTINCT c.title) FROM Category c ")
+    // Başlık ve slug'a göre kategori sorgulama
+    @Query("SELECT c FROM Category c WHERE c.title = :title")
+    Optional<Category> findByTitle(String title);
+
+
+    @Query("SELECT c FROM Category c WHERE c.slug = ?1")
+    Optional<Category> findBySlug(String slug);
+
+
     Long countAllCategory();
+
+    List<Object[]> countCategories();
 }

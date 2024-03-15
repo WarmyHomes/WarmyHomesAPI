@@ -174,8 +174,8 @@ public class AdvertController {
 
 
 
-    // ******************************************* // A04
-    //hocabilgic
+  //  // ******************************************* // A04
+  //  //hocabilgic
     @GetMapping("/popular/{amount}")
     public ResponseEntity<List<AdvertResponse>> getPopularAdverts(@PathVariable int amount) {
         List<AdvertResponse> popularAdverts = advertService.getPopularAdverts(amount);

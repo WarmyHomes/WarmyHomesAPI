@@ -277,16 +277,21 @@ public class AdvertService {
 
     //bilgichoca
     public boolean isAdvertTypeUsed(Long advertTypeId) {
-        // Check if there are adverts with the given Advert_Type ID
-        if (advertRepository.existsByAdvert_Type_Id(advertTypeId)) {
-            throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+
+        List<Advert> adverts = advertRepository.findAll();
+
+        for(Advert advert:adverts){
+            if (advert.getAdvert_type_id().getId()==advertTypeId){
+                throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+            }
         }
+
         return false;
     }
 
     private final TourRequestRepository tourRequestRepository;
 
-    // *************************************** // A04
+    // // *************************************** // A04
     public List<AdvertResponse> getPopularAdverts(int amount) {
         // Popüler reklamları almak için gerekli hesaplama yapılır
         List<Advert> popularAdverts = advertRepository.findAll();

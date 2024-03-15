@@ -19,7 +19,7 @@ public class CategoryMapper {
                 .title(categoryDTO.getTitle())
                 .icon(categoryDTO.getIcon())
                 .seq(categoryDTO.getSeq())
-                .slug(categoryDTO.getSlug())
+               // .slug(categoryDTO.getSlug())
                 .is_active(categoryDTO.getIs_active())
                 .build();
 

@@ -26,4 +26,12 @@ public class SuccessMessages {
 
 
 
+    public static final String PROPERTY_KEY_CREATED = "Property key olusturuldu";
+    public static final String CATEGORY_CONFLIG = "{$} isimli kategory kayitli oldugu icin hata aliyorsunuz ";
+    public static final String CATEGORY_SLUQ =  ("Slug zaten kullanımda: " );
+    public static final String CATEGORY_SAVE = "Category olusturuldu";
+    public static final String CATEGORY_UPDATE = "Category guncellendi";
+
+    public static final String PROPERTY_KEY_UPDATE = "property key guncellendi";
+
 }
