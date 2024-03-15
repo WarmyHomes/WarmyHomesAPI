@@ -8,13 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    void findByUsernameEquals(String username);
+    //void findByUsernameEquals(String username);
 
-    User findByEmail(String email);
+    @Query("SELECT u FROM User u WHERE u.email = :email")
+    User findByEmail(@Param("email") String email);
 
     boolean existsByEmail(String email);
 
@@ -22,12 +24,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
-    @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRoleList r WHERE r.roleType =?1")
+   @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
     long countAdmin(RoleType roleType);
 
 
 
-    List<Tour_Request> findByTourRequest(Long id);
+   // List<Tour_Request> findByTourRequest(Long id);
 
 
     // NOT: This method wrote for Report.
@@ -36,4 +38,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT tr FROM User tr WHERE  tr.tourRequests = ?1")
     Page<Tour_Request>findTourRequestByUserId(Long userid, Pageable pageable);
+
 }
