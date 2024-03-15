@@ -321,9 +321,9 @@ public class UserService {
 
 
     // NOT: This method wrote for Report.
-    //  public Long countAllUser() {
-    //    return userRepository.countAllUser();
-    // }
+      public Long countAllUser() {
+        return userRepository.countAllUser();
+    }
 
 
     public User findUserByEmail(String email){
