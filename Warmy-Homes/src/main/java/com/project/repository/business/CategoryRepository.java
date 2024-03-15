@@ -20,4 +20,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("SELECT title, COUNT(title)= ?1 FROM City GROUP BY title = ?2")
     List<Object[]> countCategories();
+
+    // NOT: This method wrote for Report.
+    @Query("SELECT COUNT (DISTINCT c.title) FROM Category c ")
+    Long countAllCategory();
 }

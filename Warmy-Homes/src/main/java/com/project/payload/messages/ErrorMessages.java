@@ -12,6 +12,7 @@ public class ErrorMessages {
     public static final String EDUCATION_TERM_NOT_FOUND_MESSAGE = "Error: Education Term not found with id %s";
 
     public static final String TOUR_REQUEST_NOT_FOUND = "Error: Tour Request not found with id %s";
+    public static final String TOUR_REQUEST_CAN_NOT_CHANGED = "Error: Tour Request Can Not Changed Because Of Status";
 
     public static final String ALREADY_REGISTER_MESSAGE_EMAIL = "Error : User with email %s is already registered";
 

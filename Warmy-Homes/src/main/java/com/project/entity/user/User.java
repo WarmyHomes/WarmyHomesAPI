@@ -69,14 +69,10 @@ public class User extends EntryDate {
 
 
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<UserRole> userRoleList;
+    @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private UserRole userRole;
+
 
     @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
     private List<Tour_Request> tourRequests;

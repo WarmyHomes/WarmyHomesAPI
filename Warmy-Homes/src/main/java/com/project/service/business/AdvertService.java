@@ -132,7 +132,7 @@ public class AdvertService {
     public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
 
         User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRoleList().contains(RoleType.CUSTOMER)){
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
@@ -179,7 +179,7 @@ public class AdvertService {
     // ****************************************** / A08
     public ResponseMessage<AdvertResponse> getCustomerAdvertId(Long id,HttpServletRequest httpServletRequest) {
         User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRoleList().contains(RoleType.CUSTOMER)){
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
         Advert advert = isAdvertExist(id);
@@ -211,8 +211,13 @@ public class AdvertService {
         Advert advertCustomer = isAdvertExist(id);
 
         // ! Role type kontrolu
-        if (!advertCustomer.getUser().getUserRoleList().contains(RoleType.CUSTOMER)){
+
+        if (!advertCustomer.getUser().getUserRole().equals(RoleType.CUSTOMER)){
+
+        if (advertCustomer.getUser().getUserRole().getRoleType().equals(RoleType.CUSTOMER)){
+
             throw new ResourceNotFoundException(String.format(ErrorMessages.ROLE_NOT_FOUND));
+        }
         }
         // ! Advert Built-in mi ?
         if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
@@ -235,7 +240,7 @@ public class AdvertService {
     }
 
     // ****************************************** / A12
-    public ResponseMessage<AdvertResponse> updateAdminAdvertById(Long id, AdvertRequestUpdateAdmin advertRequest) {
+    public ResponseMessage<AdvertResponse> updateAdminAdvertById (Long id, AdvertRequestUpdateAdmin advertRequest) {
         Advert advert = isAdvertExist(id);
 
         // ! Advert Built-in mi ?
@@ -253,7 +258,7 @@ public class AdvertService {
     }
 
     // ******************************************** //A13
-    public ResponseMessage<AdvertResponse> deleteAdvertById(Long advertId) {
+    public ResponseMessage<AdvertResponse> deleteAdvertById (Long advertId) {
 
         Advert advert = isAdvertExist(advertId);
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
@@ -322,3 +327,5 @@ public class AdvertService {
 
 
 }
+
+
