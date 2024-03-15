@@ -267,29 +267,29 @@ public class AdvertService {
 
     private final TourRequestRepository tourRequestRepository;
 
-    // *************************************** // A04
-  //  public List<AdvertResponse> getPopularAdverts(int amount) {
-  //      // Popüler reklamları almak için gerekli hesaplama yapılır
-  //      List<Advert> popularAdverts = advertRepository.findAll();
-  //      if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
-  //          throw new IllegalArgumentException("There are no popular adverts to retrieve.");
-  //      }
-//
-//
-  //      popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
-//
-  //      int endIndex = Math.min(amount, popularAdverts.size());
-  //      List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
-//
-  //      return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
-  //  }
+    // // *************************************** // A04
+    public List<AdvertResponse> getPopularAdverts(int amount) {
+        // Popüler reklamları almak için gerekli hesaplama yapılır
+        List<Advert> popularAdverts = advertRepository.findAll();
+        if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
+            throw new IllegalArgumentException("There are no popular adverts to retrieve.");
+        }
 
-  // private int calculatePopularity(Advert advert) {
-  //     int totalTourRequests = tourRequestRepository.countByAdvert(advert);
-  //     int totalViews = advert.getViewCount();
-  //     // Popülerlik puanı hesaplaması
-  //     return 3 * totalTourRequests + totalViews;
-  // }
+
+        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
+
+        int endIndex = Math.min(amount, popularAdverts.size());
+        List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
+
+        return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
+    }
+
+    private int calculatePopularity(Advert advert) {
+        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
+        int totalViews = advert.getViewCount();
+        // Popülerlik puanı hesaplaması
+        return 3 * totalTourRequests + totalViews;
+    }
 
 
 
