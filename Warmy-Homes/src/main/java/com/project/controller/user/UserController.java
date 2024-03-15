@@ -9,9 +9,7 @@ import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
-import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
-import com.project.service.mail.MailService;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,9 +27,12 @@ public class UserController {
     private final UserService userService;
 
 
+
+
     // F01 - login
     @PostMapping("/login") // http://localhost:8080/login
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+   // @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+    //todo burayi sildik
     public ResponseEntity<AuthResponse> authenticateUser(@RequestBody @Valid LoginRequest loginRequest){
 
         return userService.authenticateUser(loginRequest);

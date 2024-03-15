@@ -9,6 +9,7 @@ import com.project.service.business.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,7 +35,7 @@ public class CategoryController {
     }
 
     //C02
-    //@PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
     public ResponseEntity<List<CategoryResponse>> getAllCategories(
 
@@ -55,7 +56,7 @@ public class CategoryController {
     }
 
     //C04
-    // @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping
     public ResponseMessage<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest category) {
 
@@ -64,7 +65,7 @@ public class CategoryController {
     }
 
     //C05
-    // @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseMessage<CategoryResponse> updateCategory(@PathVariable Long id,
                                                             @RequestBody @Valid CategoryRequest request) {
@@ -75,7 +76,7 @@ public class CategoryController {
     //C06
 
     @DeleteMapping("/{id}")
-    // @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable Long id) {
         CategoryResponse deletedCategory = categoryService.deleteCategory(id);
         return ResponseEntity.ok(deletedCategory);
@@ -93,7 +94,7 @@ public class CategoryController {
 
     //C08
     @PostMapping("/{id}/properties")
-    //@PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     public ResponseMessage<Category_Property_Key_Response>  createPropertyKey(@PathVariable("id") Long categoryId,
                                                                               @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
 
@@ -111,7 +112,7 @@ public class CategoryController {
     }
 
     //C10
-    // @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @DeleteMapping("/properties/{id}")
     public ResponseMessage<Category_Property_Key_Response> deletePropertyKey(@PathVariable Long id) {
 

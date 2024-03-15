@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AdvertTypesRepository extends JpaRepository<Advert_Type, Long> {
 
-    User findByEmail(String email);
+   // User findByEmail(String email);
 
     // NOT: This method wrote for Report.
     @Query("SELECT COUNT (DISTINCT a.title) FROM Advert_Type a ")
