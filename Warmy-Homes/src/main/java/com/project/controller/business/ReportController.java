@@ -29,9 +29,9 @@ public class ReportController {
 
     // G02
     // http://localhost:8080/report/adverts?date1=2023-02-01&date2=2023&category=villa&type=rent&status=pending
-    @GetMapping("/report/adverts")
-    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage<GetAdvertsReportResponse> getAdvertReport(@RequestBody GetAdvertsReportRequest request){
-        return reportService.getAdvertReport(request);
-    }
+   // @GetMapping("/report/adverts")
+   // @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+   // public ResponseMessage<GetAdvertsReportResponse> getAdvertReport(@RequestBody GetAdvertsReportRequest request){
+   //     return reportService.getAdvertReport(request);
+   // }
 }
