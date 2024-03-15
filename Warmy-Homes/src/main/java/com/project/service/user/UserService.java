@@ -310,9 +310,9 @@ public class UserService {
         return SuccessMessages.USER_CREATED;
     }
 
-//    public long countAllAdmins(){
-//        return userRepository.countAdmin(RoleType.ADMIN);
-//    }
+  public long countAllAdmins(){
+      return userRepository.countAdmin(RoleType.ADMIN);
+  }
 
     public User isUserExist(Long id){
         return userRepository.findById(id).orElseThrow(()->
