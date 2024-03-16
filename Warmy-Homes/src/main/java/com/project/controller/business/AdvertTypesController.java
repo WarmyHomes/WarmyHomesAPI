@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/advert-types")
+@RequestMapping("advert-types")
 @RequiredArgsConstructor
 public class AdvertTypesController {
 

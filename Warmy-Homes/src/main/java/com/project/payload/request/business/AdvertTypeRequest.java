@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder(toBuilder = true)
 public class AdvertTypeRequest {
 
-    private Long id;
+
 
     @NotBlank(message = "Title cannot be blank")
     @Size(max = 30, message = "Title cannot exceed 30 characters")
