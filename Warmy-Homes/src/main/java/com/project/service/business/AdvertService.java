@@ -323,12 +323,12 @@ public class AdvertService {
     }
 
     // NOT: This method wrote for Report.
-    public List<Advert> findAdvertsByFilter(LocalDate beginningDate,
-                                            LocalDate endingDate,
-                                            Category category, Advert_Type advertType) {
-
-       return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
-    }
+   // public List<Advert> findAdvertsByFilter(LocalDate beginningDate,
+   //                                         LocalDate endingDate,
+   //                                         Category category, Advert_Type advertType) {
+//
+   //    return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
+   // }
 
 
 }

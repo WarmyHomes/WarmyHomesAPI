@@ -1,4 +1,4 @@
-    package com.project;
+package com.project;
 
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.UserRole;
@@ -16,64 +16,70 @@ import java.util.Set;
 @SpringBootApplication
 public class WarmyHomesApplication implements CommandLineRunner {
 
-	private final UserRoleService userRoleService;
+    private final UserRoleService userRoleService;
 
-	private final UserRoleRepository userRoleRepository;
+    private final UserRoleRepository userRoleRepository;
 
-	private final UserService userService;
+    private final UserService userService;
 
-	public WarmyHomesApplication(UserRoleService userRoleService,
-								 UserRoleRepository userRoleRepository,
-								 UserService userService) {
+    public WarmyHomesApplication(UserRoleService userRoleService,
+                                 UserRoleRepository userRoleRepository,
+                                 UserService userService) {
 
-		this.userRoleService = userRoleService;
-		this.userRoleRepository = userRoleRepository;
-		this.userService = userService;
-	}
+        this.userRoleService = userRoleService;
+        this.userRoleRepository = userRoleRepository;
+        this.userService = userService;
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(WarmyHomesApplication.class, args);
-	}
-
-
-	@Override
-	public void run(String... args) throws Exception {
-
-		if (userRoleService.getAllUserRole().isEmpty()) {
-
-			UserRole admin = new UserRole();
-			admin.setRoleType(RoleType.ADMIN);
-			admin.setName("Admin");
-			userRoleRepository.save(admin);
+    public static void main(String[] args) {
+        SpringApplication.run(WarmyHomesApplication.class, args);
+    }
 
 
-			UserRole manager = new UserRole();
-			manager.setRoleType(RoleType.MANAGER);
-			manager.setName("Manager");
-			userRoleRepository.save(manager);
+    @Override
+    public void run(String... args) throws Exception {
 
-			UserRole customer = new UserRole();
-			customer.setRoleType(RoleType.CUSTOMER);
-			customer.setName("Customer");
-			userRoleRepository.save(customer);
+        if (userRoleService.getAllUserRole().isEmpty()) {
 
-		}
+            UserRole admin = new UserRole();
+            admin.setRoleType(RoleType.ADMIN);
+            admin.setName("Admin");
 
-		if(userService.countAllAdmins() == 0){
-
-			Set<String> roles = new HashSet<>();
-			roles.add("Admin");
-			UserRequest adminRequest = new UserRequest();
-			adminRequest.setEmail("deneme@github.com");
-			adminRequest.setPassword_hash("123456789");
-			adminRequest.setFirst_name("Deneme");
-			adminRequest.setLast_name("Api");
-			adminRequest.setPhone("530-000-0000");
-			userService.saveAdmin(adminRequest);
-
-		}
+            userRoleRepository.save(admin);
 
 
+            UserRole manager = new UserRole();
+            manager.setRoleType(RoleType.MANAGER);
+            manager.setName("Manager");
+            userRoleRepository.save(manager);
 
-	}
+            UserRole customer = new UserRole();
+            customer.setRoleType(RoleType.CUSTOMER);
+            customer.setName("Customer");
+            userRoleRepository.save(customer);
+
+            UserRole anonymous = new UserRole();
+            anonymous.setRoleType(RoleType.ANONYMOUS);
+            anonymous.setName("Anonymous");
+            userRoleRepository.save(anonymous);
+
+
+        }
+
+        if (userService.countAllAdmins() == 0) {
+
+            Set<String> roles = new HashSet<>();
+            roles.add("Admin");
+            UserRequest adminRequest = new UserRequest();
+            adminRequest.setEmail("deneme@github.com");
+            adminRequest.setPassword_hash("123456789");
+            adminRequest.setFirst_name("Deneme");
+            adminRequest.setLast_name("Api");
+            adminRequest.setPhone("530-000-0000");
+            userService.saveAdmin(adminRequest);
+
+
+
+        }
+    }
 }

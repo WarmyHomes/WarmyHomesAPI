@@ -12,7 +12,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 
-
     // ID'ye göre Category nesnesini getiren özel sorgu
     @Query("SELECT c FROM Category c WHERE c.id = :id")
     Optional<Category> findCategoryById(Long id);
@@ -42,7 +41,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findBySlug(String slug);
 
 
+    @Query("SELECT COUNT(c) FROM Category c")
     Long countAllCategory();
 
+
+    @Query(value = "SELECT c.title, COUNT(c) FROM categories c GROUP BY c.title", nativeQuery = true)
     List<Object[]> countCategories();
+
 }

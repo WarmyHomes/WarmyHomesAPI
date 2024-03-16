@@ -20,11 +20,11 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     boolean existsAdvertBySlug(String slug);
 
 
-  // Use Method For Report
-    List<Advert> findAdvertsByFilter(LocalDate beginningDate,
-                                     LocalDate endingDate,
-                                     Category category,
-                                     Advert_Type advertType);
+
+ //ist<Advert> findAdvertsByFilter(LocalDate beginningDate,
+ //                                LocalDate endingDate,
+ //                                Category category,
+ //                                Advert_Type advertType);
 
     @Query("SELECT a FROM Advert a WHERE a.slug =: slug")
     Advert findBySlugContaining(String slug);
@@ -49,5 +49,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
   @Query("SELECT COUNT(id) FROM Advert ")
   Long countAllAdvert();
 
+
   //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
+
 }

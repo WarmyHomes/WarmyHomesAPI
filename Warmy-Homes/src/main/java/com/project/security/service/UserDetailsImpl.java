@@ -22,23 +22,33 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
+    @JsonIgnore
+    private String getPassword_hash;
+
     private String firstName; //User Entity first_name yazilmis camelCase ile yazildi
 
     private String last_name;
 
     private String userRole;
 
-    private String passwordHash;
+
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id,String email, String firstName, String last_name, String userRole) {
+    public UserDetailsImpl(Long id,String getPassword_hash,String email, String firstName, String last_name, String userRole) {
         this.id = id;
+        this.getPassword_hash=getPassword_hash;
         this.email = email;
+
         this.firstName = firstName;
         this.last_name = last_name;
-        this.userRole = userRole;
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(userRole));
+        this.authorities = grantedAuthorities;
     }
+
+
 
     //bunu silmeyin pls
     public Long getId() {
@@ -47,12 +57,13 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
+
 
     @Override
     public String getPassword() {
-        return passwordHash;
+        return getPassword_hash;
     }
 
     //!!!username field yok ama email yazinda override bozuluyor HELP!!!

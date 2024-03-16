@@ -305,14 +305,15 @@ public class UserService {
 
         user.setCreate_at(LocalDateTime.now());
 
+        user.setUserRole(admin) ;
         userRepository.save(user);
 
         return SuccessMessages.USER_CREATED;
     }
 
-//    public long countAllAdmins(){
-//        return userRepository.countAdmin(RoleType.ADMIN);
-//    }
+  public long countAllAdmins(){
+      return userRepository.countAdmin(RoleType.ADMIN);
+  }
 
     public User isUserExist(Long id){
         return userRepository.findById(id).orElseThrow(()->
@@ -321,9 +322,9 @@ public class UserService {
 
 
     // NOT: This method wrote for Report.
-    //  public Long countAllUser() {
-    //    return userRepository.countAllUser();
-    // }
+      public Long countAllUser() {
+        return userRepository.countAllUser();
+    }
 
 
     public User findUserByEmail(String email){
