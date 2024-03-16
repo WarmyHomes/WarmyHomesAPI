@@ -21,10 +21,15 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
 
 
- //ist<Advert> findAdvertsByFilter(LocalDate beginningDate,
- //                                LocalDate endingDate,
- //                                Category category,
- //                                Advert_Type advertType);
+    @Query("SELECT a FROM Advert a WHERE a.createdAt = :beginningDate " +
+            "AND a.updated_at = :endingDate AND a.category_id = :category " +
+            "AND a.advert_type_id = :advertType")
+    List<Advert> findAdvertsByFilter(@Param("beginningDate") LocalDate beginningDate,
+                                     @Param("endingDate") LocalDate endingDate,
+                                     @Param("category") Category category,
+                                     @Param("advertType") Advert_Type advertType);
+
+
 
     @Query("SELECT a FROM Advert a WHERE a.slug =: slug")
     Advert findBySlugContaining(String slug);
