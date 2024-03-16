@@ -39,7 +39,8 @@ public class Category {
     @NotNull(message = "Please enter seq")
     private Integer seq;
 
-    @NotNull(message = "Please enter slug")
+    //todo notnal olmali mi ?
+   // @NotNull(message = "Please enter slug")
     @Size( min=5, max = 200,message = "Icon must be maximum 50 characters")
     private String slug;
 
@@ -50,7 +51,7 @@ public class Category {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ssZ")
     private LocalDateTime create_at;
 
-    @NotNull()
+
     private LocalDateTime update_at;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
