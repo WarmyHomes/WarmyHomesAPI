@@ -35,7 +35,7 @@ public class AdvertController {
     private final AdvertService advertService;
 
     // ******************************************** //A10 Finished
-    @PostMapping("/adverts")
+    @PostMapping
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<ResponseMessage<AdvertResponse>> saveAdvert (@RequestBody @Valid AdvertRequestCreate advertRequest){
         return ResponseEntity.ok(advertService.saveAdvert(advertRequest));
@@ -58,19 +58,19 @@ public class AdvertController {
         Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, page, size, sort, type);
         return ResponseEntity.ok(adverts.getContent());
     }
-    @GetMapping
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')") // * A01 Benim yazdığım
-    public Page<AdvertPageableResponse> allAdvertsQueryByPageOld (
-            @RequestBody @Valid AdvertForQueryRequest advertRequest,
-            @RequestParam(value = "q") String q,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
-            @RequestParam(value = "type", defaultValue = "asc") String type
-
-    ){
-        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
-    }
+//    @GetMapping
+//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')") // * A01 Benim yazdığım
+//    public Page<AdvertPageableResponse> allAdvertsQueryByPageOld (
+//            @RequestBody @Valid AdvertForQueryRequest advertRequest,
+//            @RequestParam(value = "q") String q,
+//            @RequestParam(value = "page", defaultValue = "0") int page,
+//            @RequestParam(value = "size", defaultValue = "20") int size,
+//            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+//            @RequestParam(value = "type", defaultValue = "asc") String type
+//
+//    ){
+//        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
+//    }
 
     // ******************************************** //A02 Finished
     @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
