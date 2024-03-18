@@ -54,7 +54,10 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
   @Query("SELECT COUNT(id) FROM Advert ")
   Long countAllAdvert();
 
+    @Query("SELECT COUNT(id) FROM Advert ")
+    int countByAdvert(Advert advert);
 
-  //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
+
+    //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
 
 }
