@@ -88,7 +88,7 @@ public class AdvertTypesService {
         // İlişkili kayıtların kontrolü
         // Eğer ilişkili kayıtlar varsa, uygun bir hata fırlatılabilir veya hata mesajı döndürülebilir
 
-         advertService.isAdvertTypeUsed(id);
+        // advertService.isAdvertTypeUsed(id);
 
 
 

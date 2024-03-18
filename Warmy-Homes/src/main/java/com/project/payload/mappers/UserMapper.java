@@ -1,5 +1,6 @@
 package com.project.payload.mappers;
 
+import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
@@ -47,6 +48,8 @@ public class UserMapper {
                 .password_hash(userRequest.getPassword_hash())
                 .phone(userRequest.getPhone())
                 .email(userRequest.getEmail())
+
+
                 .build();
 
     }
