@@ -69,7 +69,7 @@ public class User extends EntryDate {
 
 
 
-    @OneToOne
+    @OneToOne()
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserRole userRole;
 

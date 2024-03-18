@@ -41,6 +41,7 @@ public class AdvertController {
         return ResponseEntity.ok(advertService.saveAdvert(advertRequest));
     }
 
+
     // ********************************************* //A01 chatgpt
     @GetMapping("/adverts")
     public ResponseEntity<List<AdvertResponse>> allAdvertsQueryByPage(
@@ -72,6 +73,39 @@ public class AdvertController {
 //        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
 //    }
 
+    // ********************************************* //A01
+//    @GetMapping("/adverts")
+//    public ResponseEntity<List<AdvertResponse>> allAdvertsQueryByPage(
+//            @RequestParam(required = false) String q,
+//            @RequestParam Long category_id,
+//            @RequestParam Long advert_type_id,
+//            @RequestParam(required = false) Double price_start,
+//            @RequestParam(required = false) Double price_end,
+//            @RequestParam(required = false) Integer status,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "20") int size,
+//            @RequestParam(defaultValue = "category_id") String sort,
+//            @RequestParam(defaultValue = "asc") String type
+//    ) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, pageable, sort, type);
+//        return ResponseEntity.ok(adverts.getContent());
+//    }
+//    @GetMapping
+//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')") //A01
+//    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPageOld (
+//            @RequestBody @Valid AdvertForQueryRequest advertRequest,
+//            @RequestParam(value = "q") String q,
+//            @RequestParam(value = "page", defaultValue = "0") int page,
+//            @RequestParam(value = "size", defaultValue = "20") int size,
+//            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+//            @RequestParam(value = "type", defaultValue = "asc") String type
+//
+//    ){
+//        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
+//    }
+
+
     // ******************************************** //A02 Finished
     @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
     @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
@@ -82,12 +116,12 @@ public class AdvertController {
     }
 
     //****************************************** //A03 Finished
-    @GetMapping("/categories")
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public List<CategoryForAdvertResponse> getAdvertByCategory(){
-
-        return advertService.getAdvertByCategory();
-    }
+//    @GetMapping("/categories")
+//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+//    public List<CategoryForAdvertResponse> getAdvertByCategory(){
+//
+//        return advertService.getAdvertByCategory();
+//    }
 
     // ******************************************** //A05 Finished
 
@@ -178,11 +212,11 @@ public class AdvertController {
 
   //  // ******************************************* // A04
   //  //hocabilgic
-    @GetMapping("/popular/{amount}")
-    public ResponseEntity<List<AdvertResponse>> getPopularAdverts(@PathVariable int amount) {
-        List<AdvertResponse> popularAdverts = advertService.getPopularAdverts(amount);
-        return ResponseEntity.ok(popularAdverts);
-    }
+//    @GetMapping("/popular/{amount}")
+//    public ResponseEntity<List<AdvertResponse>> getPopularAdverts(@PathVariable int amount) {
+//        List<AdvertResponse> popularAdverts = advertService.getPopularAdverts(amount);
+//        return ResponseEntity.ok(popularAdverts);
+//    }
 
 
 

@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public abstract class EntryDate {
 
-    @NotNull(message = "Create date must not be empty!")
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime create_at;

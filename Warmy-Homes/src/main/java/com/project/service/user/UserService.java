@@ -96,12 +96,28 @@ public class UserService {
     //F02 - register
     public ResponseMessage<UserResponse> saveUser(UserRequest userRequest) {
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail());
+
+        Set<UserRole> userRole = new HashSet<>();
+
+        UserRole customer = userRoleService.getUserRole(RoleType.CUSTOMER);
+
+        userRole.add(customer);
         User user = userMapper.mapUserRequestToUser(userRequest);
-        UserRole userRole= new UserRole();
-        userRole.setRoleType(RoleType.CUSTOMER);
+//        UserRole userRole= new UserRole();
+//        userRole.setRoleType(RoleType.CUSTOMER);
+//        UserRole customer = new UserRole();
+//        customer.setRoleType(RoleType.CUSTOMER);
+//       customer.setName("Customer");
+//        user.setUserRole(customer);
+        user.setBuilt_in(Boolean.FALSE);
+
+        user.setCreate_at(LocalDateTime.now());
+        user.setUserRole(customer) ;
+
 
 
         user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
+
 
         User savedUser = userRepository.save(user);
 
@@ -159,6 +175,7 @@ public class UserService {
         user.setFirst_name(userRequest.getFirst_name());
         user.setLast_name(userRequest.getLast_name());
         user.setPhone(userRequest.getPhone());
+        user.setUpdate_at(LocalDateTime.now());
         userRepository.save(user);
 
         String message = SuccessMessages.USER_UPDATE_MESSAGE;
