@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,59 +78,50 @@ public class CategoryService {
         return categoryMapper.mapCategoryToResponse(category);
     }
 
+    @Transactional
     public ResponseMessage<CategoryResponse> createCategory(CategoryRequest request) {
+        // Kategori başlığını formatla ve benzersiz olduğunu kontrol et.
+        String formattedTitle = categoryHelper.formatAsWordsCase(request.getTitle());
+        categoryHelper.isCategoryTitleUnique(formattedTitle, null);
 
-        String title=   categoryHelper.formatAsWordsCase(request.getTitle());
-        categoryHelper.isCategoryTitleUnique( title, null);
-
-
-
-        // TODO category creat ederken dikkat edilmesi gerekenleri incele eksik kalmasin
+        // CategoryRequest'ten Category entity'sine dönüşüm yap ve temel bilgileri ayarla.
         Category category = categoryMapper.mapCategoryDTOToEntity(request);
         category.setBuilt_in(false);
         category.setCreate_at(LocalDateTime.now());
-        category.setTitle(title);
+        category.setTitle(formattedTitle);
 
-        // Yeni bir Category_Property_Key listesi oluştur
-        List<Category_Property_Key> propertyKeys = new ArrayList<>();
+        // Henüz kategori ID'si olmadığı için, önce kategori nesnesini kaydet.
+        Category savedCategory = categoryRepository.save(category);
 
-// İstekten gelen property key'ler üzerinde döngü yap
-        // for (CategoryPropertyKeyRequest propertyKeyRequest : request.getCategory_property_keys()) {
-        //     // createPropertyKey metodu ile yeni bir property key oluştur
-        //     Category_Property_Key createdPropertyKey = createPropertyKey(category.getId(), propertyKeyRequest);
+        // category_property_keys içindeki her bir propertyKey için işlem yap.
+        if (request.getCategory_property_keys() != null) {
+            request.getCategory_property_keys().forEach(pkRequest -> {
+                // Her bir property key için createPropertyKey metodunu çağır.
 
-        //     // Oluşturulan property key'i listeye ekle
-        //     if (createdPropertyKey != null) { // createPropertyKey başarılı bir şekilde bir property key oluşturduysa
-        //         propertyKeys.add(createdPropertyKey);
-        //     }
-        // }
+                categoryPropertyKeyHelper(category,pkRequest);
+               pkRequest.setCategory(category);
 
-// Oluşturulan property key listesini category nesnesine ata
-        category.setCategory_property_keys(propertyKeys);
+            });
+        }
 
+        // Slug oluştur, benzersizliğini doğrula ve kategoriye ata.
+        String slug = categoryHelper.toSlug(formattedTitle, savedCategory.getId());
+        categoryHelper.validateCategorySlugUniqueness(slug, savedCategory.getId());
+        savedCategory.setSlug(slug);
 
-        ;
+        // Güncellenmiş kategori bilgileriyle kategoriyi tekrar kaydet.
+        savedCategory = categoryRepository.save(savedCategory);
 
-        Category savedCategory;
-        savedCategory = categoryRepository.save(category);
-
-
-        String sluq= categoryHelper.toSlug(savedCategory.getTitle(),savedCategory.getId());
-        categoryHelper.validateCategorySlugUniqueness(sluq, savedCategory.getId());
-        savedCategory.setSlug(sluq);
-
-        //sluq olustururken id nasil eklenecek ?? 2 defa mi gitmeli
-        savedCategory = categoryRepository.save(category);
-
+        // Oluşturulan kategoriyi dönüştür ve response oluştur.
         CategoryResponse categoryResponse = categoryMapper.mapCategoryToResponse(savedCategory);
-
         return ResponseMessage.<CategoryResponse>builder()
                 .object(categoryResponse)
                 .message(SuccessMessages.CATEGORY_SAVE)
                 .httpStatus(HttpStatus.CREATED)
                 .build();
-
     }
+
+
 
 
     public ResponseMessage<CategoryResponse> updateCategory(Long id, CategoryRequest request) {
@@ -213,31 +205,41 @@ public class CategoryService {
         Category_Property_Key propertyKey = Category_Property_Key.builder()
                 .name(propertyKeyRequest.getName())
                 .category(category)
-                //.categoryId(category.getId()) // Bu propertyKey'e kategori bilgisini ekle
                 .built_in(false)
                 .build();
 
-        // Oluşturulan propertyKey'i veritabanına kaydet
-        Category_Property_Key savedPropertyKey = propertyKeyRepository.save(propertyKey);
+      Category_Property_Key  savedPropertyKey = categoryPropertyKeyHelper(category,propertyKey);
 
-        // Eğer kategori'nin property key listesi null ise, yeni bir liste oluştur
-        if (category.getCategory_property_keys() == null) {
-            category.setCategory_property_keys(new ArrayList<>());
-        }
-
-        // Yeni property key'i kategori'nin property key listesine ekle
-        category.getCategory_property_keys().add(savedPropertyKey);
-
-        // Kategori nesnesini güncelle (kategoriye yeni eklenen property key ile birlikte)
-        categoryRepository.save(category); // categoryRepository, Category nesnelerini yönetmek için kullanılan repository olmalı
 
         // Response oluştur ve dön
         return ResponseMessage.<Category_Property_Key_Response>builder()
                 .object(categoryMapper.Category_Property_KeyToResponse(savedPropertyKey))
-                .message(SuccessMessages.PROPERTY_KEY_CREATED) // SuccessMessages.PREPORTY_KEY_CREATED olmalıydı, küçük bir yazım hatası var gibi
+                .message(SuccessMessages.PREPORTY_KEY_CREATED)
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
+
+private Category_Property_Key categoryPropertyKeyHelper(Category category,Category_Property_Key propertyKey){
+
+    // Oluşturulan propertyKey'i veritabanına kaydet
+    Category_Property_Key savedPropertyKey = propertyKeyRepository.save(propertyKey);
+
+    // Eğer kategori'nin property key listesi null ise, yeni bir liste oluştur
+    if (category.getCategory_property_keys() == null) {
+        category.setCategory_property_keys(new ArrayList<>());
+    }
+
+    // Yeni property key'i kategori'nin property key listesine ekle
+    category.getCategory_property_keys().add(savedPropertyKey);
+
+    // Kategori nesnesini güncelle (kategoriye yeni eklenen property key ile birlikte)
+     categoryRepository.save(category); // categoryRepository, Category nesnelerini yönetmek için kullanılan repository olmalı
+
+    return savedPropertyKey;
+
+    }
+
+
 
 
 

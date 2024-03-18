@@ -38,12 +38,12 @@ public class CategoryController {
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
     public ResponseEntity<List<CategoryResponse>> getAllCategories(
-
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type) {
+
         List<CategoryResponse> categories = categoryService.getAllCategories(query, page, size, sort, type);
         return ResponseEntity.ok(categories);
     }
@@ -74,9 +74,8 @@ public class CategoryController {
     }
 
     //C06
-
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @DeleteMapping("/{id}")
-     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable Long id) {
         CategoryResponse deletedCategory = categoryService.deleteCategory(id);
         return ResponseEntity.ok(deletedCategory);
@@ -84,7 +83,7 @@ public class CategoryController {
 
 
     //C07
-
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @GetMapping("/{id}/properties")
     public ResponseEntity<List<Category_Property_Key_Response>>  getCategoryPropertyKeys(@PathVariable Long id) {
         List<Category_Property_Key_Response> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
@@ -93,8 +92,8 @@ public class CategoryController {
 
 
     //C08
-    @PostMapping("/{id}/properties")
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PostMapping("/{id}/properties")
     public ResponseMessage<Category_Property_Key_Response>  createPropertyKey(@PathVariable("id") Long categoryId,
                                                                               @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
 
@@ -102,6 +101,7 @@ public class CategoryController {
     }
 
     //c09
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @PutMapping("/properties/{id}")
     public ResponseMessage<Category_Property_Key_Response>  updatePropertyKey(
             @PathVariable Long id,

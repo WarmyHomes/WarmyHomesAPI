@@ -15,7 +15,7 @@ public class CategoryMapper {
 
     public  Category mapCategoryDTOToEntity(@NotNull CategoryRequest categoryDTO) {
         return Category.builder()
-                .id(categoryDTO.getId())
+               // .id(categoryDTO.getId())
                 .title(categoryDTO.getTitle())
                 .icon(categoryDTO.getIcon())
                 .seq(categoryDTO.getSeq())
@@ -41,6 +41,15 @@ public class CategoryMapper {
                 .createAt(category.getCreate_at())
                 .updateAt(category.getUpdate_at() != null ? category.getUpdate_at() : null)
                 .build();
+    }
+
+
+    public Category_Property_Key mapPropertyKeyRequestToPropertyKey(Category_Property_Key request) {
+        Category_Property_Key propertyKey = Category_Property_Key.builder()
+                .name(request.getName())
+                .category(request.getCategory()) // Bağlı olduğu kategoriyi ayarla
+                .build();
+        return propertyKey;
     }
 
 
