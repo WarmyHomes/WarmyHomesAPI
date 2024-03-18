@@ -22,7 +22,6 @@ import java.util.List;
 public class CategoryRequest {
 
 
-    private Long id;
 
     @NotBlank(message = "Title is required")
     @Size(max = 150, message = "Title can have at most 150 characters")
@@ -45,6 +44,7 @@ public class CategoryRequest {
 
     @NotNull(message = "Active status is required")
     private Boolean is_active;
+
 
     private List<Category_Property_Key> category_property_keys;
 

@@ -48,7 +48,7 @@ public class Category {
     private Boolean is_active;
 
     @NotNull(message ="Create date must not be empty")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ssZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime create_at;
 
 
