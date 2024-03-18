@@ -55,19 +55,19 @@ public class ReportService {
     }
 
     // G02
-    public ResponseMessage<GetAdvertsReportResponse> getAdvertReport(GetAdvertsReportRequest request) {
-
-        List<Advert> adverts = advertService
-                .findAdvertsByFilter(request.getBeginningDate(),
-                                     request.getEndingDate(),
-                                     request.getCategory(),
-                                     request.getAdvertType());
-
-        GetAdvertsReportResponse reportResponse = new GetAdvertsReportResponse(adverts);
-
-        return ResponseMessage.<GetAdvertsReportResponse>builder()
-                .httpStatus(HttpStatus.OK)
-                .object(reportResponse)
-                .build();
-    }
+//    public ResponseMessage<GetAdvertsReportResponse> getAdvertReport(GetAdvertsReportRequest request) {
+//
+//        List<Advert> adverts = advertService
+//                .findAdvertsByFilter(request.getBeginningDate(),
+//                                     request.getEndingDate(),
+//                                     request.getCategory(),
+//                                     request.getAdvertType());
+//
+//        GetAdvertsReportResponse reportResponse = new GetAdvertsReportResponse(adverts);
+//
+//        return ResponseMessage.<GetAdvertsReportResponse>builder()
+//                .httpStatus(HttpStatus.OK)
+//                .object(reportResponse)
+//                .build();
+//    }
 }
