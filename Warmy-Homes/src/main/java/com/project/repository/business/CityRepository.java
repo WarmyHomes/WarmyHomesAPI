@@ -10,7 +10,8 @@ import java.util.Objects;
 
 public interface CityRepository extends JpaRepository<City, Long> {
 
-    @Query("SELECT name, COUNT(name)= ?1 FROM City GROUP BY name = ?2")
+    @Query("SELECT c.name, COUNT(c) FROM City c GROUP BY c.name")
     List<Object[]> countCities();
+
 
 }

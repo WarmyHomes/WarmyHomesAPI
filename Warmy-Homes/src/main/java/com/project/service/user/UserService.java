@@ -305,6 +305,7 @@ public class UserService {
 
         user.setCreate_at(LocalDateTime.now());
 
+        user.setUserRole(admin) ;
         userRepository.save(user);
 
         return SuccessMessages.USER_CREATED;

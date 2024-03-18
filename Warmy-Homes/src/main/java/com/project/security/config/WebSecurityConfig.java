@@ -4,7 +4,6 @@ import com.project.security.jwt.AuthEntryPointJwt;
 import com.project.security.jwt.AuthTokenFilter;
 import com.project.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -94,6 +93,7 @@ public class WebSecurityConfig {
             "/images/**",
             "/js/**",
             "/contactMessages/save",
-            "/auth/login"
+            //*************************************
+            "/login"
     };
 }

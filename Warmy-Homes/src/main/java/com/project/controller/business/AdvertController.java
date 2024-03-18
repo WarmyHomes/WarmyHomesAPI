@@ -102,7 +102,7 @@ public class AdvertController {
     }
 
     // *******************************************//A06
-    @GetMapping("/adverts")
+    @GetMapping("/advertss") //todo s eklendi
     public ResponseEntity<List<AdvertPageableResponse>> allAdvertsQueryByPageAdmin(
             @RequestParam(required = false) String q,
             @RequestParam Long category_id,

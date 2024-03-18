@@ -42,7 +42,7 @@ public class CategoryHelper {
         return slug;
     }
 
-    public  String formatAsWordsCase(String key) {
+    public String formatAsWordsCase(String key) {
         if (key == null || key.trim().isEmpty()) {
             throw new IllegalArgumentException("Anahtar boş olamaz.");
         }
@@ -54,8 +54,10 @@ public class CategoryHelper {
             if (capitalizeNext && Character.isLetter(ch)) {
                 ch = Character.toUpperCase(ch);
                 capitalizeNext = false;
-            } else if (!Character.isLetter(ch)) {
+            } else if (ch == ' ') { // Burada sadece boşluk karakterini kontrol ediyorum, gerekiyorsa diğer ayıraçlar da eklenebilir.
                 capitalizeNext = true;
+            } else {
+                ch = Character.toLowerCase(ch); // Büyük harf dışındaki karakterleri küçük harfe çevir.
             }
 
             formattedKeyBuilder.append(ch);

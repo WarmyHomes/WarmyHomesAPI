@@ -64,14 +64,14 @@ public class AdvertService {
     }
 
     // ***************************************** A01
-//    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
-//                                           Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
-//        if (q != null) {
-//            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
-//        } else {
-//            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
-//        }
-//    }
+    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
+                                           Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
+        if (q != null) {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
+        } else {
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
+        }
+    }
 
 
 
@@ -111,14 +111,14 @@ public class AdvertService {
 
     // ******************************************** //A03
 
-//    public List<CategoryForAdvertResponse> getAdvertByCategory() {
-//         List<Object[]> categories = categoryRepository.countCategories();
-//
-//        return categories.stream().map(objects -> CategoryForAdvertResponse.builder()
-//                .category((String) objects[0])
-//                .amount((Integer) objects[1])
-//                .build()).collect(Collectors.toList());
-//    }
+    public List<CategoryForAdvertResponse> getAdvertByCategory() {
+         List<Object[]> categories = categoryRepository.countCategories();
+
+        return categories.stream().map(objects -> CategoryForAdvertResponse.builder()
+                .category((String) objects[0])
+                .amount((Integer) objects[1])
+                .build()).collect(Collectors.toList());
+    }
 
     // ******************************************** //A05
     public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type) {
@@ -252,44 +252,44 @@ public class AdvertService {
     }
 
     //bilgichoca
-//    public boolean isAdvertTypeUsed(Long advertTypeId) {
-//
-//        List<Advert> adverts = advertRepository.findAll();
-//
-//        for(Advert advert:adverts){
-//            if (advert.getAdvert_type_id().getId()==advertTypeId){
-//                throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
-//            }
-//        }
-//
-//        return false;
-//    }
+    public boolean isAdvertTypeUsed(Long advertTypeId) {
+
+        List<Advert> adverts = advertRepository.findAll();
+
+        for(Advert advert:adverts){
+            if (advert.getAdvert_type_id().getId()==advertTypeId){
+                throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+            }
+        }
+
+        return false;
+    }
 
     private final TourRequestRepository tourRequestRepository;
 
     // // *************************************** // A04
-//    public List<AdvertResponse> getPopularAdverts(int amount) {
-//        // Popüler reklamları almak için gerekli hesaplama yapılır
-//        List<Advert> popularAdverts = advertRepository.findAll();
-//        if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
-//            throw new IllegalArgumentException("There are no popular adverts to retrieve.");
-//        }
+    public List<AdvertResponse> getPopularAdverts(int amount) {
+        // Popüler reklamları almak için gerekli hesaplama yapılır
+        List<Advert> popularAdverts = advertRepository.findAll();
+        if (popularAdverts == null || popularAdverts.isEmpty() || amount <= 0) {
+            throw new IllegalArgumentException("There are no popular adverts to retrieve.");
+        }
 
-//
-//        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
-//
-//        int endIndex = Math.min(amount, popularAdverts.size());
-//        List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
-//
-//        return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
-//    }
 
-//    private int calculatePopularity(Advert advert) {
-//        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
-//        int totalViews = advert.getViewCount();
-//        // Popülerlik puanı hesaplaması
-//        return 3 * totalTourRequests + totalViews;
-//    }
+        popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
+
+        int endIndex = Math.min(amount, popularAdverts.size());
+        List<Advert> selectedAdverts = popularAdverts.subList(0, endIndex);
+
+        return advertMapper.mapAdvertToAdvertResponse(selectedAdverts);
+    }
+
+    private int calculatePopularity(Advert advert) {
+        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
+        int totalViews = advert.getViewCount();
+        // Popülerlik puanı hesaplaması
+        return 3 * totalTourRequests + totalViews;
+    }
 
 
 
@@ -299,12 +299,13 @@ public class AdvertService {
     }
 
     // NOT: This method wrote for Report.
-//    public List<Advert> findAdvertsByFilter(LocalDate beginningDate,
-//                                            LocalDate endingDate,
-//                                            Category category, Advert_Type advertType) {
-//
-//       return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
-//    }
-//
+   public List<Advert> findAdvertsByFilter(LocalDate beginningDate,
+                                           LocalDate endingDate,
+                                           Category category,
+                                           Advert_Type advertType) {
+
+      return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
+   }
+
 
 }
