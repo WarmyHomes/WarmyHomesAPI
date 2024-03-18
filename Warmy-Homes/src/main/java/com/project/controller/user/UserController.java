@@ -40,14 +40,14 @@ public class UserController {
 
     //F02 - register
     @PostMapping("/register") // http://localhost:8080/register
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+   // @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public ResponseEntity<ResponseMessage<UserResponse>> saveUser( @RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.ok(userService.saveUser(userRequest));
     }
 
     //F03 /forgot-password
     @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+   //@PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
 
         userService.sendResetPasswordCode(httpServletRequest);
@@ -58,7 +58,7 @@ public class UserController {
 
     //F04 It will update password
     @PostMapping("/reset-password") //http://localhost:8080/reset-password
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+  //  @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
                                  HttpServletRequest servletRequest){
 
