@@ -1,5 +1,6 @@
 package com.project.entity.business.helperentity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.entity.business.Category;
 import lombok.*;
 
@@ -33,6 +34,7 @@ public class Category_Property_Key {
 
 
     @ManyToOne
+    @JsonIgnore
     private Category category;
 
     @OneToMany(mappedBy = "category_property_key_id", cascade = CascadeType.REMOVE)
