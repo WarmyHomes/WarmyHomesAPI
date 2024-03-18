@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +54,10 @@ public class AdvertService {
     public ResponseMessage<AdvertResponse> saveAdvert( AdvertRequestCreate advertRequest ) {
 
             Advert advertMap = advertMapper.mapSaveAdvertRequestToAdvert(advertRequest);
+            advertMap.setCreatedAt(LocalDateTime.now());
+            //advertMap.setBuiltIn(false); gerek yok gibi ama kontrol etmem lazım. Advert entity de builtin i false olarak belirlenmiş zaten aksi belirtilmedikçe
             Advert savedAdvert = advertRepository.save(advertMap);
+
 
 
         AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvert);
@@ -225,11 +229,12 @@ public class AdvertService {
         }
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
+        advertMap.setCreatedAt(LocalDateTime.now());
 
+        // ! Bu alan kontrol edilmeli
         // * PENDING islemi yapilacak
         advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId()); // * Çalışması kontrol edilmesi gerek
         Advert updateAdvert = advertRepository.save(advertMap);
-
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -248,6 +253,8 @@ public class AdvertService {
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
         Advert advertMap = advertMapper.mapAdvertUpdateAdminRequestToAdvert(advertRequest);
+        advertMap.setUpdated_at(LocalDateTime.now());
+
         Advert updateAdvert = advertRepository.save(advertMap);
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -309,7 +316,7 @@ public class AdvertService {
     }
 
     private int calculatePopularity(Advert advert) {
-        int totalTourRequests = tourRequestRepository.countByAdvert(advert);
+        int totalTourRequests = advertRepository.countByAdvert(advert);
         int totalViews = advert.getViewCount();
         // Popülerlik puanı hesaplaması
         return 3 * totalTourRequests + totalViews;
