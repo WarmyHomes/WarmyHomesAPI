@@ -156,6 +156,9 @@ public class AdvertMapper {
                 .tourRequestList(advert.getTourRequestList())
                 .build();
     }
+    public Page<AdvertPageableResponse> mapQueryPageAdvertToAdvertResponse(Page<Advert> advert){
+        return null;
+    }
     public AdvertResponse mapSaveAdvertToAdvertResponse(Advert advert){
         return AdvertResponse.builder()
                 .id(advert.getId())

@@ -38,6 +38,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
   @Query("SELECT e FROM Advert e WHERE LOWER(e.title) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :q, '%'))")
   Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("q") String title, @Param("q") String description, Pageable pageable);
+
   @Query("SELECT a FROM Advert a " +
           "WHERE a.category_id = :categoryId " +
           "AND a.advert_type_id= :advertTypeId " +
@@ -53,5 +54,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
   @Query("SELECT COUNT(id) FROM Advert ")
   Long countAllAdvert();
 
+
+  //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
 
 }

@@ -5,6 +5,8 @@ import com.project.entity.business.Category;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.enums.AdvertStatusType;
 import com.project.entity.enums.RoleType;
+import com.project.entity.user.User;
+import com.project.exception.BadRequestException;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AdvertMapper;
@@ -32,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -65,10 +68,12 @@ public class AdvertService {
 
     // ***************************************** A01
     public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
-                                           Double price_start, Double price_end, Integer status, Pageable pageable, String sort, String type) {
+                                           Double price_start, Double price_end, Integer status, int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
         if (q != null) {
             return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
         } else {
+
             return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
         }
     }
@@ -76,16 +81,19 @@ public class AdvertService {
 
 
 
-    // ******************************************** // A01
-    public ResponseEntity<Page<AdvertResponse>> allAdvertsQueryByPage(AdvertForQueryRequest advertRequest, String q, int page, int size, String sort, String type) {
-        if (q != null){
-            Advert advertQuery = advertMapper.mapAdvertQueryToAdvert(advertRequest);
-            Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
-            //advertRepository.findByTitle(q,pageable);
-
-        }
-        return null;
-    }
+//    // ******************************************** // A01
+//    public Page<AdvertPageableResponse> allAdvertsQueryByPage(AdvertForQueryRequest advertRequest, String q, int page, int size, String sort, String type) {
+//        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+//        if (q != null){
+//            Advert advertQuery = advertMapper.mapAdvertQueryToAdvert(advertRequest);
+//
+////            Page<Advert> advertPage = advertRepository.findByTitleOrDescriptionEquals(advertQuery.getTitle(),pageable);
+////            advertMapper.mapQueryPageAdvertToAdvertResponse(advertPage);
+//            return null;
+//
+//        }
+//            return null;
+//    }
 
 
     // ******************************************** //A02
@@ -121,14 +129,21 @@ public class AdvertService {
     }
 
     // ******************************************** //A05
-    public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type) {
+    public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
+
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+        }
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
 
         return advertRepository.findAll(pageable).map(advertMapper::mapPageAdvertToAdvertResponse);
     }
 
     // *******************************************//A06
-    public Page<AdvertPageableResponse> getAdvertsAdminByPage(String q, Long categoryId, Long advertTypeId, Integer status, Pageable pageable, String sort, String type) {
+    public Page<AdvertPageableResponse> getAdvertsAdminByPage(String q, Long category_id, Long advert_type_id,
+                                                              Double price_start, Double price_end, Integer status, int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
 
         return null;
     }
@@ -162,7 +177,11 @@ public class AdvertService {
     }
 
     // ****************************************** / A08
-    public ResponseMessage<AdvertResponse> getCustomerAdvertId(Long id) {
+    public ResponseMessage<AdvertResponse> getCustomerAdvertId(Long id,HttpServletRequest httpServletRequest) {
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+        }
         Advert advert = isAdvertExist(id);
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -192,8 +211,13 @@ public class AdvertService {
         Advert advertCustomer = isAdvertExist(id);
 
         // ! Role type kontrolu
+
+        if (!advertCustomer.getUser().getUserRole().equals(RoleType.CUSTOMER)){
+
         if (advertCustomer.getUser().getUserRole().getRoleType().equals(RoleType.CUSTOMER)){
+
             throw new ResourceNotFoundException(String.format(ErrorMessages.ROLE_NOT_FOUND));
+        }
         }
         // ! Advert Built-in mi ?
         if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
@@ -216,7 +240,7 @@ public class AdvertService {
     }
 
     // ****************************************** / A12
-    public ResponseMessage<AdvertResponse> updateAdminAdvertById(Long id, AdvertRequestUpdateAdmin advertRequest) {
+    public ResponseMessage<AdvertResponse> updateAdminAdvertById (Long id, AdvertRequestUpdateAdmin advertRequest) {
         Advert advert = isAdvertExist(id);
 
         // ! Advert Built-in mi ?
@@ -234,7 +258,7 @@ public class AdvertService {
     }
 
     // ******************************************** //A13
-    public ResponseMessage<AdvertResponse> deleteAdvertById(Long advertId) {
+    public ResponseMessage<AdvertResponse> deleteAdvertById (Long advertId) {
 
         Advert advert = isAdvertExist(advertId);
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
@@ -309,3 +333,5 @@ public class AdvertService {
 
 
 }
+
+
