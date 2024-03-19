@@ -94,7 +94,7 @@ public class AdvertMapper {
 
 
         return Advert.builder()
-                .title(advertRequest.getTitle())
+                .title(advertRequest.getTitle().toLowerCase())
                 .slug(URLEncoder.encode(advertRequest.getTitle().toLowerCase())) //create ve update isleminde kullanilmasi gerek sadece
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())

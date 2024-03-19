@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.lang.reflect.Array;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
@@ -56,6 +57,9 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     @Query("SELECT COUNT(id) FROM Advert ")
     int countByAdvert(Advert advert);
+
+    @Query("SELECT c FROM Category c WHERE c.slug = ?1")
+    Optional<Advert> findBySlug(String slug);
 
 
     //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
