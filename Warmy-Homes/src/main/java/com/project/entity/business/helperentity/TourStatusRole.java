@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -21,8 +22,10 @@ public class TourStatusRole {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private TourStatus tourStatus;
 
+    @NotNull
     private String statusName;
 
 

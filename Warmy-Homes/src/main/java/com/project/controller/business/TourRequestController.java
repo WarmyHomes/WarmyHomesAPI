@@ -66,7 +66,7 @@ public class TourRequestController {
     }
 
     //*S05
-    @PostMapping("")//!/tour-requests
+    @PostMapping()//!/tour-requests
     @PreAuthorize("hasAnyAuthority('CUSTOMERS')")
     public ResponseEntity<TourRequestResponse> createTourRequest(@RequestBody @Valid TourRequestCreateRequest request, HttpServletRequest servletRequest){
         return  tourRequestService.createTourRequest(request,servletRequest);

@@ -127,7 +127,7 @@ public class AdvertController {
     }
 
     // *******************************************//A07
-    @GetMapping("/{slug}")
+    @GetMapping("/{slug}/tour-request")
     public ResponseMessage<AdvertForSlugResponse> getAdvertBySlug(@PathVariable String slug){
 
         return advertService.getAdvertBySlug(slug);

@@ -2,6 +2,7 @@ package com.project.entity.business;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.business.helperentity.StatusRole;
 import com.project.entity.business.helperentity.TourStatusRole;
 import com.project.entity.user.User;
@@ -34,6 +35,7 @@ public class Tour_Request {
     private LocalTime tour_time;
 
     @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private TourStatusRole status;
     //status:
     //0 Pending Initial value
