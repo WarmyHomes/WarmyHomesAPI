@@ -18,6 +18,7 @@ public class ErrorMessages {
     public static final String ALREADY_REGISTER_MESSAGE_EMAIL = "Error : User with email %s is already registered";
 
     public static final String ROLE_NOT_FOUND = "There is no role like that, check the database";
+    public static final String TOUR_STATUS_NOT_FOUND = "There is no tour status like that, check the database";
     public static final String NOT_FOUND_USER_USERROLE_MESSAGE = "Error: User not found with user-role %s";
     public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with id %s";
     public static final String USER_CAN_NOT_DELETED = "Error: User cannot be deleted";

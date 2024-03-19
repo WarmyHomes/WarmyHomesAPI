@@ -1,9 +1,13 @@
 package com.project;
 
+import com.project.entity.business.helperentity.TourStatusRole;
 import com.project.entity.enums.RoleType;
+import com.project.entity.enums.TourStatus;
 import com.project.entity.user.UserRole;
 import com.project.payload.request.user.UserRequest;
+import com.project.repository.business.TourStatusRepository;
 import com.project.repository.user.UserRoleRepository;
+import com.project.service.business.TourStatusService;
 import com.project.service.user.UserRoleService;
 import com.project.service.user.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -21,14 +25,20 @@ public class WarmyHomesApplication implements CommandLineRunner {
     private final UserRoleRepository userRoleRepository;
 
     private final UserService userService;
+    private final TourStatusRepository tourStatusRepository;
+    private final TourStatusService tourStatusService;
 
     public WarmyHomesApplication(UserRoleService userRoleService,
                                  UserRoleRepository userRoleRepository,
-                                 UserService userService) {
+                                 UserService userService,
+                                 TourStatusService tourStatusService,
+                                 TourStatusRepository tourStatusRepository) {
 
         this.userRoleService = userRoleService;
         this.userRoleRepository = userRoleRepository;
         this.userService = userService;
+        this.tourStatusRepository = tourStatusRepository;
+        this.tourStatusService = tourStatusService;
     }
 
     public static void main(String[] args) {
@@ -80,6 +90,30 @@ public class WarmyHomesApplication implements CommandLineRunner {
 
 
 
+        }
+
+        if (tourStatusService.getAllStatus().isEmpty()){
+            TourStatusRole pending = new TourStatusRole();
+            pending.setTourStatus(TourStatus.PENDING);
+            pending.setStatusName("Pending");
+
+            tourStatusRepository.save(pending);
+
+            TourStatusRole declined = new TourStatusRole();
+            declined.setTourStatus(TourStatus.DECLINED);
+            declined.setStatusName("Rejected");
+            tourStatusRepository.save(declined);
+
+
+            TourStatusRole approved = new TourStatusRole();
+            approved.setTourStatus(TourStatus.APPROVED);
+            approved.setStatusName("Approved");
+            tourStatusRepository.save(approved);
+
+            TourStatusRole canceled = new TourStatusRole();
+            canceled.setTourStatus(TourStatus.CANCELED);
+            canceled.setStatusName("Canceled");
+            tourStatusRepository.save(canceled);
         }
     }
 }

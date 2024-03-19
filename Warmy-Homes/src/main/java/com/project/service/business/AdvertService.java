@@ -374,6 +374,10 @@ public class AdvertService {
       return advertRepository.findAdvertsByFilter(beginningDate, endingDate,category, advertType);
    }
 
+   public Advert findAdvertById(Long id){
+        return advertRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(ErrorMessages.ADVERT_NOT_FOUND));
+   }
+
 
 }
 
