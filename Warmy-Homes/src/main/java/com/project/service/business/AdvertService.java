@@ -26,6 +26,8 @@ import com.project.repository.business.AdvertRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.CityRepository;
 import com.project.repository.business.TourRequestRepository;
+import com.project.service.helper.AdvertHelper;
+import com.project.service.helper.CategoryHelper;
 import com.project.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,11 +52,25 @@ public class AdvertService {
     private final PageableHelper pageableHelper;
     private final CategoryRepository categoryRepository;
     private final CityRepository cityRepository;
+    private final CategoryHelper categoryHelper;
+    private final AdvertHelper advertHelper;
     // ******************************************** // A10
-    public ResponseMessage<AdvertResponse> saveAdvert( AdvertRequestCreate advertRequest ) {
+    public ResponseMessage<AdvertResponse> saveAdvert( AdvertRequestCreate advertRequest, HttpServletRequest httpServletRequest ) {
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+        }
 
             Advert advertMap = advertMapper.mapSaveAdvertRequestToAdvert(advertRequest);
             advertMap.setCreatedAt(LocalDateTime.now());
+
+            // * slug islemleri kontrol edilmeli, duzgun calisiyor mu diye
+            String slug = categoryHelper.toSlug(advertMap.getTitle(),advertMap.getId());
+            boolean isExistSlug = advertRepository.existsAdvertBySlug(slug);
+            if (isExistSlug){
+                throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
+            }
+            advertMap.setSlug(slug);
             //advertMap.setBuiltIn(false); gerek yok gibi ama kontrol etmem lazım. Advert entity de builtin i false olarak belirlenmiş zaten aksi belirtilmedikçe
             Advert savedAdvert = advertRepository.save(advertMap);
 
@@ -69,6 +85,7 @@ public class AdvertService {
                 .httpStatus(HttpStatus.CREATED)
                 .build();
     }
+
 
     // ***************************************** A01
     public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
@@ -115,11 +132,6 @@ public class AdvertService {
 
 
 
-    // ****************HELPER METHODE*************
-    private  Advert isAdvertExist(Long id){
-        return advertRepository.findById(id).orElseThrow(()->
-                new ResourceNotFoundException(String.format(ErrorMessages.ADVERT_NOT_FOUND)));
-    }
 
     // ******************************************** //A03
 
@@ -186,7 +198,7 @@ public class AdvertService {
         if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
-        Advert advert = isAdvertExist(id);
+        Advert advert = advertHelper.isAdvertExist(id);
 
         return ResponseMessage.<AdvertResponse>builder()
                 .object(advertMapper.mapAdvertToAdvertResponse(advert))
@@ -196,8 +208,12 @@ public class AdvertService {
     }
 
     //******************************************** //A09
-    public ResponseMessage<AdvertResponse> getAdminAdvertById(Long id) {
-            Advert advert = isAdvertExist(id);
+    public ResponseMessage<AdvertResponse> getAdminAdvertById(Long id, HttpServletRequest httpServletRequest) {
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+        }
+            Advert advert = advertHelper.isAdvertExist(id);
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -210,26 +226,34 @@ public class AdvertService {
 
 
     // ****************************************** / A11
-    public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AdvertRequestUpdateAuth advertRequest) {
-        // ! Boyle bir advert var mı ?
-        Advert advertCustomer = isAdvertExist(id);
+    public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AdvertRequestUpdateAuth advertRequest ,HttpServletRequest httpServletRequest) {
 
         // ! Role type kontrolu
-
-        if (!advertCustomer.getUser().getUserRole().equals(RoleType.CUSTOMER)){
-
-        if (advertCustomer.getUser().getUserRole().getRoleType().equals(RoleType.CUSTOMER)){
-
-            throw new ResourceNotFoundException(String.format(ErrorMessages.ROLE_NOT_FOUND));
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
-        }
+        // ! Boyle bir advert var mı ?
+        Advert advertCustomer = advertHelper.isAdvertExist(id);
+
+
+
         // ! Advert Built-in mi ?
         if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
-        advertMap.setCreatedAt(LocalDateTime.now());
+        advertMap.setUpdated_at(LocalDateTime.now());
+
+        // * Slug islemi calisiyor mu diye kontrol edilmeli
+        String slug = categoryHelper.toSlug(advertMap.getTitle(),advertMap.getId());
+        boolean isExistSlug = advertRepository.existsAdvertBySlug(slug);
+        if (isExistSlug){
+            throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
+        }
+        advertMap.setSlug(slug);
+
 
         // ! Bu alan kontrol edilmeli
         // * PENDING islemi yapilacak
@@ -245,8 +269,14 @@ public class AdvertService {
     }
 
     // ****************************************** / A12
-    public ResponseMessage<AdvertResponse> updateAdminAdvertById (Long id, AdvertRequestUpdateAdmin advertRequest) {
-        Advert advert = isAdvertExist(id);
+    public ResponseMessage<AdvertResponse> updateAdminAdvertById (Long id, AdvertRequestUpdateAdmin advertRequest , HttpServletRequest httpServletRequest) {
+        // ! Role type kontrolu
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+        }
+
+        Advert advert = advertHelper.isAdvertExist(id);
 
         // ! Advert Built-in mi ?
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
@@ -265,9 +295,15 @@ public class AdvertService {
     }
 
     // ******************************************** //A13
-    public ResponseMessage<AdvertResponse> deleteAdvertById (Long advertId) {
+    public ResponseMessage<AdvertResponse> deleteAdvertById (Long advertId, HttpServletRequest httpServletRequest) {
+        // ! Role type kontrolu
+        User authorized = (User) httpServletRequest.getAttribute("email");
+        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+        }
 
-        Advert advert = isAdvertExist(advertId);
+        Advert advert = advertHelper.isAdvertExist(advertId);
+
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }

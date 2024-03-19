@@ -6,6 +6,7 @@ public class ErrorMessages {
     public static final String ADVERT_ALREADY_EXIST = "Error : Advert is already exist";
 
     public static final String ADVERT_NOT_FOUND = "Error: Advert is not found" ;
+    public static final String SLUG_IS_ALREADY_EXISTS = "Error: Slug is already exists";
 
     private ErrorMessages(){}
 
