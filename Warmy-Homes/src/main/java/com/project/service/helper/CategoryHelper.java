@@ -102,13 +102,9 @@ public class CategoryHelper {
 
     public Category findCategoryById(Long id) {
 
-        return   categoryRepository.findCategoryById(id)
+        return   categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(" Category daha once olusturulmus", "id", id));
 
-       //if (!categoryRepository.existsById(id)) {
-       //    throw new ResourceNotFoundException("existsById ten gelen hataCategory", "id", id);
-
-       //}
 
     }
 
