@@ -185,7 +185,7 @@ public class CategoryService {
     public List<Category_Property_Key_Response> findPropertyKeysByCategoryId(Long categoryId) {
         // Kategori varlığını kontrol et
         //category var mi varsa dondur yoksa hata firlat
-        Category category = categoryHelper.findCategoryById(categoryId);;
+        Category category = categoryHelper.findCategoryById(categoryId);
 
         // Kategoriye ait özellik anahtarlarını bul
         List<Category_Property_Key> propertyKeys = propertyKeyRepository.findByCategoryId(categoryId);
