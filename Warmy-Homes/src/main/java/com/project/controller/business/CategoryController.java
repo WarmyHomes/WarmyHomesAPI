@@ -83,7 +83,7 @@ public class CategoryController {
 
 
     //C07
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/{id}/properties")
     public ResponseEntity<List<Category_Property_Key_Response>>  getCategoryPropertyKeys(@PathVariable Long id) {
         List<Category_Property_Key_Response> propertyKeys = categoryService.findPropertyKeysByCategoryId(id);
@@ -92,7 +92,7 @@ public class CategoryController {
 
 
     //C08
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PostMapping("/{id}/properties")
     public ResponseMessage<Category_Property_Key_Response>  createPropertyKey(@PathVariable("id") Long categoryId,
                                                                               @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
@@ -101,7 +101,7 @@ public class CategoryController {
     }
 
     //c09
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @PutMapping("/properties/{id}")
     public ResponseMessage<Category_Property_Key_Response>  updatePropertyKey(
             @PathVariable Long id,
@@ -112,7 +112,7 @@ public class CategoryController {
     }
 
     //C10
-     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @DeleteMapping("/properties/{id}")
     public ResponseMessage<Category_Property_Key_Response> deletePropertyKey(@PathVariable Long id) {
 
