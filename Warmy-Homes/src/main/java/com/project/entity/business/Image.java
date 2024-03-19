@@ -38,7 +38,7 @@ public class Image {
     private Boolean featured;
 
     @ManyToOne
-    @JoinColumn(name = "advert_id", nullable = false)
+    @JoinColumn(name = "advert_id", nullable = true) // nullable = true olarak ayarlandı
     private Advert advert_id;
 
 

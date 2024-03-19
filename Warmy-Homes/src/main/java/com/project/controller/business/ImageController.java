@@ -28,11 +28,11 @@ public class ImageController {
     }
 
     //I-02 /images/:advertId-post Bir ürünün resim(ler)ini yükleyecektir
-    @PostMapping("/{advertId}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN','CUSTOMER')")
+    @PostMapping()
     public ResponseEntity<List<Long>> uploadImages(
-            @RequestParam("images") List<MultipartFile> images,
-            @PathVariable long id) {
-        List<Long> imageIds = imageService.uploadImages(images,id);
+            @RequestParam("images") List<MultipartFile> images) {
+        List<Long> imageIds = imageService.uploadImages(images);
         return ResponseEntity.status(HttpStatus.CREATED).body(imageIds);
     }
 
