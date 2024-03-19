@@ -9,6 +9,8 @@ import com.project.payload.response.business.AdvertPageableResponse;
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.helperresponse.AdvertForSlugResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
+import com.project.service.helper.CategoryHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class AdvertMapper {
+    private final CategoryHelper categoryHelper;
 
     // * title i slug a cevirirken kullanacagiz
-    public String slugBuilt (String title) {
+    public String slugBuilt (String title , Long id) {
         return title.toLowerCase() // Küçük harfe çevir
                 .replaceAll("[^a-z0-9]+", "-") // harf veya rakam olmayan karakterleri tire ile değiştir
                 .replaceAll("^-|-$", ""); // Baştaki ve sondaki tireleri kaldır
