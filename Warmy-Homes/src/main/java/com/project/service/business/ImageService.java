@@ -39,10 +39,8 @@ public class ImageService {
 
 
 
-    public List<Long> uploadImages(List<MultipartFile> images , long advertId) {
+    public List<Long> uploadImages(List<MultipartFile> images) {
         List<Long> uploadedImageIds = new ArrayList<>();
-        Advert advert = advertRepository.findById(advertId)
-                .orElseThrow(() -> new EntityNotFoundException("Reklam bulunamadı"));
 
         for (MultipartFile imageFile : images) {
             try {
@@ -53,7 +51,7 @@ public class ImageService {
                 image.setType(ImageType.IMAGE); // Varsayılan olarak IMAGE tipinde
                 image.setFeatured(false); // Öne çıkan özelliği belirleme
                 // İlgili reklamı set etmek gerekirse
-                image.setAdvert_id(advert);
+
                 // Burada ilgili reklama ait olan image'ı kaydedin
                 Image savedImage = imageRepository.save(image);
                 uploadedImageIds.add(savedImage.getId());
