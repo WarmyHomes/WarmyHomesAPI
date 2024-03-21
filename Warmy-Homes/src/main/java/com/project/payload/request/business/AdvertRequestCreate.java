@@ -3,6 +3,7 @@ package com.project.payload.request.business;
 import com.project.entity.business.*;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
+import com.project.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +31,8 @@ public class AdvertRequestCreate{
     @NotNull(message = "Please enter your price")
     private Double price;
 
-    //@NotNull
-    //private Integer status=0;
+
+    private Integer status=0;
 
     //private Boolean built_in=false;
 
@@ -45,25 +46,25 @@ public class AdvertRequestCreate{
     private String location;
 
     @NotNull(message = "Please enter your advert type")
-    private Advert_Type advert_type_id;
+    private Long advert_type_id;
 
     @NotNull(message = "Please enter your country")
-    private Country country_id;
+    private Long country_id;
 
     @NotNull(message = "Please enter your city")
-    private City city_id;
+    private Long city_id;
 
     @NotNull(message = "Please enter your district")
-    private District district;
+    private Long district;
 
 //    @NotNull(message = "Please enter your user")
-//    private User user;
+    private User user;
 
     @NotNull(message = "Please enter your category")
-    private Category category_id;
+    private Long category_id;
 
-    @NotNull(message = "Please enter your advert type")
-    private List<Image> images;
+    //@NotNull(message = "Please enter your advert type")
+    private List<Long> images;
 
 
 //    @NotNull
@@ -74,7 +75,7 @@ public class AdvertRequestCreate{
 //    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
 //    private LocalDateTime update_at;
 
-    @NotNull(message = "Please enter your category_property_values")
+    //@NotNull(message = "Please enter your category_property_values")
     private List<Category_Property_Value> category_property_values;
 
 //    @NotNull(message = "Please enter your tourRequestList")

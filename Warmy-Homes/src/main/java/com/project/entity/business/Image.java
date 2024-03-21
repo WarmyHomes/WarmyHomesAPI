@@ -1,5 +1,6 @@
 package com.project.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.entity.enums.ImageType;
 import lombok.*;
 
@@ -38,7 +39,7 @@ public class Image {
     private Boolean featured;
 
     @ManyToOne
-    @JoinColumn(name = "advert_id", nullable = true)
+    @JsonIgnore
     private Advert advert_id;
 
 

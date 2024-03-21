@@ -49,12 +49,6 @@ public class AdvertMapper {
                 .title(advertRequest.getTitle())
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
-                .advert_type_id(advertRequest.getAdvert_type_id())
-                .country_id(advertRequest.getCountry_id())
-                .city_id(advertRequest.getCity_id())
-                .district(advertRequest.getDistrict())
-                .category_id(advertRequest.getCategory_id())
-                .images(advertRequest.getImages())
                 .location(advertRequest.getLocation())
                 .build();
     }
@@ -98,12 +92,6 @@ public class AdvertMapper {
                 .slug(URLEncoder.encode(advertRequest.getTitle().toLowerCase())) //create ve update isleminde kullanilmasi gerek sadece
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
-                .advert_type_id(advertRequest.getAdvert_type_id())
-                .country_id(advertRequest.getCountry_id())
-                .city_id(advertRequest.getCity_id())
-                .district(advertRequest.getDistrict())
-                .category_id(advertRequest.getCategory_id())
-                .images(advertRequest.getImages())
                 .location(advertRequest.getLocation())
                 .build();
     }

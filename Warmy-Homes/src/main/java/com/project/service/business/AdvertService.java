@@ -1,8 +1,10 @@
 package com.project.service.business;
 
-import com.project.entity.business.Advert;
-import com.project.entity.business.Category;
+import com.project.entity.business.*;
+import com.project.entity.business.helperentity.AdvertStatusRole;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.business.helperentity.Category_Property_Key;
+import com.project.entity.business.helperentity.Category_Property_Value;
 import com.project.entity.enums.AdvertStatusType;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
@@ -22,10 +24,9 @@ import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.business.helperresponse.AdvertForSlugResponse;
 import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
-import com.project.repository.business.AdvertRepository;
-import com.project.repository.business.CategoryRepository;
-import com.project.repository.business.CityRepository;
-import com.project.repository.business.TourRequestRepository;
+import com.project.repository.business.*;
+import com.project.repository.helperRepository.CategoryPropertyValueRepository;
+import com.project.repository.user.UserRepository;
 import com.project.service.helper.AdvertHelper;
 import com.project.service.helper.CategoryHelper;
 import com.project.service.helper.PageableHelper;
@@ -54,15 +55,80 @@ public class AdvertService {
     private final CityRepository cityRepository;
     private final CategoryHelper categoryHelper;
     private final AdvertHelper advertHelper;
+    private final UserRepository userRepository;
+    private final AdvertTypesRepository advertTypesRepository;
+    private final AddressCountryRepository countryRepository;
+    private final AddressCityRepository addressCityRepository;
+    private final AddressDistrictRepository districtRepository;
+    private final ImageRepository imageRepository;
+    private final CategoryPropertyValueRepository categoryPropertyValueRepository;
+
     // ******************************************** // A10
     public ResponseMessage<AdvertResponse> saveAdvert( AdvertRequestCreate advertRequest, HttpServletRequest httpServletRequest ) {
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
 
+        Category category = categoryRepository.findById(advertRequest.getCategory_id()).orElseThrow(()->
+                    new ResourceNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND));
+        Advert_Type advertType = advertTypesRepository.findById(advertRequest.getAdvert_type_id()).orElseThrow(()->
+                    new ResourceNotFoundException(ErrorMessages.ADVERT_TYPE_NOT_FOUND));
+        Country country = countryRepository.findById(advertRequest.getCountry_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Country not found."));
+
+        City city = cityRepository.findById(advertRequest.getCity_id())
+                .orElseThrow(() -> new ResourceNotFoundException("City not found."));
+
+        District district = districtRepository.findById(advertRequest.getDistrict())
+                .orElseThrow(() -> new ResourceNotFoundException("District not found."));
+
+        //List<Image> image = imageRepository.findAllById(advertRequest.getImages());
+
+
             Advert advertMap = advertMapper.mapSaveAdvertRequestToAdvert(advertRequest);
             advertMap.setCreatedAt(LocalDateTime.now());
+            advertMap.setAdvert_type_id(advertType);
+            advertMap.setCategory_id(category);
+            advertMap.setCountry_id(country);
+            advertMap.setCity_id(city);
+            advertMap.setDistrict(district);
+            advertMap.setIsActive(false);
+            advertMap.setBuiltIn(false);
+            advertMap.setUser(user);
+            // * advertMap.setStatus(AdvertStatusType.PENDING.id); // * Seni bulacam oğlum
+            //advertMap.setImages(image);
+
+        List<Category_Property_Value> category_property_values=advertRequest.getCategory_property_values();
+        List<Category_Property_Key> categoryPropertyKeys=category.getCategory_property_keys();
+
+        for (int i = 0; i <categoryPropertyKeys.size() ; i++) {
+            category_property_values.get(i).setCategory_property_key_id(categoryPropertyKeys.get(i));
+            category_property_values.get(i).setId(advertMap.getId());
+        }
+
+
+        for (Category_Property_Value k:category_property_values) {
+            categoryPropertyValueRepository.save(k);
+
+
+        }
+
+        advertMap.setCategory_property_values(category_property_values);
+
+            Advert advertsavedd = advertRepository.save(advertMap);
+
+        for (Category_Property_Value cpv : category_property_values) {
+            cpv.setAdvert(advertsavedd);
+        }
+
+        for (Category_Property_Value k:category_property_values) {
+            categoryPropertyValueRepository.save(k);
+
+
+        }
+
 
             // * slug islemleri kontrol edilmeli, duzgun calisiyor mu diye
             String slug = categoryHelper.toSlug(advertMap.getTitle(),advertMap.getId());
@@ -72,11 +138,11 @@ public class AdvertService {
             }
             advertMap.setSlug(slug);
             //advertMap.setBuiltIn(false); gerek yok gibi ama kontrol etmem lazım. Advert entity de builtin i false olarak belirlenmiş zaten aksi belirtilmedikçe
-            Advert savedAdvert = advertRepository.save(advertMap);
+
+            Advert savedAdvertSlug = advertRepository.save(advertMap);
 
 
-
-        AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvert);
+        AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvertSlug);
 
 
         return ResponseMessage.<AdvertResponse>builder()
