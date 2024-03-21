@@ -4,6 +4,7 @@ import com.project.entity.business.Advert;
 import com.project.entity.business.Category;
 import com.project.entity.business.City;
 import com.project.entity.business.helperentity.Advert_Type;
+import com.project.entity.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -60,6 +61,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     @Query("SELECT c FROM Category c WHERE c.slug = ?1")
     Optional<Advert> findBySlug(String slug);
+
 
 
     //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
