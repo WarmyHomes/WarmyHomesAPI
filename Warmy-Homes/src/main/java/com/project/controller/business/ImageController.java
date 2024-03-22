@@ -20,7 +20,6 @@ public class ImageController {
     private final ImageService imageService;
 
     //I-01 /images/:imageId-get Bir reklamın görüntüsünü alacak
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     @GetMapping("/{imageId}")
     public ResponseEntity<Image> getImageById(@PathVariable Long imageId) {
         Image image = imageService.getImageById(imageId);
@@ -46,14 +45,15 @@ public class ImageController {
 
 
         // I-04 /images/:imageId-put
-    @PutMapping("/{imageId}")
-    public ImageResponse setFeaturedImage(@PathVariable Long imageId) {
-        return  null;// imageService.setFeaturedImage(imageId);
-
-    }
+   //    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN','CUSTOMER')")
+   //    @PutMapping("/{imageId}")
+   //    public ImageResponse setFeaturedImage(@PathVariable Long imageId) {
+   //    return  null;// imageService.setFeaturedImage(imageId);
+   //}
 
         // I-04 /images/:imageId-put Bir görüntünün öne çıkan alanını ayarlayacaktır
-        @PutMapping("/images/:imageId")
+        @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN','CUSTOMER')")
+        @PutMapping("/{imageId}")
         public ResponseEntity<String> setFeaturedImage1(@PathVariable Long imageId) {
             imageService.setFeaturedImage(imageId);
             return ResponseEntity.status(HttpStatus.OK).body("Image feature updated successfully.");
