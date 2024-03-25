@@ -1,8 +1,10 @@
 package com.project.entity.business.helperentity;
 
+import com.project.entity.business.Advert;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Getter
@@ -23,4 +25,8 @@ public class Advert_Type {
 
     @Column(nullable = false)
     private Boolean builtIn;
+
+    @OneToMany
+    private List<Advert> advert;
+
 }
