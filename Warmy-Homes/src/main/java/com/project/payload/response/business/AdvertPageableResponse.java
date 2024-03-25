@@ -33,7 +33,7 @@ public class AdvertPageableResponse {
     private Double price;
 
 
-    private AdvertStatusRole status;
+    private byte status;
 
     private Boolean is_active;
 

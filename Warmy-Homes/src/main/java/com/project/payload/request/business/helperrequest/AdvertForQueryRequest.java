@@ -26,6 +26,6 @@ public class AdvertForQueryRequest {
 
     private Double price_end;
 
-    private AdvertStatusRole status;
+    private byte status;
 
 }

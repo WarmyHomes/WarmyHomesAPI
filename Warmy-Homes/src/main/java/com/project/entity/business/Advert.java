@@ -9,6 +9,7 @@ import com.project.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Advert {
     @ManyToOne(fetch = FetchType.LAZY)
     private Country country_id;
 
-
+    @Size(min = 5, max = 200,message = "Your slug should be at least 5 chars")
     private String slug;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,8 +53,8 @@ public class Advert {
     private District district;
 
 
-    @OneToOne
-    private AdvertStatusRole status;
+
+    private byte status = 0 ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -61,7 +62,7 @@ public class Advert {
 
     private Boolean builtIn = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category_id;
 
 
@@ -74,7 +75,7 @@ public class Advert {
 
     private Integer viewCount;
 
-    @OneToMany(mappedBy = "advert_id",cascade = CascadeType.REMOVE)
+    @OneToMany( mappedBy = "advert", cascade = CascadeType.REMOVE)
     private List<Image> images;
 
     @Column(name = "update_at")

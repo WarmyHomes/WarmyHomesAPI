@@ -47,22 +47,22 @@ public class AdvertRequestUpdateAuth {
 //    private String location;
 
     @NotNull(message = "Please enter your advert type")
-    private Advert_Type advert_type_id;
+    private Long advert_type_id;
 
     @NotNull(message = "Please enter your country")
-    private Country country_id;
+    private Long country_id;
 
     @NotNull(message = "Please enter your city")
-    private City city_id;
+    private Long city_id;
 
     @NotNull(message = "Please enter your district")
-    private District district;
+    private Long district;
 
 //    @NotNull(message = "Please enter your user")
 //    private User user;
 
     @NotNull(message = "Please enter your category")
-    private Category category_id;
+    private Long category_id;
 
 //    @NotNull(message = "Please enter your advert type")
 //    private List<Image> images;
