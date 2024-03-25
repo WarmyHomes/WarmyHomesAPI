@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface CategoryPropertyValueRepository extends JpaRepository<Category_Property_Value, Long> {
     // CategoryPropertyKey'e bağlı tüm CategoryPropertyValue kayıtlarını siler
     @Modifying
-    @Query("delete from Category_Property_Value cpv where cpv.category_property_key_id = :categoryPropertyKey")
+    @Query("delete from Category_Property_Value cpv where cpv.category_property_key = :categoryPropertyKey")
     void deleteByCategoryPropertyKey(@Param("categoryPropertyKey") Category_Property_Key categoryPropertyKey);
 
 }

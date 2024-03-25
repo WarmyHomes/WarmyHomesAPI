@@ -1,5 +1,6 @@
 package com.project.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,6 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Builder(toBuilder = true)
+
+@Table(name = "t_city")
 public class City {
 
     /* branch g */
@@ -20,7 +23,8 @@ public class City {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private Country country_id;
+    @JsonIgnore
+    @ManyToOne
+    private Country country;
 
 }

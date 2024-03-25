@@ -24,8 +24,8 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
 
     @Query("SELECT a FROM Advert a WHERE a.createdAt = :beginningDate " +
-            "AND a.updated_at = :endingDate AND a.category_id = :category " +
-            "AND a.advert_type_id = :advertType")
+            "AND a.updated_at = :endingDate AND a.category = :category " +
+            "AND a.advert_type = :advertType")
     List<Advert> findAdvertsByFilter(@Param("beginningDate") LocalDate beginningDate,
                                      @Param("endingDate") LocalDate endingDate,
                                      @Param("category") Category category,
@@ -42,8 +42,8 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
   Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("q") String title, @Param("q") String description, Pageable pageable);
 
   @Query("SELECT a FROM Advert a " +
-          "WHERE a.category_id = :categoryId " +
-          "AND a.advert_type_id= :advertTypeId " +
+          "WHERE a.category = :categoryId " +
+          "AND a.advert_type= :advertTypeId " +
           "AND a.price BETWEEN :priceStart AND :priceEnd " +
           "AND a.status = :status " +
           "ORDER BY CASE WHEN :sort = 'price' AND :type = 'asc' THEN a.price END ASC, " +

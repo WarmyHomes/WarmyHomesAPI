@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "category_property_values")
+@Table(name = "t_category_property_values")
 public class Category_Property_Value {
     //SongulCelik
     @Id
@@ -27,7 +27,7 @@ public class Category_Property_Value {
     private String name;
 
     @ManyToOne
-    private Category_Property_Key category_property_key_id;
+    private Category_Property_Key category_property_key;
 
     @ManyToOne
     private Advert advert;

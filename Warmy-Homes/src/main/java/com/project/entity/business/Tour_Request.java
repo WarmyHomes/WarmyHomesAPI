@@ -45,16 +45,14 @@ public class Tour_Request {
 
 
     @ManyToOne
-    @JoinColumn(name ="advert_id", nullable = true)
-    private Advert advert_id;
+
+    private Advert advert;
 
     @ManyToOne
-    @JoinColumn(name="owner_user_id", nullable = true)
-    private User owner_user_id;
+    private User owner_user;
 
     @ManyToOne
-    @JoinColumn(name = "guest_user_id", nullable = true)
-    private User guest_user_id;
+    private User guest_user;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
     private LocalDateTime create_at;
