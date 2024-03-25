@@ -61,8 +61,8 @@ public class AdvertService {
     private final AddressCountryRepository countryRepository;
     private final AddressCityRepository addressCityRepository;
     private final AddressDistrictRepository districtRepository;
-    private final ImageRepository imageRepository;
-    private final ImageService imageService;
+    //private final ImageRepository imageRepository;
+    //private final ImageService imageService;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
     // ******************************************** // A10
