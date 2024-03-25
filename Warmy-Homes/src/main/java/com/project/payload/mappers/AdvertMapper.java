@@ -60,11 +60,6 @@ public class AdvertMapper {
                 .title(advertRequest.getTitle())
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
-                .advert_type_id(advertRequest.getAdvert_type_id())
-                .country_id(advertRequest.getCountry_id())
-                .city_id(advertRequest.getCity_id())
-                .district(advertRequest.getDistrict())
-                .category_id(advertRequest.getCategory_id())
                 .isActive(advertRequest.getIs_active())
                 .category_property_values(advertRequest.getCategory_property_values())
                 .build();
@@ -76,11 +71,6 @@ public class AdvertMapper {
                 .title(advertRequest.getTitle())
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
-                .advert_type_id(advertRequest.getAdvert_type_id())
-                .country_id(advertRequest.getCountry_id())
-                .city_id(advertRequest.getCity_id())
-                .district(advertRequest.getDistrict())
-                .category_id(advertRequest.getCategory_id())
                 .category_property_values(advertRequest.getCategory_property_values())
                 .build();
     }
@@ -89,7 +79,7 @@ public class AdvertMapper {
 
         return Advert.builder()
                 .title(advertRequest.getTitle().toLowerCase())
-                .slug(URLEncoder.encode(advertRequest.getTitle().toLowerCase())) //create ve update isleminde kullanilmasi gerek sadece
+                .slug(advertRequest.getTitle()) //create ve update isleminde kullanilmasi gerek sadece
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
                 .location(advertRequest.getLocation())
@@ -164,6 +154,7 @@ public class AdvertMapper {
                 .location(advert.getLocation())
                 .category_id(advert.getCategory_id())
                 .images(advert.getImages())
+                .category_property_values(advert.getCategory_property_values())
                 .build();
     }
 

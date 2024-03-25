@@ -32,7 +32,7 @@ public class AdvertForSlugResponse {
     private Double price;
 
 
-    private AdvertStatusRole status;
+    private byte status;
 
 
 

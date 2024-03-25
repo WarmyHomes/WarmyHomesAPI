@@ -39,8 +39,7 @@ public class Image {
     private Boolean featured;
 
     @ManyToOne
-    @JsonIgnore
-    private Advert advert_id;
+    private Advert advert;
 
 
 }

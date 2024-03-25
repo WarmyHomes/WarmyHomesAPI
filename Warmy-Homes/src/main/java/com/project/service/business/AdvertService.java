@@ -62,6 +62,7 @@ public class AdvertService {
     private final AddressCityRepository addressCityRepository;
     private final AddressDistrictRepository districtRepository;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
     // ******************************************** // A10
@@ -72,18 +73,16 @@ public class AdvertService {
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
 
-        Category category = categoryRepository.findById(advertRequest.getCategory_id()).orElseThrow(()->
-                    new ResourceNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND));
-        Advert_Type advertType = advertTypesRepository.findById(advertRequest.getAdvert_type_id()).orElseThrow(()->
-                    new ResourceNotFoundException(ErrorMessages.ADVERT_TYPE_NOT_FOUND));
-        Country country = countryRepository.findById(advertRequest.getCountry_id())
-                .orElseThrow(() -> new ResourceNotFoundException("Country not found."));
+        Category category = advertHelper.isCategoryExist(advertRequest.getCategory_id());
+        Advert_Type advertType = advertHelper.isAdvert_TypeExist(advertRequest.getAdvert_type_id());
+        Country country = advertHelper.isCountryExist(advertRequest.getCountry_id());
+        City city = advertHelper.isCityExist(advertRequest.getCity_id());
+        District district = advertHelper.isDistrictExist(advertRequest.getDistrict());
 
-        City city = cityRepository.findById(advertRequest.getCity_id())
-                .orElseThrow(() -> new ResourceNotFoundException("City not found."));
-
-        District district = districtRepository.findById(advertRequest.getDistrict())
-                .orElseThrow(() -> new ResourceNotFoundException("District not found."));
+       // List<Long> imagesId = advertRequest.getImages();
+//        for (Long imageId : imagesId){
+//            imageService.getImageById(imageId);
+//        }
 
         //List<Image> image = imageRepository.findAllById(advertRequest.getImages());
 
@@ -98,8 +97,11 @@ public class AdvertService {
             advertMap.setIsActive(false);
             advertMap.setBuiltIn(false);
             advertMap.setUser(user);
+            advertMap.setStatus((byte)0);
+            //advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId()); // * AdvertStatusType ı iptal edip status u byte olarak tanımladım
             // * advertMap.setStatus(AdvertStatusType.PENDING.id); // * Seni bulacam oğlum
             //advertMap.setImages(image);
+
 
         List<Category_Property_Value> category_property_values=advertRequest.getCategory_property_values();
         List<Category_Property_Key> categoryPropertyKeys=category.getCategory_property_keys();
@@ -296,13 +298,20 @@ public class AdvertService {
     public ResponseMessage<AdvertResponse> updateAdvertById(Long id, AdvertRequestUpdateAuth advertRequest ,HttpServletRequest httpServletRequest) {
 
         // ! Role type kontrolu
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
+
+        Category category = advertHelper.isCategoryExist(advertRequest.getCategory_id());
+        Advert_Type advertType = advertHelper.isAdvert_TypeExist(advertRequest.getAdvert_type_id());
+        Country country = advertHelper.isCountryExist(advertRequest.getCountry_id());
+        City city = advertHelper.isCityExist(advertRequest.getCity_id());
+        District district = advertHelper.isDistrictExist(advertRequest.getDistrict());
+
         // ! Boyle bir advert var mı ?
         Advert advertCustomer = advertHelper.isAdvertExist(id);
-
 
 
         // ! Advert Built-in mi ?
@@ -312,6 +321,15 @@ public class AdvertService {
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
         advertMap.setUpdated_at(LocalDateTime.now());
+        advertMap.setAdvert_type_id(advertType);
+        advertMap.setCategory_id(category);
+        advertMap.setCountry_id(country);
+        advertMap.setCity_id(city);
+        advertMap.setDistrict(district);
+        advertMap.setIsActive(false);
+        advertMap.setBuiltIn(false);
+        advertMap.setUser(user);
+        advertMap.setStatus((byte) 0);
 
         // * Slug islemi calisiyor mu diye kontrol edilmeli
         String slug = categoryHelper.toSlug(advertMap.getTitle(),advertMap.getId());
@@ -320,11 +338,7 @@ public class AdvertService {
             throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
         }
         advertMap.setSlug(slug);
-
-
-        // ! Bu alan kontrol edilmeli
-        // * PENDING islemi yapilacak
-        advertMap.getStatus().setAdvertStatusId(AdvertStatusType.PENDING.getId()); // * Çalışması kontrol edilmesi gerek
+        
         Advert updateAdvert = advertRepository.save(advertMap);
 
 
@@ -338,12 +352,18 @@ public class AdvertService {
     // ****************************************** / A12
     public ResponseMessage<AdvertResponse> updateAdminAdvertById (Long id, AdvertRequestUpdateAdmin advertRequest , HttpServletRequest httpServletRequest) {
         // ! Role type kontrolu
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.ADMIN)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
 
         Advert advert = advertHelper.isAdvertExist(id);
+        Category category = advertHelper.isCategoryExist(advertRequest.getCategory_id());
+        Advert_Type advertType = advertHelper.isAdvert_TypeExist(advertRequest.getAdvert_type_id());
+        Country country = advertHelper.isCountryExist(advertRequest.getCountry_id());
+        City city = advertHelper.isCityExist(advertRequest.getCity_id());
+        District district = advertHelper.isDistrictExist(advertRequest.getDistrict());
 
         // ! Advert Built-in mi ?
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
@@ -351,6 +371,14 @@ public class AdvertService {
         }
         Advert advertMap = advertMapper.mapAdvertUpdateAdminRequestToAdvert(advertRequest);
         advertMap.setUpdated_at(LocalDateTime.now());
+        advertMap.setAdvert_type_id(advertType);
+        advertMap.setCategory_id(category);
+        advertMap.setCountry_id(country);
+        advertMap.setCity_id(city);
+        advertMap.setDistrict(district);
+        advertMap.setIsActive(false);
+        advertMap.setBuiltIn(false);
+        advertMap.setUser(user);
 
         Advert updateAdvert = advertRepository.save(advertMap);
 
