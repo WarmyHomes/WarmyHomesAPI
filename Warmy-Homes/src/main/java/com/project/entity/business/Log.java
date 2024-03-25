@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "log")
+@Table(name = "t_log")
 public class Log {
     //TugbaAkdogan
 
@@ -35,12 +35,10 @@ public class Log {
     //TOUR_REQUEST_CANCELED Tour request is canceled
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user_id;
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "advert_id")
-    private Advert advert_id;
+    private Advert advert;
 
     @NotNull
     private LocalDateTime create_at;

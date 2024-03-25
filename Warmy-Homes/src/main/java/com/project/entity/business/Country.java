@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
+@Table(name = "t_country")
 public class Country {
 
     @Id
@@ -18,7 +19,7 @@ public class Country {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "country_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "country", cascade = CascadeType.REMOVE)
     private Set<City> city;
 
 

@@ -89,10 +89,10 @@ public class AdvertService {
 
             Advert advertMap = advertMapper.mapSaveAdvertRequestToAdvert(advertRequest);
             advertMap.setCreatedAt(LocalDateTime.now());
-            advertMap.setAdvert_type_id(advertType);
-            advertMap.setCategory_id(category);
-            advertMap.setCountry_id(country);
-            advertMap.setCity_id(city);
+            advertMap.setAdvert_type(advertType);
+            advertMap.setCategory(category);
+            advertMap.setCountry(country);
+            advertMap.setCity(city);
             advertMap.setDistrict(district);
             advertMap.setIsActive(false);
             advertMap.setBuiltIn(false);
@@ -107,7 +107,7 @@ public class AdvertService {
         List<Category_Property_Key> categoryPropertyKeys=category.getCategory_property_keys();
 
         for (int i = 0; i <categoryPropertyKeys.size() ; i++) {
-            category_property_values.get(i).setCategory_property_key_id(categoryPropertyKeys.get(i));
+            category_property_values.get(i).setCategory_property_key(categoryPropertyKeys.get(i));
             category_property_values.get(i).setId(advertMap.getId());
         }
 
@@ -326,10 +326,10 @@ public class AdvertService {
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
         advertMap.setUpdated_at(LocalDateTime.now());
-        advertMap.setAdvert_type_id(advertType);
-        advertMap.setCategory_id(category);
-        advertMap.setCountry_id(country);
-        advertMap.setCity_id(city);
+        advertMap.setAdvert_type(advertType);
+        advertMap.setCategory(category);
+        advertMap.setCountry(country);
+        advertMap.setCity(city);
         advertMap.setDistrict(district);
         advertMap.setIsActive(false);
         advertMap.setBuiltIn(false);
@@ -376,10 +376,10 @@ public class AdvertService {
         }
         Advert advertMap = advertMapper.mapAdvertUpdateAdminRequestToAdvert(advertRequest);
         advertMap.setUpdated_at(LocalDateTime.now());
-        advertMap.setAdvert_type_id(advertType);
-        advertMap.setCategory_id(category);
-        advertMap.setCountry_id(country);
-        advertMap.setCity_id(city);
+        advertMap.setAdvert_type(advertType);
+        advertMap.setCategory(category);
+        advertMap.setCountry(country);
+        advertMap.setCity(city);
         advertMap.setDistrict(district);
         advertMap.setIsActive(false);
         advertMap.setBuiltIn(false);

@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories")
+@Table(name = "t_categories")
 @Builder(toBuilder = true)
 public class Category {
     //SongulCelik
@@ -58,7 +58,7 @@ public class Category {
     private List<Category_Property_Key> category_property_keys;
 
 
-    @OneToMany(mappedBy = "category_id",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
     private List<Advert> adverts;
 
 
