@@ -29,7 +29,7 @@ public class TourRequestController {
     public ResponseEntity<List<TourRequestResponse>> getUsersTourRequest(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+            @RequestParam(value = "sort", defaultValue = "tour_date") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type,
             HttpServletRequest servletRequest){
         return tourRequestService.getUsersTourRequest(page, size, sort, type, servletRequest);
@@ -37,16 +37,15 @@ public class TourRequestController {
 
     //*S02
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")//'MANAGER'
     public ResponseEntity<List<TourRequestResponse>> getAllTourRequestWithPage(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+            @RequestParam(value = "sort", defaultValue = "tour_date") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type,
             HttpServletRequest servletRequest
     ){
-        List<TourRequestResponse> tourRequestResponse= tourRequestService.getAllTourRequestWithPage(page,size,sort,type, servletRequest);
-        return ResponseEntity.ok(tourRequestResponse);
+         return tourRequestService.getAllTourRequestWithPage(page,size,sort,type, servletRequest);
     }
 
     //*S03

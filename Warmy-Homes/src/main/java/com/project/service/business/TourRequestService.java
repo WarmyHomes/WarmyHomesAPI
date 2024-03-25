@@ -48,29 +48,28 @@ public class TourRequestService {
         String email =(String) servletRequest.getAttribute("email");
         User user =  userService.findUserByEmail(email);
         UserRole roles = user.getUserRole();
-        if (roles.getRoleType().equals(RoleType.ANONYMOUS)){
+        if (!roles.getRoleType().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         Pageable pageable =pageableHelper.getPageableWithProperties(page,size,sort,type);
-        Page<Tour_Request> usersTourReq =  userService.getUsersTourRequestById(user.getId(),pageable);
-        //!!!
+        Page<Tour_Request> usersTourReq =  tourRequestRepository.findAllByUserId(user.getId(),pageable);
+
         List<TourRequestResponse> mapped =tourRequestMapper.usersTourRequestToTourRequestResponseList(usersTourReq);
         return ResponseEntity.ok(mapped);
     }
 
     //*S02
-    public List<TourRequestResponse> getAllTourRequestWithPage(int page, int size, String sort, String type, HttpServletRequest servletRequest) {
-        UserRole roles = getUsersRole(servletRequest);
-
-        if (!roles.equals(RoleType.MANAGER) || !roles.equals(RoleType.CUSTOMER)){
+    public  ResponseEntity<List<TourRequestResponse>> getAllTourRequestWithPage(int page, int size, String sort, String type, HttpServletRequest servletRequest) {
+        String email = (String) servletRequest.getAttribute("email");
+        User user = userService.findUserByEmail(email);
+        UserRole role = user.getUserRole();
+        if(!role.getRoleType().equals(RoleType.ADMIN)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
-
         Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
-        return tourRequestRepository.findAll(pageable)
-                .stream()
-                .map(tourRequestMapper::mapTourRequestToResponse)
-                .collect(Collectors.toList());
+        Page<Tour_Request> request = tourRequestRepository.findAll(pageable);
+        List<TourRequestResponse> mapped = tourRequestMapper.usersTourRequestToTourRequestResponseList(request);
+        return ResponseEntity.ok(mapped);
     }
 
     //*S03
