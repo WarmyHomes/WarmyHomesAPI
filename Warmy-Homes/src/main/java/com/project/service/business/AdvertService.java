@@ -146,6 +146,11 @@ public class AdvertService {
 
 
         AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvertSlug);
+//        advertResponse.setAdvert_type_id(advertType);
+//        advertResponse.setDistrict(district);
+//        advertResponse.setCity_id(city);
+//        advertResponse.setCountry_id(country);
+//        advertResponse.setCategory_property_values(category_property_values);
 
 
         return ResponseMessage.<AdvertResponse>builder()
