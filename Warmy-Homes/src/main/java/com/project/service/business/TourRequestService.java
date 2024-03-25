@@ -126,7 +126,7 @@ public class TourRequestService {
         createdTourRequest.setGuest_user(user);
 //        createdTourRequest.setAdvert_id(advert);
         createdTourRequest.setStatus(pending);
-        createdTourRequest.setAdvert_id(advert);
+        createdTourRequest.setAdvert(advert);
 
 
         //* database kayit islemi
