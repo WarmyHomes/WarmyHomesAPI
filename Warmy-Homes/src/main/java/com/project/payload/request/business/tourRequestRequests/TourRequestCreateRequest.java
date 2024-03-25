@@ -21,5 +21,5 @@ public class TourRequestCreateRequest {
     private LocalTime tour_time;
 
     @NotNull
-    private Advert advert_id;
+    private Long advert_id;
 }

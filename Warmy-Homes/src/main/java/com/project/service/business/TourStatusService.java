@@ -16,7 +16,7 @@ public class TourStatusService {
 
     private final TourStatusRepository tourStatusRepository;
 
-    public TourStatus getTourStatus(TourStatus status){
+    public TourStatusRole getTourStatus(TourStatus status){
         return tourStatusRepository.findByEnumTourStatusEquals(status).orElseThrow(()->
                 new ResourceNotFoundException(ErrorMessages.TOUR_STATUS_NOT_FOUND));
     }
