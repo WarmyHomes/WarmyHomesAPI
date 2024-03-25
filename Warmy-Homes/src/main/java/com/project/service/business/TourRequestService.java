@@ -122,8 +122,8 @@ public class TourRequestService {
         statusRoles.add(pending);
         Tour_Request createdTourRequest = tourRequestMapper.createTourResponseToTourRequest(request);
         createdTourRequest.setCreate_at(LocalDateTime.now());
-        createdTourRequest.setOwner_user_id(ownerUser);
-        createdTourRequest.setGuest_user_id(user);
+        createdTourRequest.setOwner_user(ownerUser);
+        createdTourRequest.setGuest_user(user);
 //        createdTourRequest.setAdvert_id(advert);
         createdTourRequest.setStatus(pending);
         createdTourRequest.setAdvert_id(advert);

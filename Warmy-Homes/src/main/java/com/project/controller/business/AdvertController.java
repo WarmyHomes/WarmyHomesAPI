@@ -33,7 +33,7 @@ import java.util.List;
 public class AdvertController {
 
     private final AdvertService advertService;
-
+        //deneme
     // ******************************************** //A10 Finished
     @PostMapping
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "t_adverts_status_role")
 public class AdvertStatusRole {
 
     @Id

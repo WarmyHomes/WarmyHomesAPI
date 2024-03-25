@@ -12,10 +12,10 @@ public interface TourRequestRepository extends JpaRepository<Tour_Request,Long> 
     @Override
     boolean existsById(Long id);
 
-    @Query(value = "SELECT COUNT(*) FROM t_tour_request WHERE advert_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM t_tour_request WHERE advert = ?1", nativeQuery = true)
     int countByAdvert(Advert advert);
 
-    @Query("SELECT tr FROM Tour_Request tr WHERE tr.owner_user_id.id = ?1")
+    @Query("SELECT tr FROM Tour_Request tr WHERE tr.owner_user.id = ?1")
     Page<Tour_Request> findAllByUserId(Long userId, Pageable pageable);
 
     @Query("SELECT tr FROM Tour_Request tr")
