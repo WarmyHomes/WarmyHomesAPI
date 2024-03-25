@@ -18,6 +18,7 @@ import com.project.entity.enums.ImageType;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private final AdvertRepository advertRepository;
+    private final AdvertService advertService;
     private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
 
     //I-01 /images/:imageId-get Bir reklamın görüntüsünü alacak
@@ -39,7 +40,7 @@ public class ImageService {
 
 
 
-    public List<Long> uploadImages(List<MultipartFile> images) {
+    public List<Long> uploadImages(List<MultipartFile> images,Long advertId) {
         List<Long> uploadedImageIds = new ArrayList<>();
 
         for (MultipartFile imageFile : images) {
@@ -48,9 +49,31 @@ public class ImageService {
                 Image image = new Image();
                 image.setData(imageData);
                 image.setName(imageFile.getOriginalFilename());
-                image.setType(ImageType.IMAGE); // Varsayılan olarak IMAGE tipinde
+
+                String dosyaAdi = imageFile.getOriginalFilename();
+                int uzantiBaslangicIndex = dosyaAdi.lastIndexOf(".");
+                String uzanti = dosyaAdi.substring(uzantiBaslangicIndex + 1).toLowerCase();
+
+
+                if (uzanti.equalsIgnoreCase("jpg") || uzanti.equalsIgnoreCase("jpeg")) {
+                    image.setType(ImageType.JPEG);
+                } else if (uzanti.equalsIgnoreCase("png")) {
+                    image.setType(ImageType.PNG);
+                } else if (uzanti.equalsIgnoreCase("gif")) {
+                    image.setType(ImageType.GIF);
+                } else  if(uzanti.equalsIgnoreCase("image")){
+                    image.setType(ImageType.IMAGE);
+                }else {
+                    throw new IllegalStateException("Resmin tipi belirlenemedi."); // Hata mesajı ile birlikte istisna fırlatma
+                }
+
+
                 image.setFeatured(false); // Öne çıkan özelliği belirleme
-                // İlgili reklamı set etmek gerekirse
+
+
+                Advert advert=advertService.isAdvert(advertId);
+
+                image.setAdvert_id(advert);
 
                 // Burada ilgili reklama ait olan image'ı kaydedin
                 Image savedImage = imageRepository.save(image);
