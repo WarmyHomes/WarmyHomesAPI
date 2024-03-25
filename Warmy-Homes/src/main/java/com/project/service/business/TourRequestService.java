@@ -110,9 +110,9 @@ public class TourRequestService {
 
 
         //*ownerUser icin request den algımız advert id ile owner user a ulasıcaz.
-        Long advertId = request.getAdvert_id();
+        Long requestAdvertId = request.getAdvert_id();
+        Advert advert = advertService.findAdvertById(requestAdvertId);
 
-        Advert advert = advertService.findAdvertById(request.getAdvert_id());
 
 
         User ownerUser = advert.getUser();
@@ -126,6 +126,7 @@ public class TourRequestService {
         createdTourRequest.setGuest_user(user);
 //        createdTourRequest.setAdvert_id(advert);
         createdTourRequest.setStatus(pending);
+        createdTourRequest.setAdvert_id(advert);
 
 
         //* database kayit islemi
