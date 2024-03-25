@@ -29,7 +29,10 @@ import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +43,8 @@ public class TourRequestService {
     private final PageableHelper pageableHelper;
     private final TourRequestMapper tourRequestMapper;
     private final UserService userService;
-
-
-
+    private final AdvertService advertService;
+    private final TourStatusService tourStatusService;
     //*S01
     public ResponseEntity<List<TourRequestResponse>> getUsersTourRequest(int page, int size, String sort, String type, HttpServletRequest servletRequest) {
         String email =(String) servletRequest.getAttribute("email");
@@ -75,11 +77,13 @@ public class TourRequestService {
     //*S03
     public TourRequestResponse getUsersTourRequestDetails(Long id, HttpServletRequest servletRequest) {
 
+        Tour_Request req = isTourRequestExistById(id);
+
         UserRole roles = getUsersRole(servletRequest);
         if (!roles.equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
-        Tour_Request req = isTourRequestExistById(id);
+
         return tourRequestMapper.mapTourRequestToResponse(req);
     }
 
@@ -98,23 +102,37 @@ public class TourRequestService {
     public ResponseEntity<TourRequestResponse> createTourRequest(TourRequestCreateRequest request, HttpServletRequest servletRequest) {
         //*tetikleyen kullanicinin user bilgilerine erismek icin unique degerini aldık ve userrepository e gidip ariyicaz.
         String email =(String) servletRequest.getAttribute("email");
-        User guestUser =  userService.findUserByEmail(email);
-        if (!guestUser.getUserRole().equals(RoleType.CUSTOMER)){
+        User user =  userService.findUserByEmail(email);
+        UserRole guestRoles = user.getUserRole();
+        if (!guestRoles.getRoleType().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
+
+
         //*ownerUser icin request den algımız advert id ile owner user a ulasıcaz.
-        Advert advert = request.getAdvert_id();
+        Long advertId = request.getAdvert_id();
+
+        Advert advert = advertService.findAdvertById(request.getAdvert_id());
+
+
         User ownerUser = advert.getUser();
         //* owner ve guest user tourRequest e map islemi.
-        Tour_Request createdTourRequest = tourRequestMapper.createTourRequestToTourRequest(request);
-        createdTourRequest.toBuilder()
-                .owner_user_id(ownerUser)
-                .guest_user_id(guestUser)
-                .build();
-        createdTourRequest.getStatus().setTourStatus(TourStatus.PENDING);
+        List<TourStatusRole> statusRoles = new ArrayList<>();
+        TourStatusRole pending = tourStatusService.getTourStatus(TourStatus.PENDING);
+        statusRoles.add(pending);
+        Tour_Request createdTourRequest = tourRequestMapper.createTourResponseToTourRequest(request);
+        createdTourRequest.setCreate_at(LocalDateTime.now());
+        createdTourRequest.setOwner_user_id(ownerUser);
+        createdTourRequest.setGuest_user_id(user);
+//        createdTourRequest.setAdvert_id(advert);
+        createdTourRequest.setStatus(pending);
+
+
         //* database kayit islemi
         Tour_Request savedTourRequest = tourRequestRepository.save(createdTourRequest);
-        return ResponseEntity.ok(tourRequestMapper.savedTourRequestToTourRequestResponse(savedTourRequest));
+        TourRequestResponse res = tourRequestMapper.savedTourRequestToTourRequestResponse(savedTourRequest);
+
+        return ResponseEntity.ok(res);
     }
 
     //*S06

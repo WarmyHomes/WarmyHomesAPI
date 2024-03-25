@@ -2,10 +2,8 @@ package com.project.entity.business.helperentity;
 
 import com.project.entity.enums.StatusType;
 import com.project.entity.enums.TourStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+
 public class TourStatusRole {
 
     @Id

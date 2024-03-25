@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.business.helperentity.StatusRole;
 import com.project.entity.business.helperentity.TourStatusRole;
+import com.project.entity.enums.TourStatus;
 import com.project.entity.user.User;
 import lombok.*;
 
@@ -28,15 +29,14 @@ public class Tour_Request {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "You must enter tour date")
+
     private LocalDate tour_date;
 
-    @NotNull(message = "You must enter tour time")
+
     private LocalTime tour_time;
 
     @OneToOne
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private TourStatusRole status;
+    private TourStatusRole status ;
     //status:
     //0 Pending Initial value
     //1 Approved Can be approved by owner of property
@@ -45,15 +45,15 @@ public class Tour_Request {
 
 
     @ManyToOne
-    @JoinColumn(name ="advert_id", nullable = false)
+    @JoinColumn(name ="advert_id", nullable = true)
     private Advert advert_id;
 
     @ManyToOne
-    @JoinColumn(name="owner_user_id", nullable = false)
+    @JoinColumn(name="owner_user_id", nullable = true)
     private User owner_user_id;
 
     @ManyToOne
-    @JoinColumn(name = "guest_user_id", nullable = false)
+    @JoinColumn(name = "guest_user_id", nullable = true)
     private User guest_user_id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")

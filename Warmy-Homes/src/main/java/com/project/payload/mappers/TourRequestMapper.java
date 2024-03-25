@@ -65,11 +65,10 @@ public class TourRequestMapper {
                .build();
     }
 
-    public Tour_Request createTourRequestToTourRequest(TourRequestCreateRequest request){
+    public Tour_Request createTourResponseToTourRequest(TourRequestCreateRequest request){
         return Tour_Request.builder()
                 .tour_date(request.getTour_date())
                 .tour_time(request.getTour_time())
-                .advert_id(request.getAdvert_id())
                 .build();
     }
 
@@ -78,7 +77,6 @@ public class TourRequestMapper {
                .id(request.getId())
                .tour_date(request.getTour_date())
                .tour_time(request.getTour_time())
-               .status(request.getStatus().getStatusName())
                .create_at(request.getCreate_at())
                .update_at(request.getUpdate_at())
                .advert_id(request.getAdvert_id())

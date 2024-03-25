@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface TourStatusRepository extends JpaRepository<TourStatusRole,Long> {
     @Query("SELECT tsr FROM TourStatusRole tsr WHERE tsr.tourStatus= ?1")
-    Optional<TourStatus> findByEnumTourStatusEquals(TourStatus status);
+    Optional<TourStatusRole> findByEnumTourStatusEquals(TourStatus status);
 }
