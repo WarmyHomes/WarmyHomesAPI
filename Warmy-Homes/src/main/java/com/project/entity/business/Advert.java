@@ -32,6 +32,7 @@ public class Advert {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
+
     private Advert_Type advert_type;
 
 
