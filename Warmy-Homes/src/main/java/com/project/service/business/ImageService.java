@@ -73,7 +73,7 @@ public class ImageService {
 
                 Advert advert=advertService.isAdvert(advertId);
 
-                image.setAdvert_id(advert);
+                image.setAdvert(advert);
 
                 // Burada ilgili reklama ait olan image'ı kaydedin
                 Image savedImage = imageRepository.save(image);
