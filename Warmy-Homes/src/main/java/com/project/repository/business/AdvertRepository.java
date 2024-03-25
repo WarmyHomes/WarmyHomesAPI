@@ -64,6 +64,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
 
 
+
     //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);
 
 }

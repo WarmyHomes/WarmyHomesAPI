@@ -42,6 +42,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -385,18 +386,23 @@ public class AdvertService {
     }
 
     //bilgichoca
-    public boolean isAdvertTypeUsed(Long advertTypeId) {
-
-        List<Advert> adverts = advertRepository.findAll();
-
-        for(Advert advert:adverts){
-            if (advert.getAdvert_type_id().getId()==advertTypeId){
-                throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+    public Advert isAdvert(Long advertTypeId) {
+        Advert adverta = null;
+        for (Advert advert : advertRepository.findAll()) {
+            if (advert.getId().equals(advertTypeId)) {
+                adverta = advert;
+                break;
             }
         }
 
-        return false;
+        // Belirtilen advertTypeId ile eşleşen bir reklam bulunamadı
+        if (adverta == null) {
+            throw new IllegalStateException(ErrorMessages.ADVERT_TYPE_IN_USE_ERROR_MESSAGE);
+        }
+
+        return adverta;
     }
+
 
     private final TourRequestRepository tourRequestRepository;
 
