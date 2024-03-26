@@ -32,7 +32,6 @@ public class Advert {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     private Advert_Type advert_type;
 
 
@@ -58,7 +57,9 @@ public class Advert {
     private byte status = 0 ;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
+
 
 
     private Boolean builtIn = false;
