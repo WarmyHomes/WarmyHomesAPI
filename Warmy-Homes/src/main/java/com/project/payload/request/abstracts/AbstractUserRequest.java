@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractUserRequest {
+public  class AbstractUserRequest {
 
     @NotNull(message = "Please enter your name")
     @Pattern(regexp = "\\A(?!\\s*\\Z).+", message = "Your name must consist of the characters .")
@@ -41,7 +41,7 @@ public abstract class AbstractUserRequest {
     private String phone;
 
 
-    private UserRole userRole;
+   // private UserRole userRole;
 
 
 
