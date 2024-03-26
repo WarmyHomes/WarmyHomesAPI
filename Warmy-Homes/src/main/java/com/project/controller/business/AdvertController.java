@@ -157,7 +157,7 @@ public class AdvertController {
     @PutMapping("/auth/{id}")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseMessage<AdvertResponse> updateAdvertById (@PathVariable Long id,
-                                                             AdvertRequestUpdateAuth advertRequest,
+                                                             @RequestBody @Valid AdvertRequestUpdateAuth advertRequest,
                                                              HttpServletRequest httpServletRequest){
         return advertService.updateAdvertById(id,advertRequest ,httpServletRequest);
     }
@@ -167,7 +167,7 @@ public class AdvertController {
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> updateAdminAdvertById (@PathVariable Long id,
-                                                             AdvertRequestUpdateAdmin advertRequest,
+                                                             @RequestBody @Valid AdvertRequestUpdateAdmin advertRequest,
                                                                   HttpServletRequest httpServletRequest){
         return advertService.updateAdminAdvertById(id,advertRequest, httpServletRequest);
     }
