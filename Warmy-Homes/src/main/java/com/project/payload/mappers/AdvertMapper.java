@@ -57,9 +57,11 @@ public class AdvertMapper {
 
 
         return Advert.builder()
+                .id(advertRequest.getId())
                 .title(advertRequest.getTitle())
                 .description(advertRequest.getDescription())
                 .price(advertRequest.getPrice())
+                .location(advertRequest.getLocation())
                 .isActive(advertRequest.getIs_active())
                 .category_property_values(advertRequest.getCategory_property_values())
                 .build();
@@ -147,6 +149,7 @@ public class AdvertMapper {
                 .title(advert.getTitle())
                 .description(advert.getDescription())
                 .price(advert.getPrice())
+                .location(advert.getLocation())
                 .advert_type_id(advert.getAdvert_type())
                 .country_id(advert.getCountry())
                 .city_id(advert.getCity())

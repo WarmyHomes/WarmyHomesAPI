@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.project.entity.enums.ImageType;
@@ -131,5 +132,9 @@ public class ImageService {
     }
 
 
-
+//    public List<Image> findWithAdvert(Long id) {
+//        List<Image> images = imageRepository.findWithAdvert(id);
+//
+//        return images;
+//    }
 }
