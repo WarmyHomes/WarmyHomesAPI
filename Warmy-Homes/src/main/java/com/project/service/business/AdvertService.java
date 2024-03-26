@@ -216,10 +216,13 @@ public class AdvertService {
     // ******************************************** //A05
     public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
 
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        // ! Role type kontrolu
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
+
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
 
         return advertRepository.findAll(pageable).map(advertMapper::mapPageAdvertToAdvertResponse);
@@ -263,10 +266,13 @@ public class AdvertService {
 
     // ****************************************** / A08
     public ResponseMessage<AdvertResponse> getCustomerAdvertId(Long id,HttpServletRequest httpServletRequest) {
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        // ! Role type kontrolu
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
+
         Advert advert = advertHelper.isAdvertExist(id);
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -278,11 +284,14 @@ public class AdvertService {
 
     //******************************************** //A09
     public ResponseMessage<AdvertResponse> getAdminAdvertById(Long id, HttpServletRequest httpServletRequest) {
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        // ! Role type kontrolu
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.ADMIN)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
-            Advert advert = advertHelper.isAdvertExist(id);
+
+        Advert advert = advertHelper.isAdvertExist(id);
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -396,11 +405,12 @@ public class AdvertService {
 
     // ******************************************** //A13
     public ResponseMessage<AdvertResponse> deleteAdvertById (Long advertId, HttpServletRequest httpServletRequest) {
-        // ! Role type kontrolu
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
-            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
-        }
+//        // ! Role type kontrolu
+//        String email = (String) httpServletRequest.getAttribute("email");
+//        User user = userRepository.findByEmail(email);
+//        if (!user.getUserRole().equals(RoleType.ADMIN)){
+//            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+//        }
 
         Advert advert = advertHelper.isAdvertExist(advertId);
 

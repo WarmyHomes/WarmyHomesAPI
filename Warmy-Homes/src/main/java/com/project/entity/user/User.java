@@ -83,7 +83,7 @@ public class User extends EntryDate {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Log> logs;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Advert> advertList;
 
 
