@@ -28,7 +28,7 @@ public class Advert_Type {
     private Boolean builtIn;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "advert_type")
+    @OneToMany(mappedBy = "advert_type",cascade = CascadeType.REMOVE)
     private List<Advert> advert;
 
 }
