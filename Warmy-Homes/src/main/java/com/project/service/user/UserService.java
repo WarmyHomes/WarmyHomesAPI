@@ -187,31 +187,35 @@ public class UserService {
     }
 
     //F07 It will update the authenticated user’s password
-    public void updateUserPassword(HttpServletRequest request, BaseUserRequest baseUserRequest) {
+    public ResponseEntity<String> updateUserPassword(HttpServletRequest request, BaseUserRequest baseUserRequest) {
         String email= (String) request.getAttribute("email");
         User user = userRepository.findByEmail(email);
         if (Boolean.TRUE.equals(user.getBuilt_in())){
             throw  new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
-        if(!passwordEncoder.matches(baseUserRequest.getPassword_hash(), user.getPassword_hash())){
-            throw  new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
-        }
+//        if(!passwordEncoder.matches(baseUserRequest.getPassword_hash(), user.getPassword_hash())){
+//            throw  new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
+//        }
 
         String encodedPassword = passwordEncoder.encode(baseUserRequest.getPassword_hash());
         user.setPassword_hash(encodedPassword);
         userRepository.save(user);
 
+        String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
+        return  ResponseEntity.ok(response);
+
     }
 
     //F08 /users/auth It will delete authenticated user
-    public String deleteUser(HttpServletRequest servletRequest, BaseUserRequest baseUserRequest) {
+    public String deleteUser(HttpServletRequest servletRequest) {
         //biult_in control
         Boolean isBuiltlIn = (Boolean) servletRequest.getAttribute("built_in");
         if (Boolean.TRUE.equals(isBuiltlIn)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
 
-        User user = (User) servletRequest.getAttribute("password_hash");
+        String email = (String) servletRequest.getAttribute("email");
+        User user=userRepository.findByEmail(email);
         Long id= user.getId();
 
         //isadvert and tour request

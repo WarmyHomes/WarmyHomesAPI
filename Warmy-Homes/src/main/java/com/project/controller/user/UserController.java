@@ -87,14 +87,13 @@ public class UserController {
     }
 
     //F07 It will update the authenticated user’s password
-    @PatchMapping("/users/auth ") // http://localhost:8080/auth/users/auth
+    @PatchMapping("/users/auth ") // http://localhost:8080/users/auth
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
     public ResponseEntity<String> updateUserPassword(HttpServletRequest request,
                                                      @RequestBody @Valid BaseUserRequest baseUserRequest){
 
-        userService.updateUserPassword(request,baseUserRequest);
-        String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
-        return  ResponseEntity.ok(response);
+        return   userService.updateUserPassword(request,baseUserRequest);
+
 
 
     }
@@ -103,9 +102,8 @@ public class UserController {
     //F08 /users/auth It will delete authenticated user
     @DeleteMapping("/users/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<String> deleteUser(HttpServletRequest request,
-                                             @RequestBody @Valid BaseUserRequest baseUserRequest) {
-        return ResponseEntity.ok(userService.deleteUser(request,baseUserRequest));
+    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
+        return ResponseEntity.ok(userService.deleteUser(request));
     }
 
     //F09 /users/admin  It will return users
