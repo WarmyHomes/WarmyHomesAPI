@@ -57,12 +57,7 @@ public class AdvertService {
     private final CategoryHelper categoryHelper;
     private final AdvertHelper advertHelper;
     private final UserRepository userRepository;
-    private final AdvertTypesRepository advertTypesRepository;
-    private final AddressCountryRepository countryRepository;
-    private final AddressCityRepository addressCityRepository;
-    private final AddressDistrictRepository districtRepository;
-    //private final ImageRepository imageRepository;
-    //private final ImageService imageService;
+   // private final ImageService imageService;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
     // ******************************************** // A10
@@ -146,6 +141,11 @@ public class AdvertService {
 
 
         AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvertSlug);
+//        advertResponse.setAdvert_type_id(advertType);
+//        advertResponse.setDistrict(district);
+//        advertResponse.setCity_id(city);
+//        advertResponse.setCountry_id(country);
+//        advertResponse.setCategory_property_values(category_property_values);
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -318,8 +318,13 @@ public class AdvertService {
         if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
+        // ! Image kontrol
+//        List<Long> imageList = advertRequest.getImages();
+//        List<Image> currentImages = imageService.findWithAdvert(id);
+
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
+        advertMap.setCreatedAt(advertMap.getCreatedAt());
         advertMap.setUpdated_at(LocalDateTime.now());
         advertMap.setAdvert_type(advertType);
         advertMap.setCategory(category);
@@ -334,9 +339,9 @@ public class AdvertService {
         // * Slug islemi calisiyor mu diye kontrol edilmeli
         String slug = categoryHelper.toSlug(advertMap.getTitle(),advertMap.getId());
         boolean isExistSlug = advertRepository.existsAdvertBySlug(slug);
-        if (isExistSlug){
-            throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
-        }
+//        if (isExistSlug){
+//            throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
+//        }
         advertMap.setSlug(slug);
         
         Advert updateAdvert = advertRepository.save(advertMap);

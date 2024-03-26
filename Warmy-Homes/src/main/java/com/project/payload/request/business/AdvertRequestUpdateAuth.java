@@ -6,6 +6,7 @@ import com.project.entity.business.helperentity.Category_Property_Value;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Lombok;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -19,6 +20,9 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class AdvertRequestUpdateAuth {
+
+    @NotNull(message = "Please enter your id")
+    private Long id;
 
     @NotNull(message = "Please enter your title")
     @Size(min = 5, max = 150,message = "Your title should be at least 5 chars")
@@ -43,8 +47,8 @@ public class AdvertRequestUpdateAuth {
 //    @NotNull
 //    private Integer view_count=0;
 
-//    @NotNull(message = "Please enter your location")
-//    private String location;
+    @NotNull(message = "Please enter your location")
+    private String location;
 
     @NotNull(message = "Please enter your advert type")
     private Long advert_type_id;
@@ -65,7 +69,7 @@ public class AdvertRequestUpdateAuth {
     private Long category_id;
 
 //    @NotNull(message = "Please enter your advert type")
-//    private List<Image> images;
+    private List<Long> images;
 
 
 //    @NotNull

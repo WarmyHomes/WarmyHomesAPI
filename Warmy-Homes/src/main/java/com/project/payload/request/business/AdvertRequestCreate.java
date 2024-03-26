@@ -37,7 +37,7 @@ public class AdvertRequestCreate{
     //private Boolean built_in=false;
 
 //    @NotNull
-//    private Boolean is_active=true;
+    private Boolean is_active=true;
 
 //    @NotNull
 //    private Integer view_count=0;
