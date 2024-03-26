@@ -41,16 +41,17 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
   @Query("SELECT e FROM Advert e WHERE LOWER(e.title) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :q, '%'))")
   Page<Advert> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("q") String title, @Param("q") String description, Pageable pageable);
 
-  @Query("SELECT a FROM Advert a " +
-          "WHERE a.category = :categoryId " +
-          "AND a.advert_type= :advertTypeId " +
-          "AND a.price BETWEEN :priceStart AND :priceEnd " +
-          "AND a.status = :status " +
-          "ORDER BY CASE WHEN :sort = 'price' AND :type = 'asc' THEN a.price END ASC, " +
-          "CASE WHEN :sort = 'price' AND :type = 'desc' THEN a.price END DESC, " +
-          "CASE WHEN :sort = 'status' AND :type = 'asc' THEN a.status END ASC, " +
-          "CASE WHEN :sort = 'status' AND :type = 'desc' THEN a.status END DESC")
-  Page<Advert> findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(Pageable pageable, Long categoryId, Long advertTypeId, Double priceStart, Double priceEnd, Integer status, String sort, String type);
+    @Query("SELECT a FROM Advert a WHERE " +
+            "a.category.id = :categoryId AND " +
+            "a.advert_type.id = :advertTypeId AND " +
+            "a.price BETWEEN :priceStart AND :priceEnd AND " +
+            "a.status = :status")
+    Page<Advert> findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(Pageable pageable,
+                                                                                   @Param("categoryId") Long categoryId,
+                                                                                   @Param("advertTypeId") Long advertTypeId,
+                                                                                   @Param("priceStart") Double priceStart,
+                                                                                   @Param("priceEnd") Double priceEnd,
+                                                                                   @Param("status") Integer status);
 
   // NOT: This method wrote for Report.
   @Query("SELECT COUNT(id) FROM Advert ")

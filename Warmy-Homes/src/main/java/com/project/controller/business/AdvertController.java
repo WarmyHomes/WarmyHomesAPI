@@ -173,7 +173,7 @@ public class AdvertController {
     }
 
     //********************************************//A13
-    @DeleteMapping("/adverts/admin/{advertId}")
+    @DeleteMapping("/admin/{advertId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> advertDeleteById(@PathVariable Long advertId, HttpServletRequest httpServletRequest){
         return advertService.deleteAdvertById(advertId, httpServletRequest);

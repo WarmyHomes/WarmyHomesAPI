@@ -84,7 +84,7 @@ public class Advert {
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
     private LocalDateTime updated_at;
 
-    @OneToMany(mappedBy = "advert")
+    @OneToMany(mappedBy = "advert",cascade = CascadeType.REMOVE)
     private List<Category_Property_Value> category_property_values;
 
     @OneToMany(mappedBy = "advert", cascade = CascadeType.REMOVE)
