@@ -45,7 +45,6 @@ public class Tour_Request {
 
 
     @ManyToOne
-
     private Advert advert;
 
     @ManyToOne

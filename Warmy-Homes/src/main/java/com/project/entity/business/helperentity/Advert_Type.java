@@ -27,9 +27,8 @@ public class Advert_Type {
     @Column(nullable = false)
     private Boolean builtIn;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "advert_type")
-
     private List<Advert> advert;
 
 }

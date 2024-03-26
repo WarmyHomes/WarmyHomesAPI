@@ -1,5 +1,6 @@
 package com.project.entity.business.helperentity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.entity.business.Advert;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +28,11 @@ public class Category_Property_Value {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     private Category_Property_Key category_property_key;
 
+
+    @JsonIgnore
     @ManyToOne
     private Advert advert;
 
