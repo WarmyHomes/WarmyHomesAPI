@@ -57,12 +57,7 @@ public class AdvertService {
     private final CategoryHelper categoryHelper;
     private final AdvertHelper advertHelper;
     private final UserRepository userRepository;
-    private final AdvertTypesRepository advertTypesRepository;
-    private final AddressCountryRepository countryRepository;
-    private final AddressCityRepository addressCityRepository;
-    private final AddressDistrictRepository districtRepository;
-    //private final ImageRepository imageRepository;
-    //private final ImageService imageService;
+   // private final ImageService imageService;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
     // ******************************************** // A10
@@ -89,10 +84,10 @@ public class AdvertService {
 
             Advert advertMap = advertMapper.mapSaveAdvertRequestToAdvert(advertRequest);
             advertMap.setCreatedAt(LocalDateTime.now());
-            advertMap.setAdvert_type_id(advertType);
-            advertMap.setCategory_id(category);
-            advertMap.setCountry_id(country);
-            advertMap.setCity_id(city);
+            advertMap.setAdvert_type(advertType);
+            advertMap.setCategory(category);
+            advertMap.setCountry(country);
+            advertMap.setCity(city);
             advertMap.setDistrict(district);
             advertMap.setIsActive(false);
             advertMap.setBuiltIn(false);
@@ -107,7 +102,7 @@ public class AdvertService {
         List<Category_Property_Key> categoryPropertyKeys=category.getCategory_property_keys();
 
         for (int i = 0; i <categoryPropertyKeys.size() ; i++) {
-            category_property_values.get(i).setCategory_property_key_id(categoryPropertyKeys.get(i));
+            category_property_values.get(i).setCategory_property_key(categoryPropertyKeys.get(i));
             category_property_values.get(i).setId(advertMap.getId());
         }
 
@@ -146,6 +141,11 @@ public class AdvertService {
 
 
         AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvertSlug);
+//        advertResponse.setAdvert_type_id(advertType);
+//        advertResponse.setDistrict(district);
+//        advertResponse.setCity_id(city);
+//        advertResponse.setCountry_id(country);
+//        advertResponse.setCategory_property_values(category_property_values);
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -216,10 +216,13 @@ public class AdvertService {
     // ******************************************** //A05
     public Page<AdvertPageableResponse> getAdvertByPageAll(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
 
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        // ! Role type kontrolu
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
+
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
 
         return advertRepository.findAll(pageable).map(advertMapper::mapPageAdvertToAdvertResponse);
@@ -263,10 +266,13 @@ public class AdvertService {
 
     // ****************************************** / A08
     public ResponseMessage<AdvertResponse> getCustomerAdvertId(Long id,HttpServletRequest httpServletRequest) {
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        // ! Role type kontrolu
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.CUSTOMER)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
+
         Advert advert = advertHelper.isAdvertExist(id);
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -278,11 +284,14 @@ public class AdvertService {
 
     //******************************************** //A09
     public ResponseMessage<AdvertResponse> getAdminAdvertById(Long id, HttpServletRequest httpServletRequest) {
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
+        // ! Role type kontrolu
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = userRepository.findByEmail(email);
+        if (user.getUserRole().equals(RoleType.ADMIN)){
             throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
         }
-            Advert advert = advertHelper.isAdvertExist(id);
+
+        Advert advert = advertHelper.isAdvertExist(id);
 
 
         return ResponseMessage.<AdvertResponse>builder()
@@ -318,13 +327,18 @@ public class AdvertService {
         if (advertCustomer.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
+        // ! Image kontrol
+//        List<Long> imageList = advertRequest.getImages();
+//        List<Image> currentImages = imageService.findWithAdvert(id);
+
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
+        advertMap.setCreatedAt(advertMap.getCreatedAt());
         advertMap.setUpdated_at(LocalDateTime.now());
-        advertMap.setAdvert_type_id(advertType);
-        advertMap.setCategory_id(category);
-        advertMap.setCountry_id(country);
-        advertMap.setCity_id(city);
+        advertMap.setAdvert_type(advertType);
+        advertMap.setCategory(category);
+        advertMap.setCountry(country);
+        advertMap.setCity(city);
         advertMap.setDistrict(district);
         advertMap.setIsActive(false);
         advertMap.setBuiltIn(false);
@@ -334,9 +348,9 @@ public class AdvertService {
         // * Slug islemi calisiyor mu diye kontrol edilmeli
         String slug = categoryHelper.toSlug(advertMap.getTitle(),advertMap.getId());
         boolean isExistSlug = advertRepository.existsAdvertBySlug(slug);
-        if (isExistSlug){
-            throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
-        }
+//        if (isExistSlug){
+//            throw new BadRequestException(ErrorMessages.SLUG_IS_ALREADY_EXISTS);
+//        }
         advertMap.setSlug(slug);
         
         Advert updateAdvert = advertRepository.save(advertMap);
@@ -371,10 +385,10 @@ public class AdvertService {
         }
         Advert advertMap = advertMapper.mapAdvertUpdateAdminRequestToAdvert(advertRequest);
         advertMap.setUpdated_at(LocalDateTime.now());
-        advertMap.setAdvert_type_id(advertType);
-        advertMap.setCategory_id(category);
-        advertMap.setCountry_id(country);
-        advertMap.setCity_id(city);
+        advertMap.setAdvert_type(advertType);
+        advertMap.setCategory(category);
+        advertMap.setCountry(country);
+        advertMap.setCity(city);
         advertMap.setDistrict(district);
         advertMap.setIsActive(false);
         advertMap.setBuiltIn(false);
@@ -391,11 +405,12 @@ public class AdvertService {
 
     // ******************************************** //A13
     public ResponseMessage<AdvertResponse> deleteAdvertById (Long advertId, HttpServletRequest httpServletRequest) {
-        // ! Role type kontrolu
-        User authorized = (User) httpServletRequest.getAttribute("email");
-        if (!authorized.getUserRole().equals(RoleType.CUSTOMER)){
-            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
-        }
+//        // ! Role type kontrolu
+//        String email = (String) httpServletRequest.getAttribute("email");
+//        User user = userRepository.findByEmail(email);
+//        if (!user.getUserRole().equals(RoleType.ADMIN)){
+//            throw new BadRequestException(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE);
+//        }
 
         Advert advert = advertHelper.isAdvertExist(advertId);
 

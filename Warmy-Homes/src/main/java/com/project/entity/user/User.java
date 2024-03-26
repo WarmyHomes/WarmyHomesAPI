@@ -74,16 +74,16 @@ public class User extends EntryDate {
     private UserRole userRole;
 
 
-    @OneToMany(mappedBy = "owner_user_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "owner_user", cascade = CascadeType.REMOVE)
     private List<Tour_Request> tourRequests;
 
-    @OneToMany(mappedBy = "guest_user_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "guest_user", cascade = CascadeType.REMOVE)
     private List<Tour_Request> tour_requestList;
 
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Log> logs;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Advert> advertList;
 
 

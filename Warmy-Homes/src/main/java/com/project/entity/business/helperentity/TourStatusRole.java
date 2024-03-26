@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity
 
+@Table(name = "t_tour_status_role")
 public class TourStatusRole {
 
     @Id

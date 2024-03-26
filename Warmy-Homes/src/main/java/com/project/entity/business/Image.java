@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder(toBuilder = true)
-//TODO class ismini duzelt
+
+@Table(name = "t_image")
 public class Image {
     //EmreAktas
 

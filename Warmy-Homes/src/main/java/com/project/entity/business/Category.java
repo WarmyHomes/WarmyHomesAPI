@@ -1,6 +1,7 @@
 package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.entity.business.helperentity.Category_Property_Key;
 import lombok.*;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories")
+@Table(name = "t_categories")
 @Builder(toBuilder = true)
 public class Category {
     //SongulCelik
@@ -57,8 +58,8 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<Category_Property_Key> category_property_keys;
 
-
-    @OneToMany(mappedBy = "category_id",cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
     private List<Advert> adverts;
 
 

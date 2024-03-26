@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "category_property_keys")
+@Table(name = "t_category_property_keys")
 @Builder(toBuilder = true)
 public class Category_Property_Key {
     //SongulCelik
@@ -37,7 +37,7 @@ public class Category_Property_Key {
     @JsonIgnore
     private Category category;
 
-    @OneToMany(mappedBy = "category_property_key_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "category_property_key", cascade = CascadeType.REMOVE)
     private List<Category_Property_Value> category_property_values;
 
 }

@@ -1,6 +1,7 @@
 package com.project.payload.response.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.entity.business.*;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
@@ -21,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AdvertResponse {
 
 

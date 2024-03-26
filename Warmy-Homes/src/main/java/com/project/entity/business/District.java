@@ -10,6 +10,8 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder(toBuilder = true)
+
+@Table(name = "t_district")
 public class District {
     //EmreAktas
 
@@ -24,7 +26,7 @@ public class District {
 
     //TODO class ismini duzelt
     @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn( nullable = false)
     private City city;
 
 

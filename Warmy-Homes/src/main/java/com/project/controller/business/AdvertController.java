@@ -33,7 +33,7 @@ import java.util.List;
 public class AdvertController {
 
     private final AdvertService advertService;
-
+        //deneme
     // ******************************************** //A10 Finished
     @PostMapping
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
@@ -157,7 +157,7 @@ public class AdvertController {
     @PutMapping("/auth/{id}")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseMessage<AdvertResponse> updateAdvertById (@PathVariable Long id,
-                                                             AdvertRequestUpdateAuth advertRequest,
+                                                             @RequestBody @Valid AdvertRequestUpdateAuth advertRequest,
                                                              HttpServletRequest httpServletRequest){
         return advertService.updateAdvertById(id,advertRequest ,httpServletRequest);
     }
@@ -167,13 +167,13 @@ public class AdvertController {
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> updateAdminAdvertById (@PathVariable Long id,
-                                                             AdvertRequestUpdateAdmin advertRequest,
+                                                             @RequestBody @Valid AdvertRequestUpdateAdmin advertRequest,
                                                                   HttpServletRequest httpServletRequest){
         return advertService.updateAdminAdvertById(id,advertRequest, httpServletRequest);
     }
 
     //********************************************//A13
-    @DeleteMapping("/adverts/admin/{advertId}")
+    @DeleteMapping("/admin/{advertId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> advertDeleteById(@PathVariable Long advertId, HttpServletRequest httpServletRequest){
         return advertService.deleteAdvertById(advertId, httpServletRequest);

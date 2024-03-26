@@ -1,5 +1,6 @@
 package com.project.entity.business.helperentity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.entity.business.Advert;
 import lombok.*;
 
@@ -26,7 +27,8 @@ public class Advert_Type {
     @Column(nullable = false)
     private Boolean builtIn;
 
-    @OneToMany
+    @JsonIgnore
+    @OneToMany(mappedBy = "advert_type",cascade = CascadeType.REMOVE)
     private List<Advert> advert;
 
 }
