@@ -259,7 +259,9 @@ public class UserService {
     //F11 /users/4/admin It will update the user
     public ResponseMessage<BaseUserResponse> updateUserById(UserRequest userRequest, Long id) {
         User user= isUserExist(id);
-        if (user.getBuilt_in().equals(true)){
+        Boolean isBuiltlIn= user.getBuilt_in();
+
+        if ( Boolean.TRUE.equals(isBuiltlIn)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         uniquePropertyValidator.checkUniqueProperties(user,userRequest);
