@@ -41,7 +41,8 @@ public  class AbstractUserRequest {
     private String phone;
 
 
-   // private UserRole userRole;
+    private UserRole userRole;
+    private Boolean built_in;
 
 
 

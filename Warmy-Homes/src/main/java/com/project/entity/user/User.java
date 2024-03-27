@@ -65,7 +65,7 @@ public class User extends EntryDate {
     @Nullable
     private String reset_password_code;
 
-    private Boolean built_in=false;
+    private Boolean built_in;
 
 
 
