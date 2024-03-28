@@ -61,6 +61,9 @@ public class UserMapper {
                 .password_hash(userRequest.getPassword_hash())
                 .phone(userRequest.getPhone())
                 .email(userRequest.getEmail())
+                .userRole(userRequest.getUserRole())
+                .built_in(userRequest.getBuilt_in())
+
 
                 .build();
     }

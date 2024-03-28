@@ -10,6 +10,7 @@ public class ErrorMessages {
     public static final String CATEGORY_NOT_FOUND = "Error: Category not found";
     public static final String ADVERT_TYPE_NOT_FOUND = "Error: Advert Type not found";
 
+    public static final String ADVERT_STATUS_NOT_FOUND = "Error: Advert Status not found";
     private ErrorMessages(){}
 
     public static final String EDUCATION_TERM_NOT_FOUND_MESSAGE = "Error: Education Term not found with id %s";
