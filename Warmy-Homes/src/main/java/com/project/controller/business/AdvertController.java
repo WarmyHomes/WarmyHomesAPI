@@ -127,7 +127,7 @@ public class AdvertController {
     }
 
     // *******************************************//A07
-    @GetMapping("/{slug}/tour-request")
+    @GetMapping("/{slug}")
     public ResponseMessage<AdvertForSlugResponse> getAdvertBySlug(@PathVariable String slug){
 
         return advertService.getAdvertBySlug(slug);
@@ -144,7 +144,7 @@ public class AdvertController {
 
 
     //********************************************//A09
-    @GetMapping("/{id}/admin")
+    @GetMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<AdvertResponse> getAdminAdvertById(@PathVariable Long  id , HttpServletRequest httpServletRequest){
 

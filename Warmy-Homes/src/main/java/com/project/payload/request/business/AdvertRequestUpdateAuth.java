@@ -21,8 +21,6 @@ import java.util.List;
 @SuperBuilder
 public class AdvertRequestUpdateAuth {
 
-    @NotNull(message = "Please enter your id")
-    private Long id;
 
     @NotNull(message = "Please enter your title")
     @Size(min = 5, max = 150,message = "Your title should be at least 5 chars")

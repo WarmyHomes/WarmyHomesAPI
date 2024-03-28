@@ -257,7 +257,7 @@ public class AdvertService {
     private boolean isAdvertExistByAdvertSlug(String slug){
 
         boolean advertExist = advertRepository.existsAdvertBySlug(slug);
-        if (advertExist){
+        if (!advertExist){
             throw  new ConflictException(ErrorMessages.ADVERT_ALREADY_EXIST);
         }else {
             return false;
@@ -321,6 +321,7 @@ public class AdvertService {
 
         // ! Boyle bir advert var mı ?
         Advert advertCustomer = advertHelper.isAdvertExist(id);
+        LocalDateTime createAt =advertCustomer.getCreatedAt();
 
 
         // ! Advert Built-in mi ?
@@ -333,7 +334,7 @@ public class AdvertService {
 
 
         Advert advertMap = advertMapper.mapAdvertUpdateRequestToAdvert(advertRequest);
-        advertMap.setCreatedAt(advertMap.getCreatedAt());
+        advertMap.setCreatedAt(createAt);
         advertMap.setUpdated_at(LocalDateTime.now());
         advertMap.setAdvert_type(advertType);
         advertMap.setCategory(category);
@@ -373,6 +374,7 @@ public class AdvertService {
         }
 
         Advert advert = advertHelper.isAdvertExist(id);
+        LocalDateTime createTime = advert.getCreatedAt();
         Category category = advertHelper.isCategoryExist(advertRequest.getCategory_id());
         Advert_Type advertType = advertHelper.isAdvert_TypeExist(advertRequest.getAdvert_type_id());
         Country country = advertHelper.isCountryExist(advertRequest.getCountry_id());
@@ -384,6 +386,7 @@ public class AdvertService {
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
         Advert advertMap = advertMapper.mapAdvertUpdateAdminRequestToAdvert(advertRequest);
+        advertMap.setCreatedAt(createTime);
         advertMap.setUpdated_at(LocalDateTime.now());
         advertMap.setAdvert_type(advertType);
         advertMap.setCategory(category);
