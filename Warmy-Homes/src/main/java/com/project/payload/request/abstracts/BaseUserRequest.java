@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class BaseUserRequest extends AbstractUserRequest {
+public class BaseUserRequest extends AbstractUserRequest {
     @NotEmpty(message = "Password must not be empty")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern.List({

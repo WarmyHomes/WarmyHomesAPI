@@ -22,13 +22,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public abstract class EntryDate {
 
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime create_at;
 
     @Nullable
     private LocalDateTime update_at;
+
+
 
     @PrePersist
     private void createAt() {

@@ -1,12 +1,16 @@
 package com.project;
 
+import com.project.entity.business.helperentity.AdvertStatusRole;
 import com.project.entity.business.helperentity.TourStatusRole;
+import com.project.entity.enums.AdvertStatusType;
 import com.project.entity.enums.RoleType;
 import com.project.entity.enums.TourStatus;
 import com.project.entity.user.UserRole;
 import com.project.payload.request.user.UserRequest;
+import com.project.repository.business.AdvertStatusRepository;
 import com.project.repository.business.TourStatusRepository;
 import com.project.repository.user.UserRoleRepository;
+import com.project.service.business.AdvertStatusService;
 import com.project.service.business.TourStatusService;
 import com.project.service.user.UserRoleService;
 import com.project.service.user.UserService;
@@ -27,18 +31,25 @@ public class WarmyHomesApplication implements CommandLineRunner {
     private final UserService userService;
     private final TourStatusRepository tourStatusRepository;
     private final TourStatusService tourStatusService;
+    private final AdvertStatusRepository advertStatusRepository;
+    private final AdvertStatusService advertStatusService;
+
 
     public WarmyHomesApplication(UserRoleService userRoleService,
                                  UserRoleRepository userRoleRepository,
                                  UserService userService,
                                  TourStatusService tourStatusService,
-                                 TourStatusRepository tourStatusRepository) {
+                                 TourStatusRepository tourStatusRepository,
+                                 AdvertStatusService advertStatusService,
+                                 AdvertStatusRepository advertStatusRepository) {
 
         this.userRoleService = userRoleService;
         this.userRoleRepository = userRoleRepository;
         this.userService = userService;
         this.tourStatusRepository = tourStatusRepository;
         this.tourStatusService = tourStatusService;
+        this.advertStatusRepository = advertStatusRepository;
+        this.advertStatusService = advertStatusService;
     }
 
     public static void main(String[] args) {
@@ -115,5 +126,26 @@ public class WarmyHomesApplication implements CommandLineRunner {
             canceled.setStatusName("Canceled");
             tourStatusRepository.save(canceled);
         }
+
+        if (advertStatusRepository.findAll().isEmpty()){
+            AdvertStatusRole pending = new AdvertStatusRole();
+            pending.setAdvertStatusType(AdvertStatusType.PENDING);
+            pending.setAdvertStatusId(0);
+            advertStatusRepository.save(pending);
+
+            AdvertStatusRole activated = new AdvertStatusRole();
+            activated.setAdvertStatusType(AdvertStatusType.ACTIVATED);
+            activated.setAdvertStatusId(1);
+            advertStatusRepository.save(activated);
+
+            AdvertStatusRole rejected = new AdvertStatusRole();
+            rejected.setAdvertStatusType(AdvertStatusType.REJECTED);
+            rejected.setAdvertStatusId(2);
+            advertStatusRepository.save(rejected);
+
+        }
+
     }
+
+
 }
