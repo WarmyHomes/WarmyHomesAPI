@@ -102,6 +102,10 @@ public class AdvertService {
         List<Category_Property_Key> categoryPropertyKeys=category.getCategory_property_keys();
 
         for (int i = 0; i <categoryPropertyKeys.size() ; i++) {
+
+
+
+
             category_property_values.get(i).setCategory_property_key(categoryPropertyKeys.get(i));
             category_property_values.get(i).setId(advertMap.getId());
         }
@@ -139,6 +143,8 @@ public class AdvertService {
 
             Advert savedAdvertSlug = advertRepository.save(advertMap);
 
+    //TODO Advert geri dondurulurken Property keylerin, property value lari tamami donduruluyor engelle
+        //TODO sadece ilana ozel property value lerin donmesini sagla
 
         AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvertSlug);
 //        advertResponse.setAdvert_type_id(advertType);

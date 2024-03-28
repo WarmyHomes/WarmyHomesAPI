@@ -9,6 +9,9 @@ import com.project.payload.response.business.Category_Property_Key_Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Component
 public class CategoryMapper {
@@ -34,6 +37,26 @@ public class CategoryMapper {
                 .id(category.getId())
                 .title(category.getTitle())
                 .category_property_keys(category.getCategory_property_keys())
+                .icon(category.getIcon())
+                .seq(category.getSeq())
+                .slug(category.getSlug())
+                .isActive(category.getIs_active())
+                .createAt(category.getCreate_at())
+                .updateAt(category.getUpdate_at() != null ? category.getUpdate_at() : null)
+                .build();
+    }
+
+
+    //tum Category nesnelerinin istendigi yerde property value lerin geri donusu engellendi performasn artisi saglandi
+    public CategoryResponse mapCategoryToResponseGetCategory(Category category) {
+        List<Category_Property_Key> propertyKeyResponses = category.getCategory_property_keys().stream()
+                .map(key -> new Category_Property_Key(key.getId(), key.getName(), key.getBuilt_in()))
+                .collect(Collectors.toList());
+
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .title(category.getTitle())
+                .category_property_keys(propertyKeyResponses) // Güncellenmiş kısım
                 .icon(category.getIcon())
                 .seq(category.getSeq())
                 .slug(category.getSlug())

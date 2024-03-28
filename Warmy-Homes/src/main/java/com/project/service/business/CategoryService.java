@@ -42,7 +42,6 @@ public class CategoryService {
 
     private final CategoryPropertyKeyRepository propertyKeyRepository;
     private final CategoryMapper categoryMapper;
-    private final CategoryPropertyValueRepository categoryPropertyValueRepository;
     private final CategoryHelper categoryHelper;
 
 
@@ -51,7 +50,7 @@ public class CategoryService {
         //todo queri null ilse neye gore siralayacak
         Page<Category> categoryPage = categoryRepository.findByTitleContainingAndIsActiveTrue(query, pageable);
         return categoryPage.getContent().stream()
-                .map(categoryMapper::mapCategoryToResponse)
+                .map(categoryMapper::mapCategoryToResponseGetCategory)
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +64,7 @@ public class CategoryService {
             categoryPage = categoryRepository.findAll(pageable);
         }
         return categoryPage.getContent().stream()
-                .map(categoryMapper::mapCategoryToResponse)
+                .map(categoryMapper::mapCategoryToResponseGetCategory)
                 .collect(Collectors.toList());
     }
 
