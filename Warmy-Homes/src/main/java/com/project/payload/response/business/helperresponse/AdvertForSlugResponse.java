@@ -1,5 +1,6 @@
 package com.project.payload.response.business.helperresponse;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.entity.business.*;
 import com.project.entity.business.helperentity.AdvertStatusRole;
 import com.project.entity.business.helperentity.Advert_Type;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AdvertForSlugResponse {
 
     private  Long id;
@@ -40,18 +42,18 @@ public class AdvertForSlugResponse {
 
     private String location;
 
-    private Advert_Type advert_type_id;
+    private String  advertTypeName;
 
-    private Country country_id;
+    private String countryName;
 
-    private City city_id;
+    private String cityName;
 
-    private District district;
+    private String districtName;
 
 
     private List<Image> images;
 
-    private Category category_id;
+    private String  categoryName;
 
     //private LocalDateTime createdAt;
 

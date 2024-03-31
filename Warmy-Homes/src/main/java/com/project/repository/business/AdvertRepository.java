@@ -33,7 +33,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
 
 
-    @Query("SELECT a FROM Advert a WHERE a.slug =: slug")
+    @Query("SELECT a FROM Advert a WHERE a.slug = :slug")
     Advert findBySlugContaining(String slug);
 
 
