@@ -6,6 +6,7 @@ import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -66,6 +67,18 @@ public class UserMapper {
 
 
                 .build();
+    }
+    public Page<UserResponse> mapUserPageToUserResponsePage(Page<User> userPage) {
+        return userPage.map(user -> UserResponse.builder()
+                .id(user.getId())
+                .first_name(user.getFirst_name())
+                .last_name(user.getLast_name())
+                .phone(user.getPhone())
+                .create_at(user.getCreate_at())
+                .update_at(user.getUpdate_at())
+                .email(user.getEmail())
+                .role(user.getUserRole().getName())
+                .build());
     }
 
 }

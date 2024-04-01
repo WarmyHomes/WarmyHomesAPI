@@ -13,6 +13,7 @@ import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractUserRequest;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.LoginRequest;
+import com.project.payload.request.user.PasswordUpdateRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
@@ -187,7 +188,7 @@ public class UserService {
     }
 
     //F07 It will update the authenticated user’s password
-    public ResponseEntity<String> updateUserPassword(HttpServletRequest request, BaseUserRequest baseUserRequest) {
+    public ResponseEntity<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
         String email= (String) request.getAttribute("email");
         User user = userRepository.findByEmail(email);
         if (Boolean.TRUE.equals(user.getBuilt_in())){
@@ -205,6 +206,7 @@ public class UserService {
         return  ResponseEntity.ok(response);
 
     }
+
 
     //F08 /users/auth It will delete authenticated user
     public String deleteUser(HttpServletRequest servletRequest) {
@@ -232,9 +234,13 @@ public class UserService {
     }
 
     //F09 /users/admin  It will return users
-    public Page<UserResponse> getUserByPage(int page, int size, String sort, String type) {
-        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
-        return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
+    public Page<UserResponse> getUserByPage(String q,int page, int size, String sort, String type) {
+        if (q == null && q.isEmpty()) {
+            new ResourceNotFoundException("dddddddddd");
+        }
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        Page<User> usersPage = userRepository.findByUser(pageable, q);
+        return userMapper.mapUserPageToUserResponsePage(usersPage);
     }
 
     ///F10 -  It will return a user
@@ -261,11 +267,19 @@ public class UserService {
         User user= isUserExist(id);
         Boolean isBuiltlIn= user.getBuilt_in();
 
+        userRequest.setUserRole(user.getUserRole());
         if ( Boolean.TRUE.equals(isBuiltlIn)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
         uniquePropertyValidator.checkUniqueProperties(user,userRequest);
         User updatedUser = userMapper.mapUserRequestToUpdatedUser(userRequest, id);
+
+        updatedUser.setReset_password_code(passwordEncoder.encode(userRequest.getPassword_hash()));
+        updatedUser.setPassword_hash(passwordEncoder.encode(userRequest.getPassword_hash()));
+        updatedUser.setUserRole(user.getUserRole());
+        updatedUser.setBuilt_in(false);
+        updatedUser.setCreate_at(user.getCreate_at());
+        updatedUser.setUpdate_at(LocalDateTime.now());
 
         User savedUser = userRepository.save(updatedUser);
 
@@ -334,9 +348,36 @@ public class UserService {
         return SuccessMessages.USER_CREATED;
     }
 
+    public String saveManager(UserRequest userRequest) {
+
+        Set<UserRole> userRole = new HashSet<>();
+
+        UserRole manager = userRoleService.getUserRole(RoleType.MANAGER);
+
+        userRole.add(manager);
+
+        User user = userMapper.mapUserRequestToUser(userRequest);
+
+        user.setBuilt_in(Boolean.TRUE);
+
+
+        user.setPassword_hash(passwordEncoder.encode(userRequest.getPassword_hash()));
+
+        user.setCreate_at(LocalDateTime.now());
+
+        user.setUserRole(manager) ;
+        userRepository.save(user);
+
+        return SuccessMessages.USER_CREATED;
+    }
+
   public long countAllAdmins(){
       return userRepository.countAdmin(RoleType.ADMIN);
   }
+
+    public long countAllManagers(){
+        return userRepository.countManager(RoleType.MANAGER);
+    }
 
     public User isUserExist(Long id){
         return userRepository.findById(id).orElseThrow(()->
