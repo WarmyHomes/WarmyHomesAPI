@@ -34,10 +34,10 @@ public class TourRequestResponse {
 
     private LocalDateTime update_at;
 
-    private Advert advert_id;
+    private Long advert_id;
 
-    private User owner_user;
+    private Long owner_user;
 
-    private User guest_user;
+    private Long guest_user;
 
 }

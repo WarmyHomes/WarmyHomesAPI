@@ -8,6 +8,7 @@ import com.project.payload.response.business.TourRequestResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,45 +24,16 @@ public class TourRequestMapper {
                .advert_id(request.getAdvert())
                .guest_user(request.getGuest_user())
                .owner_user(request.getOwner_user())
+               .update_at(request.getUpdate_at())
                .build();
    }
 
-    public TourRequestResponse mapTourRequestToResponseWithOutOwner(Tour_Request request){
-        return TourRequestResponse.builder()
-                .id(request.getId())
-                .tour_date(request.getTour_date())
-                .tour_time(request.getTour_time())
-                //.status(request.getStatus().getStatusType().name())
-                .advert_id(request.getAdvert())
-                .guest_user(request.getGuest_user())
-                .build();
-    }
-
-    public TourRequestResponse mapTourRequestToResponseWithOutGuest(Tour_Request request){
-        return TourRequestResponse.builder()
-                .id(request.getId())
-                .tour_date(request.getTour_date())
-                .tour_time(request.getTour_time())
-                //.status(request.getStatus().getStatusType().name())
-                .advert_id(request.getAdvert())
-                .owner_user(request.getOwner_user())
-                .build();
-    }
 
     public Tour_Request mapTourRequestRequestToTour_Request(TourRequestRequest request){
        return Tour_Request.builder()
                .tour_date(request.getTour_date())
                .tour_time(request.getTour_time())
                .advert(request.getAdvert_id())
-               .build();
-    }
-
-    public Tour_Request updateTourRequest(TourRequestRequest request){
-       return Tour_Request.builder()
-               .tour_date(request.getTour_date())
-               .tour_time(request.getTour_time())
-               .advert(request.getAdvert_id())
-               //.status()
                .build();
     }
 
@@ -96,8 +68,14 @@ public class TourRequestMapper {
               .tour_date(request.getTour_date())
               .tour_time(request.getTour_time())
               .advert(request.getAdvert_id())
+              .update_at(LocalDateTime.now())
               .build();
 
+    }
+
+    public List<TourRequestResponse> mapTourRequestToTourRequestResponseList(List<Tour_Request> req ){
+       List<TourRequestResponse> mapped = req.stream().map(this::mapTourRequestToResponse).collect(Collectors.toList());
+       return mapped;
     }
 
 }
