@@ -11,6 +11,8 @@ public class SuccessMessages {
     public static final String USER_UPDATE_MESSAGE = "User is Updated Successfully";
     public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE = "Password Successfully Changed";
 
+    public static final String TOUR_REQUEST_DELETED_SUCCESSFULLY = "Tour Request Deleted Successfully";
+
 
     public static final String ADVERT_SAVE= "Advert is Saved";
 

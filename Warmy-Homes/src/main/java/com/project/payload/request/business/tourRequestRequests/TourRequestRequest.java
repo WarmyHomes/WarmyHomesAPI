@@ -36,7 +36,7 @@ public class TourRequestRequest {
     private LocalDateTime update_at;
 
     @NotNull
-    private Advert advert_id;
+    private Long advert_id;
 
 
 

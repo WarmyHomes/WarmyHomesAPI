@@ -29,6 +29,12 @@ import org.springframework.lang.Nullable;
 @Table(name="t_user")
 public class User extends EntryDate {
 
+    @Column(name = "create_at")
+    private LocalDateTime create_at;
+
+    @Nullable
+
+    private LocalDateTime update_at;
 
 
     @Id

@@ -4,6 +4,7 @@ import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractUserRequest;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.LoginRequest;
+import com.project.payload.request.user.PasswordUpdateRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.request.user.UserUpdatePasswordRequest;
 import com.project.payload.response.abstracts.BaseUserResponse;
@@ -87,16 +88,17 @@ public class UserController {
     }
 
     //F07 It will update the authenticated user’s password
-    @PatchMapping("/users/auth ") // http://localhost:8080/users/auth
+    @PostMapping("/users/auth") // http://localhost:8080/users/auth
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
     public ResponseEntity<String> updateUserPassword(HttpServletRequest request,
-                                                     @RequestBody @Valid BaseUserRequest baseUserRequest){
+                                                     @RequestBody @Valid PasswordUpdateRequest baseUserRequest){
 
         return   userService.updateUserPassword(request,baseUserRequest);
 
 
 
     }
+
 
 
     //F08 /users/auth It will delete authenticated user
@@ -110,12 +112,13 @@ public class UserController {
     @GetMapping("/users/admin")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<Page<UserResponse>> getUserByPage(
+            @RequestParam String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "create_at") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type
     ) {
-        Page<UserResponse> getUserByPage = userService.getUserByPage(page,size,sort,type);
+        Page<UserResponse> getUserByPage = userService.getUserByPage(q,page,size,sort,type);
         return new ResponseEntity<>(getUserByPage, HttpStatus.OK);
     }
 
@@ -131,7 +134,7 @@ public class UserController {
     @PutMapping("/users/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseMessage<BaseUserResponse> updateUserById(@RequestBody @Valid UserRequest userRequest,
-                                                                         @PathVariable Long id) {
+                                                            @PathVariable Long id) {
         return userService.updateUserById(userRequest, id);
     }
 
