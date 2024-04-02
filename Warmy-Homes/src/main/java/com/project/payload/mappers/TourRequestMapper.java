@@ -21,21 +21,14 @@ public class TourRequestMapper {
                .tour_date(request.getTour_date())
                .tour_time(request.getTour_time())
                .status(request.getStatus().getStatusName())
-               .advert_id(request.getAdvert())
-               .guest_user(request.getGuest_user())
-               .owner_user(request.getOwner_user())
+               .advert_id(request.getAdvert().getId())
+               .guest_user(request.getGuest_user().getId())
+               .owner_user(request.getOwner_user().getId())
                .update_at(request.getUpdate_at())
                .build();
    }
 
 
-    public Tour_Request mapTourRequestRequestToTour_Request(TourRequestRequest request){
-       return Tour_Request.builder()
-               .tour_date(request.getTour_date())
-               .tour_time(request.getTour_time())
-               .advert(request.getAdvert_id())
-               .build();
-    }
 
     public Tour_Request createTourResponseToTourRequest(TourRequestCreateRequest request){
         return Tour_Request.builder()
@@ -51,9 +44,9 @@ public class TourRequestMapper {
                .tour_time(request.getTour_time())
                .create_at(request.getCreate_at())
                .update_at(request.getUpdate_at())
-               .advert_id(request.getAdvert())
-               .owner_user(request.getOwner_user())
-               .guest_user(request.getGuest_user())
+               .advert_id(request.getAdvert().getId())
+               .owner_user(request.getOwner_user().getId())
+               .guest_user(request.getGuest_user().getId())
                .build();
     }
 
@@ -67,7 +60,6 @@ public class TourRequestMapper {
       return tr.toBuilder()
               .tour_date(request.getTour_date())
               .tour_time(request.getTour_time())
-              .advert(request.getAdvert_id())
               .update_at(LocalDateTime.now())
               .build();
 
