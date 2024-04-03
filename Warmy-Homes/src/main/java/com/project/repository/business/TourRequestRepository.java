@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface TourRequestRepository extends JpaRepository<Tour_Request,Long> {
 
     @Override
@@ -17,6 +19,10 @@ public interface TourRequestRepository extends JpaRepository<Tour_Request,Long> 
 
     @Query("SELECT tr FROM Tour_Request tr WHERE tr.owner_user.id = ?1")
     Page<Tour_Request> findAllByUserId(Long userId, Pageable pageable);
+
+    @Query("SELECT tr FROM Tour_Request tr WHERE tr.owner_user.id = ?1")
+    List<Tour_Request> findAllByUserIdList(Long userId);
+
 
     @Query("SELECT tr FROM Tour_Request tr")
     Page<Tour_Request> findAll(Pageable pageable);

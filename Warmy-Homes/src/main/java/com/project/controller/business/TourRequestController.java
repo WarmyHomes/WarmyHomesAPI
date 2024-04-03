@@ -1,5 +1,6 @@
 package com.project.controller.business;
 
+import com.project.entity.enums.TourStatus;
 import com.project.payload.request.business.tourRequestRequests.TourRequestCreateRequest;
 import com.project.payload.request.business.tourRequestRequests.TourRequestRequest;
 import com.project.payload.request.business.tourRequestRequests.TourRequestUpdateRequest;
@@ -52,7 +53,8 @@ public class TourRequestController {
     @GetMapping("/{id}/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<TourRequestResponse> getUsersTourRequestDetails(@PathVariable Long id, HttpServletRequest servletRequest){
-        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetails(id,servletRequest);
+        String userEmail = servletRequest.getUserPrincipal().getName();
+        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetails(id,userEmail);
         return ResponseEntity.ok(tourRequestResponse);
     }
 
@@ -60,7 +62,8 @@ public class TourRequestController {
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<TourRequestResponse> getUsersTourRequestDetailsForAdmin(@PathVariable Long id, HttpServletRequest servletRequest){
-        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetailsForAdmin(id,servletRequest);
+        String userEmail = servletRequest.getUserPrincipal().getName();
+        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetailsForAdmin(id, userEmail);
         return ResponseEntity.ok(tourRequestResponse);
     }
 
@@ -68,36 +71,38 @@ public class TourRequestController {
     @PostMapping//!/tour-requests
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<TourRequestResponse> createTourRequest(@RequestBody @Valid TourRequestCreateRequest request, HttpServletRequest servletRequest){
-        return  tourRequestService.createTourRequest(request,servletRequest);
+        String userEmail = servletRequest.getUserPrincipal().getName();
+
+        return  tourRequestService.createTourRequest(request,userEmail);
 
     }
 
     //*S06
     @PutMapping("/{id}/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public  ResponseEntity<TourRequestResponse> updateTourRequest(@PathVariable Long id,@RequestBody @Valid TourRequestUpdateRequest request){
-        return tourRequestService.updateTourRequest(id, request);
+    public  ResponseEntity<TourRequestResponse> updateTourRequest(@PathVariable Long id,@RequestBody @Valid TourRequestUpdateRequest request, HttpServletRequest servletRequest){
+        return tourRequestService.updateTourRequest(id, request, servletRequest);
     }
 
     //*S07
     @PatchMapping("/{id}/cancel")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<TourRequestResponse> cancelTourRequest(@PathVariable Long id,HttpServletRequest servletRequest){
-        return tourRequestService.cancelTourRequest(id, servletRequest);
+        return tourRequestService.updateTourRequestStatus(id, servletRequest, TourStatus.CANCELED);
     }
 
     //*S08
     @PatchMapping("/{id}/approve")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<TourRequestResponse> approveTourRequest(@PathVariable Long id, HttpServletRequest servletRequest){
-        return tourRequestService.approveTourRequest(id, servletRequest);
+        return tourRequestService.updateTourRequestStatus(id, servletRequest,TourStatus.APPROVED);
     }
 
     //*S09
     @PatchMapping("/{id}/decline")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<TourRequestResponse> declineTourRequest(@PathVariable Long id, HttpServletRequest servletRequest){
-        return tourRequestService.declineTourRequest(id, servletRequest);
+        return tourRequestService.updateTourRequestStatus(id, servletRequest,TourStatus.DECLINED);
     }
 
     //*S10
