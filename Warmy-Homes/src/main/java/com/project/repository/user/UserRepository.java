@@ -14,6 +14,8 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     //void findByUsernameEquals(String username);
+    @Query("SELECT u FROM User u WHERE u.first_name LIKE %:q% OR u.last_name LIKE %:q% OR u.email LIKE %:q% OR u.phone LIKE %:q%")
+    Page<User> findByUser(Pageable pageable, @Param("q") String q);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
     User findByEmail(@Param("email") String email);
@@ -26,6 +28,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
    @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
     long countAdmin(RoleType roleType);
+
+    @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
+    long countManager(RoleType roleType);
 
 
 

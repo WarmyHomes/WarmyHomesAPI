@@ -11,6 +11,7 @@ import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.TourRequestMapper;
 import com.project.payload.messages.ErrorMessages;
+import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.tourRequestRequests.TourRequestCreateRequest;
 import com.project.payload.request.business.tourRequestRequests.TourRequestRequest;
 import com.project.payload.request.business.tourRequestRequests.TourRequestUpdateRequest;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,21 +77,21 @@ public class TourRequestService {
     }
 
     //*S03
-    public TourRequestResponse getUsersTourRequestDetails(Long id, HttpServletRequest servletRequest) {
+    public TourRequestResponse getUsersTourRequestDetails(Long id, String userEmail) {
+       Tour_Request tourRequest = isTourRequestExistById(id);
+       User user = userService.findUserByEmail(userEmail);
+       UserRole role = getUserRole(user);
+       if (!role.equals(RoleType.CUSTOMER)){
+           throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
 
-        Tour_Request req = isTourRequestExistById(id);
-
-        UserRole roles = getUsersRole(servletRequest);
-        if (!roles.equals(RoleType.CUSTOMER)){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
-
-        return tourRequestMapper.mapTourRequestToResponse(req);
+       }
+        return tourRequestMapper.mapTourRequestToResponse(tourRequest);
     }
 
     //*S04
-    public TourRequestResponse getUsersTourRequestDetailsForAdmin(Long id, HttpServletRequest servletRequest) {
-        UserRole roles = getUsersRole(servletRequest);
+    public TourRequestResponse getUsersTourRequestDetailsForAdmin(Long id, String userEmail) {
+        User user = userService.findUserByEmail(userEmail);
+        UserRole roles = getUserRole(user);
         if (!roles.equals(RoleType.ADMIN)|| !roles.equals(RoleType.MANAGER)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
@@ -99,96 +101,66 @@ public class TourRequestService {
     }
 
     //*S05
-    public ResponseEntity<TourRequestResponse> createTourRequest(TourRequestCreateRequest request, HttpServletRequest servletRequest) {
-        //*tetikleyen kullanicinin user bilgilerine erismek icin unique degerini aldık ve userrepository e gidip ariyicaz.
-        String email =(String) servletRequest.getAttribute("email");
-        User user =  userService.findUserByEmail(email);
-        UserRole guestRoles = user.getUserRole();
-        if (!guestRoles.getRoleType().equals(RoleType.CUSTOMER)){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
+    public ResponseEntity<TourRequestResponse> createTourRequest(TourRequestCreateRequest request, String userEmail) {
+        User user = userService.findUserByEmail(userEmail);
+        checkUserRole(RoleType.CUSTOMER,getUserRoleType(userEmail));
+        Advert advert = advertService.findAdvertById(request.getAdvert_id());
 
-
-        //*ownerUser icin request den algımız advert id ile owner user a ulasıcaz.
-        Long requestAdvertId = request.getAdvert_id();
-        Advert advert = advertService.findAdvertById(requestAdvertId);
-
-
-
-        User ownerUser = advert.getUser();
-        //* owner ve guest user tourRequest e map islemi.
-        List<TourStatusRole> statusRoles = new ArrayList<>();
-        TourStatusRole pending = tourStatusService.getTourStatus(TourStatus.PENDING);
-        statusRoles.add(pending);
         Tour_Request createdTourRequest = tourRequestMapper.createTourResponseToTourRequest(request);
-        createdTourRequest.setCreate_at(LocalDateTime.now());
-        createdTourRequest.setOwner_user(ownerUser);
+        createdTourRequest.setCreate_at(LocalDateTime.now(ZoneId.of("UTC")));
         createdTourRequest.setGuest_user(user);
-//        createdTourRequest.setAdvert_id(advert);
-        createdTourRequest.setStatus(pending);
+        createdTourRequest.setOwner_user(advert.getUser());
+
+        createdTourRequest.setStatus(tourStatusService.getTourStatus(TourStatus.PENDING));
         createdTourRequest.setAdvert(advert);
+        Tour_Request saved = tourRequestRepository.save(createdTourRequest);
+        TourRequestResponse tourRequestResponse = tourRequestMapper.mapTourRequestToResponse(saved);
+        return ResponseEntity.ok(tourRequestResponse);
 
-
-        //* database kayit islemi
-        Tour_Request savedTourRequest = tourRequestRepository.save(createdTourRequest);
-        TourRequestResponse res = tourRequestMapper.savedTourRequestToTourRequestResponse(savedTourRequest);
-
-        return ResponseEntity.ok(res);
     }
 
     //*S06
-    public ResponseEntity<TourRequestResponse> updateTourRequest(Long id, TourRequestUpdateRequest request) {
-        Tour_Request tourRequest = isTourRequestExistById(id);
-        TourStatusRole status = tourRequest.getStatus();
-        if (!status.equals(TourStatus.PENDING) || !status.equals(TourStatus.DECLINED)){
-            throw new BadRequestException(ErrorMessages.TOUR_REQUEST_CAN_NOT_CHANGED);
-        }
-        Tour_Request updatedReq = tourRequestMapper.mapTourRequestUpdateRequestToTourRequest(tourRequest,request);
-        updatedReq.getStatus().setTourStatus(TourStatus.PENDING);
-        Tour_Request savedReq = tourRequestRepository.save(updatedReq);
-        return ResponseEntity.ok(tourRequestMapper.mapTourRequestToResponse(savedReq));
+    public ResponseEntity<TourRequestResponse> updateTourRequest(Long id, TourRequestUpdateRequest request, HttpServletRequest servletRequest) {
+        validateUserHasRole(servletRequest,RoleType.CUSTOMER);
+        Tour_Request tourRequestToUpdate = isTourRequestExistById(id);
+        Tour_Request saved = tourRequestMapper.mapTourRequestUpdateRequestToTourRequest(tourRequestToUpdate,request);
+        tourRequestRepository.save(saved);
+        TourRequestResponse response = tourRequestMapper.mapTourRequestToResponse(saved);
+        return ResponseEntity.ok(response);
 
     }
-    //*S07
-    public ResponseEntity<TourRequestResponse> cancelTourRequest(Long id, HttpServletRequest servletRequest) {
-        Tour_Request request = isTourRequestExistById(id);
-        UserRole roles = getUsersRole(servletRequest);
-        if (!roles.equals(RoleType.CUSTOMER)){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
-        request.getStatus().setStatusName(TourStatus.CANCELED.getStatusName());
-        tourRequestRepository.save(request);
-        return ResponseEntity.ok(tourRequestMapper.mapTourRequestToResponse(request));
 
-    }
-    //*S08
-    public ResponseEntity<TourRequestResponse> approveTourRequest(Long id, HttpServletRequest servletRequest) {
-        Tour_Request request = isTourRequestExistById(id);
-        UserRole roles = getUsersRole(servletRequest);
-        if (!roles.equals(RoleType.CUSTOMER)){
+    //*S07-08-09
+    public ResponseEntity<TourRequestResponse> updateTourRequestStatus(Long id, HttpServletRequest request, TourStatus newStatus) {
+       User user = getUser(request);
+       Tour_Request tourRequest = isTourRequestExistById(id);
+
+        // Kullanıcı rolü ve yetkilendirme kontrolleri
+        if (!user.getUserRole().getRoleType().equals(RoleType.CUSTOMER)) {
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
-        request.getStatus().setStatusName(TourStatus.APPROVED.getStatusName());
-        tourRequestRepository.save(request);
-        return ResponseEntity.ok(tourRequestMapper.mapTourRequestToResponse(request));
+
+        // Status değişikliği mantığıc
+        //todo bu kisma birdaha bak onemli!!!
+        TourStatusRole statusRole = tourStatusService.getTourStatus(newStatus);
+        tourRequest.setStatus(statusRole);
+
+        tourRequest = tourRequestRepository.save(tourRequest);
+
+        return ResponseEntity.ok(tourRequestMapper.mapTourRequestToResponse(tourRequest));
     }
 
-    public ResponseEntity<TourRequestResponse> declineTourRequest(Long id, HttpServletRequest servletRequest) {
-        Tour_Request request = isTourRequestExistById(id);
-        UserRole roles = getUsersRole(servletRequest);
-        if (!roles.equals(RoleType.CUSTOMER)){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
-        request.getStatus().setStatusName(TourStatus.DECLINED.getStatusName());
-        tourRequestRepository.save(request);
-        return ResponseEntity.ok(tourRequestMapper.mapTourRequestToResponse(request));
-
-}
-
+    //*S10
     public ResponseMessage  deleteTourRequest(Long id, HttpServletRequest servletRequest) {
+        User user = getUser(servletRequest);
+        UserRole userRole = getUserRole(user);
+        if (!userRole.equals(RoleType.ADMIN)||  !userRole.equals(RoleType.MANAGER)){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+
+        }
         tourRequestRepository.delete(isTourRequestExistById(id));
         return ResponseMessage.builder()
-                .message("deleted ")
+                .message(SuccessMessages.TOUR_REQUEST_DELETED_SUCCESSFULLY)
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
@@ -198,11 +170,9 @@ public class TourRequestService {
                 .orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.TOUR_REQUEST_NOT_FOUND,id)));
     }
 
-    public UserRole getUsersRole(HttpServletRequest servletRequest){
-        String email =(String) servletRequest.getAttribute("email");
-        User user =  userService.findUserByEmail(email);
-        UserRole role = user.getUserRole();
-        return role;
+
+    public UserRole getUserRole(User user){
+        return user.getUserRole();
     }
 
     public User getUser(HttpServletRequest servletRequest){
@@ -211,7 +181,23 @@ public class TourRequestService {
         return user;
     }
 
+    private void checkUserRole(RoleType expectedRole, RoleType actualRole){
+        if(!actualRole.equals(expectedRole)){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+    }
 
+    private RoleType getUserRoleType(String email){
+        User user = userService.findUserByEmail(email);
+        return user.getUserRole().getRoleType();
+    }
+
+    private void validateUserHasRole(HttpServletRequest request, RoleType roleType){
+        User user = getUser(request);
+        if(!user.getUserRole().getRoleType().equals(roleType)){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+    }
 
 
 
