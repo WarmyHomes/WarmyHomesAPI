@@ -160,12 +160,12 @@ public class AdvertService {
     public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
                                            Double price_start, Double price_end, Integer status, int page, int size, String sort, String type) {
         Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
-        if (q != null) {
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
-        } else {
+//        if (q != null) {
+//            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
+//        } else {
 
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status, sort, type));
-        }
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.searchAllProducts(q, category_id, advert_type_id, price_start, price_end,pageable));
+        //}
     }
 
 
@@ -190,6 +190,7 @@ public class AdvertService {
     public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
 
             List<Object[]> cities = cityRepository.countCities();
+
 
 
            return cities.stream().map(objects -> CityForAdvertResponse.builder()
