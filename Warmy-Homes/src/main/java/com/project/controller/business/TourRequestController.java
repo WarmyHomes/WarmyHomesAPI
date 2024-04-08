@@ -53,8 +53,7 @@ public class TourRequestController {
     @GetMapping("/{id}/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<TourRequestResponse> getUsersTourRequestDetails(@PathVariable Long id, HttpServletRequest servletRequest){
-        String userEmail = servletRequest.getUserPrincipal().getName();
-        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetails(id,userEmail);
+        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetails(id,servletRequest);
         return ResponseEntity.ok(tourRequestResponse);
     }
 
@@ -62,8 +61,8 @@ public class TourRequestController {
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<TourRequestResponse> getUsersTourRequestDetailsForAdmin(@PathVariable Long id, HttpServletRequest servletRequest){
-        String userEmail = servletRequest.getUserPrincipal().getName();
-        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetailsForAdmin(id, userEmail);
+
+        TourRequestResponse tourRequestResponse = tourRequestService.getUsersTourRequestDetailsForAdmin(id, servletRequest);
         return ResponseEntity.ok(tourRequestResponse);
     }
 
@@ -108,7 +107,7 @@ public class TourRequestController {
     //*S10
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
-    public ResponseMessage deleteTourRequest(@PathVariable Long id, HttpServletRequest servletRequest){
+    public ResponseEntity<ResponseMessage> deleteTourRequest(@PathVariable Long id, HttpServletRequest servletRequest){
         return tourRequestService.deleteTourRequest(id, servletRequest);
     }
 
