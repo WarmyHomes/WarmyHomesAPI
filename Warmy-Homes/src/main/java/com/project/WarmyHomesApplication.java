@@ -111,21 +111,21 @@ public class WarmyHomesApplication implements CommandLineRunner {
 
         }
 
-        if (userService.countAllManagers() == 0) {
-
-            Set<String> roles = new HashSet<>();
-            roles.add("Manager");
-            UserRequest managerRequest = new UserRequest();
-            managerRequest.setEmail("denememanager@github.com");
-            managerRequest.setPassword_hash("123456789");
-            managerRequest.setFirst_name("Deneme");
-            managerRequest.setLast_name("Api");
-            managerRequest.setPhone("530-000-0000");
-            userService.saveManager(managerRequest);
-
-
-
-        }
+//        if (userService.countAllManagers() == 0) {
+//
+//            Set<String> roles = new HashSet<>();
+//            roles.add("Manager");
+//            UserRequest managerRequest = new UserRequest();
+//            managerRequest.setEmail("denememanager@github.com");
+//            managerRequest.setPassword_hash("123456789");
+//            managerRequest.setFirst_name("Deneme");
+//            managerRequest.setLast_name("Api");
+//            managerRequest.setPhone("530-000-0000");
+//            userService.saveManager(managerRequest);
+//
+//
+//
+//        }
 
         if (tourStatusService.getAllStatus().isEmpty()){
             TourStatusRole pending = new TourStatusRole();
