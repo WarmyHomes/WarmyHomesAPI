@@ -19,7 +19,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.mail.javamail.JavaMailSender;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class WarmyHomesApplication implements CommandLineRunner {
     private final TourStatusService tourStatusService;
     private final AdvertStatusRepository advertStatusRepository;
     private final AdvertStatusService advertStatusService;
-    private final JavaMailSender mailSender;
+
 
 
     public WarmyHomesApplication(UserRoleService userRoleService,
@@ -45,8 +45,7 @@ public class WarmyHomesApplication implements CommandLineRunner {
                                  TourStatusService tourStatusService,
                                  TourStatusRepository tourStatusRepository,
                                  AdvertStatusService advertStatusService,
-                                 AdvertStatusRepository advertStatusRepository,
-                                JavaMailSender mailSender) {
+                                 AdvertStatusRepository advertStatusRepository) {
 
         this.userRoleService = userRoleService;
         this.userRoleRepository = userRoleRepository;
@@ -55,14 +54,14 @@ public class WarmyHomesApplication implements CommandLineRunner {
         this.tourStatusService = tourStatusService;
         this.advertStatusRepository = advertStatusRepository;
         this.advertStatusService = advertStatusService;
-        this.mailSender = mailSender;
+
     }
 
     public static void main(String[] args) {
         SpringApplication.run(WarmyHomesApplication.class, args);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+
 
 
     @Override
@@ -111,21 +110,21 @@ public class WarmyHomesApplication implements CommandLineRunner {
 
         }
 
-//        if (userService.countAllManagers() == 0) {
-//
-//            Set<String> roles = new HashSet<>();
-//            roles.add("Manager");
-//            UserRequest managerRequest = new UserRequest();
-//            managerRequest.setEmail("denememanager@github.com");
-//            managerRequest.setPassword_hash("123456789");
-//            managerRequest.setFirst_name("Deneme");
-//            managerRequest.setLast_name("Api");
-//            managerRequest.setPhone("530-000-0000");
-//            userService.saveManager(managerRequest);
-//
-//
-//
-//        }
+        if (userService.countAllManagers() == 0) {
+
+            Set<String> roles = new HashSet<>();
+            roles.add("Manager");
+            UserRequest managerRequest = new UserRequest();
+            managerRequest.setEmail("denememanager@github.com");
+            managerRequest.setPassword_hash("123456789");
+            managerRequest.setFirst_name("Deneme");
+            managerRequest.setLast_name("Api");
+            managerRequest.setPhone("530-000-0000");
+            userService.saveManager(managerRequest);
+
+
+
+        }
 
         if (tourStatusService.getAllStatus().isEmpty()){
             TourStatusRole pending = new TourStatusRole();
