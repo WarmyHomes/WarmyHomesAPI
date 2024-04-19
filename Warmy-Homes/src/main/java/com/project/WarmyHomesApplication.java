@@ -17,6 +17,9 @@ import com.project.service.user.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +36,7 @@ public class WarmyHomesApplication implements CommandLineRunner {
     private final TourStatusService tourStatusService;
     private final AdvertStatusRepository advertStatusRepository;
     private final AdvertStatusService advertStatusService;
+    private final JavaMailSender mailSender;
 
 
     public WarmyHomesApplication(UserRoleService userRoleService,
@@ -41,7 +45,8 @@ public class WarmyHomesApplication implements CommandLineRunner {
                                  TourStatusService tourStatusService,
                                  TourStatusRepository tourStatusRepository,
                                  AdvertStatusService advertStatusService,
-                                 AdvertStatusRepository advertStatusRepository) {
+                                 AdvertStatusRepository advertStatusRepository,
+                                JavaMailSender mailSender) {
 
         this.userRoleService = userRoleService;
         this.userRoleRepository = userRoleRepository;
@@ -50,11 +55,14 @@ public class WarmyHomesApplication implements CommandLineRunner {
         this.tourStatusService = tourStatusService;
         this.advertStatusRepository = advertStatusRepository;
         this.advertStatusService = advertStatusService;
+        this.mailSender = mailSender;
     }
 
     public static void main(String[] args) {
         SpringApplication.run(WarmyHomesApplication.class, args);
     }
+
+    @EventListener(ApplicationReadyEvent.class)
 
 
     @Override

@@ -132,11 +132,11 @@ public class UserService {
 
 
     //F03 /forgot-password
-    public void sendResetPasswordCode(HttpServletRequest servletRequest) {
-        String email= (String) servletRequest.getAttribute("email");
-        String reset_password_code= (String) servletRequest.getAttribute("reset_password_code");
-        mailService.sendMail(email,reset_password_code);
-    }
+//    public void sendResetPasswordCode(HttpServletRequest servletRequest) {
+//        String email= (String) servletRequest.getAttribute("email");
+//        String reset_password_code= (String) servletRequest.getAttribute("reset_password_code");
+//        mailService.sendMail(email,reset_password_code);
+//    }
 
     //F04 It will update password
     public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
