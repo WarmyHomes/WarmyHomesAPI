@@ -47,14 +47,14 @@ public class UserController {
     }
 
     //F03 /forgot-password
-    @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
+   // @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
    //@PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
-
-        userService.sendResetPasswordCode(httpServletRequest);
-
-        return "Sent e-mail";
-    }
+//    public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
+//
+//        userService.sendResetPasswordCode(httpServletRequest);
+//
+//        return "Sent e-mail";
+//    }
 
 
     //F04 It will update password

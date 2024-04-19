@@ -17,6 +17,9 @@ import com.project.service.user.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +38,7 @@ public class WarmyHomesApplication implements CommandLineRunner {
     private final AdvertStatusService advertStatusService;
 
 
+
     public WarmyHomesApplication(UserRoleService userRoleService,
                                  UserRoleRepository userRoleRepository,
                                  UserService userService,
@@ -50,11 +54,14 @@ public class WarmyHomesApplication implements CommandLineRunner {
         this.tourStatusService = tourStatusService;
         this.advertStatusRepository = advertStatusRepository;
         this.advertStatusService = advertStatusService;
+
     }
 
     public static void main(String[] args) {
         SpringApplication.run(WarmyHomesApplication.class, args);
     }
+
+
 
 
     @Override
@@ -103,21 +110,21 @@ public class WarmyHomesApplication implements CommandLineRunner {
 
         }
 
-//        if (userService.countAllManagers() == 0) {
-//
-//            Set<String> roles = new HashSet<>();
-//            roles.add("Manager");
-//            UserRequest managerRequest = new UserRequest();
-//            managerRequest.setEmail("denememanager@github.com");
-//            managerRequest.setPassword_hash("123456789");
-//            managerRequest.setFirst_name("Deneme");
-//            managerRequest.setLast_name("Api");
-//            managerRequest.setPhone("530-000-0000");
-//            userService.saveManager(managerRequest);
-//
-//
-//
-//        }
+        if (userService.countAllManagers() == 0) {
+
+            Set<String> roles = new HashSet<>();
+            roles.add("Manager");
+            UserRequest managerRequest = new UserRequest();
+            managerRequest.setEmail("denememanager@github.com");
+            managerRequest.setPassword_hash("123456789");
+            managerRequest.setFirst_name("Deneme");
+            managerRequest.setLast_name("Api");
+            managerRequest.setPhone("530-000-0000");
+            userService.saveManager(managerRequest);
+
+
+
+        }
 
         if (tourStatusService.getAllStatus().isEmpty()){
             TourStatusRole pending = new TourStatusRole();
