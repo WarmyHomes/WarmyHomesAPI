@@ -8,25 +8,30 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Service
-
+@RequiredArgsConstructor
 public class MailServiceImpl implements MailService{
     private JavaMailSender mailSender;
+    private UserService userService;
 
     @Autowired
-    public MailServiceImpl(JavaMailSender mailSender){
+    public MailServiceImpl(JavaMailSender mailSender, UserService userService){
         this.mailSender=mailSender;
+        this.userService = userService;
     }
 
     @Override
     public String sendMail(String email) {
+
+        User user= userService.findUserByEmail(email);
+        String resetCode=user.getReset_password_code();
+
+
        SimpleMailMessage message=new SimpleMailMessage();
        message.setFrom("noreply@metsoft.com");
        message.setTo(email);
-       message.setText("Reset Code");
-       message.setSubject("acma");
+       message.setText(resetCode);
+       message.setSubject("Reset Code;");
        mailSender.send(message);
        return "Message sent";
     }

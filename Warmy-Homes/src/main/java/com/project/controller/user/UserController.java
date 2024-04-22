@@ -46,27 +46,34 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(userRequest));
     }
 
-    //F03 /forgot-password
-   // @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
-   //@PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-//    public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
+
+
+
+//    //F04 It will update password
+//    @PostMapping("/reset-password") //http://localhost:8080/reset-password
+//  //  @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+//    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
+//                                 HttpServletRequest servletRequest){
 //
-//        userService.sendResetPasswordCode(httpServletRequest);
+//       userService.updatePassword(request,servletRequest);
+//       return null;
 //
-//        return "Sent e-mail";
 //    }
 
 
-    //F04 It will update password
-    @PostMapping("/reset-password") //http://localhost:8080/reset-password
-  //  @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
-                                 HttpServletRequest servletRequest){
+   //F04 It will update password
+   @PostMapping("/reset-password") //http://localhost:8080/reset-password
+   public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
+                               HttpServletRequest servletRequest){
 
-       userService.updatePassword(request,servletRequest);
-       return null;
+      userService.updatePassword(request,servletRequest);
+      return "Password updated!";
 
-    }
+   }
+
+
+
+
 
     //F05 /users/auth http://localhost:8080/users/auth
     @GetMapping("/users/auth")
