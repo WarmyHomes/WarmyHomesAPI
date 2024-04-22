@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 public class UserUpdatePasswordRequest {
     private String password_hash;
+    private String retry_password_hash;
 
-    private String reset_password_code;
+    private String reset_password_codee;
 }

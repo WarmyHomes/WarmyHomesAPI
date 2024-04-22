@@ -64,7 +64,7 @@ public class User extends EntryDate {
     @Pattern.List({
             @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one digit"),
             @Pattern(regexp = ".*[a-zA-Z].*", message = "Password must contain at least one letter"),
-            @Pattern(regexp = ".*[@#$%^&+=!].*", message = "Password must contain at least one special character")
+            @Pattern(regexp = ".*[!@#$%^&*()-_=+[{]}|;:',<.>/?].*", message = "Password must contain at least one special character")
     })
     private String password_hash;
 
