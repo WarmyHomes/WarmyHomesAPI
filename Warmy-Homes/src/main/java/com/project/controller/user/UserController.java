@@ -46,27 +46,34 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(userRequest));
     }
 
-    //F03 /forgot-password
-    @PostMapping("/forgot-password") // http://localhost:8080/forgot-password
-   //@PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public String sendResetPasswordCode (HttpServletRequest httpServletRequest){
-
-        userService.sendResetPasswordCode(httpServletRequest);
-
-        return "Sent e-mail";
-    }
 
 
-    //F04 It will update password
-    @PostMapping("/reset-password") //http://localhost:8080/reset-password
-  //  @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
-                                 HttpServletRequest servletRequest){
 
-       userService.updatePassword(request,servletRequest);
-       return null;
+//    //F04 It will update password
+//    @PostMapping("/reset-password") //http://localhost:8080/reset-password
+//  //  @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+//    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
+//                                 HttpServletRequest servletRequest){
+//
+//       userService.updatePassword(request,servletRequest);
+//       return null;
+//
+//    }
 
-    }
+
+   //F04 It will update password
+   @PostMapping("/reset-password") //http://localhost:8080/reset-password
+   public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
+                               HttpServletRequest servletRequest){
+
+      userService.updatePassword(request,servletRequest);
+      return "Password updated!";
+
+   }
+
+
+
+
 
     //F05 /users/auth http://localhost:8080/users/auth
     @GetMapping("/users/auth")
@@ -112,7 +119,7 @@ public class UserController {
     @GetMapping("/users/admin")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<Page<UserResponse>> getUserByPage(
-            @RequestParam String q,
+            @RequestParam (defaultValue = "") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "create_at") String sort,

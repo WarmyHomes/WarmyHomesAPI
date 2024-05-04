@@ -14,6 +14,7 @@ import java.time.LocalTime;
 @Builder(toBuilder = true)
 public class TourRequestUpdateRequest {
     @NotNull(message = "Tour Date must not be empty")
+
     private LocalDate tour_date;
 
     @NotNull(message = "Tour Time must not be empty")

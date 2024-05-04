@@ -102,10 +102,6 @@ public class AdvertService {
         List<Category_Property_Key> categoryPropertyKeys=category.getCategory_property_keys();
 
         for (int i = 0; i <categoryPropertyKeys.size() ; i++) {
-
-
-
-
             category_property_values.get(i).setCategory_property_key(categoryPropertyKeys.get(i));
             category_property_values.get(i).setId(advertMap.getId());
         }
@@ -143,8 +139,6 @@ public class AdvertService {
 
             Advert savedAdvertSlug = advertRepository.save(advertMap);
 
-    //TODO Advert geri dondurulurken Property keylerin, property value lari tamami donduruluyor engelle
-        //TODO sadece ilana ozel property value lerin donmesini sagla
 
         AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(savedAdvertSlug);
 //        advertResponse.setAdvert_type_id(advertType);
@@ -166,12 +160,12 @@ public class AdvertService {
     public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
                                            Double price_start, Double price_end, Integer status, int page, int size, String sort, String type) {
         Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
-        if (q != null) {
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
-        } else {
+//        if (q != null) {
+//            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
+//        } else {
 
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(pageable, category_id, advert_type_id, price_start, price_end, status));
-        }
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.searchAllProducts(q, category_id, advert_type_id, price_start, price_end,pageable));
+        //}
     }
 
 
@@ -196,6 +190,7 @@ public class AdvertService {
     public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
 
             List<Object[]> cities = cityRepository.countCities();
+
 
 
            return cities.stream().map(objects -> CityForAdvertResponse.builder()
@@ -407,7 +402,7 @@ public class AdvertService {
 
         return ResponseMessage.<AdvertResponse>builder()
                 .message(SuccessMessages.ADVERT_UPDATED)
-                .object(advertMapper.mapAdvertToAdvertResponse(updateAdvert))
+                .object(advertMapper.mapSaveAdvertToAdvertResponse(updateAdvert))
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
@@ -426,7 +421,7 @@ public class AdvertService {
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
-        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
+        AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(advert);
         advertRepository.deleteById(advertId);
 
 
