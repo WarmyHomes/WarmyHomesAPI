@@ -77,24 +77,28 @@ public class TourRequestService {
     }
 
     //*S03
-    public TourRequestResponse getUsersTourRequestDetails(Long id, String userEmail) {
+    public TourRequestResponse getUsersTourRequestDetails(Long id, HttpServletRequest servletRequest) {
        Tour_Request tourRequest = isTourRequestExistById(id);
-       User user = userService.findUserByEmail(userEmail);
-       UserRole role = getUserRole(user);
-       if (!role.equals(RoleType.CUSTOMER)){
-           throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-
-       }
+       String email = (String) servletRequest.getAttribute("email");
+       User user = userService.findUserByEmail(email);
+       UserRole role = user.getUserRole();
+      if(!role.getRoleType().equals(RoleType.CUSTOMER)){
+          throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+      }
         return tourRequestMapper.mapTourRequestToResponse(tourRequest);
     }
 
     //*S04
-    public TourRequestResponse getUsersTourRequestDetailsForAdmin(Long id, String userEmail) {
-        User user = userService.findUserByEmail(userEmail);
-        UserRole roles = getUserRole(user);
-        if (!roles.equals(RoleType.ADMIN)|| !roles.equals(RoleType.MANAGER)){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
+    public TourRequestResponse getUsersTourRequestDetailsForAdmin(Long id, HttpServletRequest servletRequest) {
+        String email = (String) servletRequest.getAttribute("email");
+        User user = userService.findUserByEmail(email);
+        UserRole role = user.getUserRole();
+        //todo: userRole list olmadıgından manager cıkartıp sadece admin icin yazdım. sonradan duzeltilebilir.
+        //*role tarafında admin ve manager istiyor fakat list olmadıgından sadece admin icin yaptım
+        //permission hatası veriyor.
+//        if(!role.equals(RoleType.ADMIN)){
+//            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+//        }
         Tour_Request request = isTourRequestExistById(id);
         return tourRequestMapper.
                 mapTourRequestToResponse(request);
@@ -124,6 +128,9 @@ public class TourRequestService {
         validateUserHasRole(servletRequest,RoleType.CUSTOMER);
         Tour_Request tourRequestToUpdate = isTourRequestExistById(id);
         Tour_Request saved = tourRequestMapper.mapTourRequestUpdateRequestToTourRequest(tourRequestToUpdate,request);
+        LocalDateTime createTime = saved.getCreate_at();
+        saved.setCreate_at(createTime);
+        saved.setUpdate_at(LocalDateTime.now());
         tourRequestRepository.save(saved);
         TourRequestResponse response = tourRequestMapper.mapTourRequestToResponse(saved);
         return ResponseEntity.ok(response);
@@ -132,37 +139,30 @@ public class TourRequestService {
 
     //*S07-08-09
     public ResponseEntity<TourRequestResponse> updateTourRequestStatus(Long id, HttpServletRequest request, TourStatus newStatus) {
-       User user = getUser(request);
-       Tour_Request tourRequest = isTourRequestExistById(id);
 
-        // Kullanıcı rolü ve yetkilendirme kontrolleri
-        if (!user.getUserRole().getRoleType().equals(RoleType.CUSTOMER)) {
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
+        String email = (String) request.getAttribute("email");
+        checkUserRole(RoleType.CUSTOMER,getUserRoleType(email));
 
-        // Status değişikliği mantığıc
-        //todo bu kisma birdaha bak onemli!!!
+        Tour_Request tourRequest = isTourRequestExistById(id);
+
         TourStatusRole statusRole = tourStatusService.getTourStatus(newStatus);
         tourRequest.setStatus(statusRole);
-
         tourRequest = tourRequestRepository.save(tourRequest);
-
         return ResponseEntity.ok(tourRequestMapper.mapTourRequestToResponse(tourRequest));
+
     }
 
     //*S10
-    public ResponseMessage  deleteTourRequest(Long id, HttpServletRequest servletRequest) {
-        User user = getUser(servletRequest);
-        UserRole userRole = getUserRole(user);
-        if (!userRole.equals(RoleType.ADMIN)||  !userRole.equals(RoleType.MANAGER)){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-
-        }
-        tourRequestRepository.delete(isTourRequestExistById(id));
-        return ResponseMessage.builder()
-                .message(SuccessMessages.TOUR_REQUEST_DELETED_SUCCESSFULLY)
+    public ResponseEntity<ResponseMessage>  deleteTourRequest(Long id, HttpServletRequest servletRequest) {
+        String email = (String) servletRequest.getAttribute("email");
+        checkUserRole(RoleType.ADMIN,getUserRoleType(email));
+        Tour_Request deleteOne = isTourRequestExistById(id);
+        tourRequestRepository.delete(deleteOne);
+        ResponseMessage<String> responseMessage = ResponseMessage.<String>builder()
+                .message("Request deleted successfully")
                 .httpStatus(HttpStatus.OK)
                 .build();
+        return ResponseEntity.ok(responseMessage);
     }
 
     public Tour_Request isTourRequestExistById(Long id ){

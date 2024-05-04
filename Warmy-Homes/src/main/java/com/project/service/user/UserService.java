@@ -56,7 +56,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
-    private final MailService mailService;
+    //private final MailService mailService;
     private final PageableHelper pageableHelper;
 
 
@@ -131,29 +131,41 @@ public class UserService {
     }
 
 
-    //F03 /forgot-password
-    public void sendResetPasswordCode(HttpServletRequest servletRequest) {
-        String email= (String) servletRequest.getAttribute("email");
-        String reset_password_code= (String) servletRequest.getAttribute("reset_password_code");
-        mailService.sendMail(email,reset_password_code);
-    }
+
+
+    //F04 It will update password
+//    public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
+//
+//         String code= request.getReset_password_code();
+//         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
+//         if (!code.equals(reset_code)){
+//             throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
+//         }
+//
+//         User user= (User) servletRequest.getAttribute("email");
+//         String new_password= passwordEncoder.encode(code);
+//         user.setPassword_hash(new_password);
+//         userRepository.save(user);
+//
+//    }
 
     //F04 It will update password
     public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
-
-         String code= request.getReset_password_code();
-         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
-         if (!code.equals(reset_code)){
+        String reset_code= (String) servletRequest.getAttribute("reset_password_code");
+        String code= request.getReset_password_codee();
+        if (!code.equals(reset_code)){
              throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
-         }
-
-         User user= (User) servletRequest.getAttribute("email");
-         String new_password= passwordEncoder.encode(code);
-         user.setPassword_hash(new_password);
-         userRepository.save(user);
+        }
+        if (!(request.getPassword_hash().equals(request.getRetry_password_hash()))){
+            throw new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
+        }
+        String email= (String) servletRequest.getAttribute("email");
+        User user= userRepository.findByEmail(email);
+        String newPassword= passwordEncoder.encode(request.getPassword_hash());
+        user.setPassword_hash(newPassword);
+        userRepository.save(user);
 
     }
-
 
     //F05 /users/auth http://localhost:8080/users/auth
     public UserResponse getUser(String email) {
@@ -403,4 +415,5 @@ public class UserService {
     public Page<Tour_Request>getUsersTourRequestById(Long id, Pageable pageable){
         return userRepository.findTourRequestByUserId(id,pageable);
     }
+
 }
