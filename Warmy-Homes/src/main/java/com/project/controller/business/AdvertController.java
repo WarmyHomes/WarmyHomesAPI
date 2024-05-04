@@ -77,8 +77,8 @@ public class AdvertController {
 
     // ******************************************** //A02 Finished
     @GetMapping("/cities") //normalde task'de cities yazıyor biz city yazdik
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-
+//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+//
     public List<CityForAdvertResponse> getAdvertsDependingOnCities (){
 
         return advertService.getAdvertsDependingOnCities();
@@ -86,7 +86,7 @@ public class AdvertController {
 
     //****************************************** //A03 Finished
     @GetMapping("/categories")
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     public List<CategoryForAdvertResponse> getAdvertByCategory(){
 
         return advertService.getAdvertByCategory();

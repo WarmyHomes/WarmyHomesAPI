@@ -402,7 +402,7 @@ public class AdvertService {
 
         return ResponseMessage.<AdvertResponse>builder()
                 .message(SuccessMessages.ADVERT_UPDATED)
-                .object(advertMapper.mapAdvertToAdvertResponse(updateAdvert))
+                .object(advertMapper.mapSaveAdvertToAdvertResponse(updateAdvert))
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
@@ -421,7 +421,7 @@ public class AdvertService {
         if (advert.getBuiltIn().equals(Boolean.TRUE)){
             throw new ConflictException(ErrorMessages.ADVERT_BUILD_IN);
         }
-        AdvertResponse advertResponse = advertMapper.mapAdvertToAdvertResponse(advert);
+        AdvertResponse advertResponse = advertMapper.mapSaveAdvertToAdvertResponse(advert);
         advertRepository.deleteById(advertId);
 
 

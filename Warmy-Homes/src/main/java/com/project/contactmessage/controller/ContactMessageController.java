@@ -22,7 +22,7 @@ public class ContactMessageController {
     private final ContactMessageService contactMessageService;
 
     //J01:It will create a contact message
-    @PostMapping //http://localhost:8080/contact-messages + POST + JSON
+    @PostMapping("/save") //http://localhost:8080/contact-messages + POST + JSON
     public ResponseMessage<ContactMessageResponse> create(@RequestBody @Valid ContactMessageRequest contactMessageRequest){
 
         return contactMessageService.create(contactMessageRequest);
@@ -31,12 +31,13 @@ public class ContactMessageController {
 
 
     //J02:It will get contact messages
-    @GetMapping
+
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @GetMapping("/getAll")
     public Page<ContactMessageResponse> getAll(
             @RequestParam(value = "page", defaultValue = "0")int page,
             @RequestParam(value = "size", defaultValue = "20")int size,
-            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+            @RequestParam(value = "sort", defaultValue = "email") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type){
 
         return contactMessageService.getAll(page,size,sort,type);
