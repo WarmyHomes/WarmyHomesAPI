@@ -112,7 +112,7 @@ public class UserController {
     @GetMapping("/users/admin")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public ResponseEntity<Page<UserResponse>> getUserByPage(
-            @RequestParam String q,
+            @RequestParam (defaultValue = "") String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "create_at") String sort,

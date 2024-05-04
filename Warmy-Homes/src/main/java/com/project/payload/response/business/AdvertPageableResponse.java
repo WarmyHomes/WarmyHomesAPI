@@ -42,18 +42,20 @@ public class AdvertPageableResponse {
 
     private String location;
 
-    private Advert_Type advert_type_id;
+    private String  advertTypeName;
 
-    private Country country_id;
+    private String countryName;
 
-    private City city_id;
+    private String cityName;
 
-    private District district;
+    private String districtName;
+
+
+    private String  categoryName;
 
 
     private List<Image> images;
 
-    private Category category_id;
 
     private LocalDateTime createdAt;
 
