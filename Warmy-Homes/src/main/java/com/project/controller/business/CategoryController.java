@@ -7,6 +7,7 @@ import com.project.payload.response.business.Category_Property_Key_Response;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,27 +25,27 @@ public class CategoryController {
 
     //C01
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getCategories(
+    public ResponseEntity<Page<CategoryResponse>> getCategories(
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type) {
-        List<CategoryResponse> categories = categoryService.getCategories(query, page, size, sort, type);
+        Page<CategoryResponse> categories = categoryService.getCategories(query, page, size, sort, type);
         return ResponseEntity.ok(categories);
     }
 
     //C02
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(
+    public ResponseEntity<Page<CategoryResponse>> getAllCategories(
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type) {
 
-        List<CategoryResponse> categories = categoryService.getAllCategories(query, page, size, sort, type);
+        Page<CategoryResponse> categories = categoryService.getAllCategories(query, page, size, sort, type);
         return ResponseEntity.ok(categories);
     }
 
