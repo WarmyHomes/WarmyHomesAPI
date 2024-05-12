@@ -30,7 +30,7 @@ public class ContactMessageRequest {
     @Email
     private String email;
 
-    private Integer status;
+    private Integer status=0;
 
     @NotNull(message = "Please enter message")
     @Size(max = 300)

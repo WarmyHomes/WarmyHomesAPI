@@ -96,6 +96,7 @@ public class WebSecurityConfig {
             //*************************************
             "/login",
             "/register",
-            "/adverts/cities"
+            "/adverts/cities",
+            "/contact-messages/save"
     };
 }
