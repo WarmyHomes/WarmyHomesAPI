@@ -97,7 +97,7 @@ public class UserController {
     //F07 It will update the authenticated user’s password
     @PostMapping("/users/auth") // http://localhost:8080/users/auth
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
-    public ResponseEntity<String> updateUserPassword(HttpServletRequest request,
+    public ResponseMessage<String> updateUserPassword(HttpServletRequest request,
                                                      @RequestBody @Valid PasswordUpdateRequest baseUserRequest){
 
         return   userService.updateUserPassword(request,baseUserRequest);
