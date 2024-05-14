@@ -22,6 +22,7 @@ public class ContactMessageController {
     private final ContactMessageService contactMessageService;
 
     //J01:It will create a contact message
+
     @PostMapping("/save") //http://localhost:8080/contact-messages + POST + JSON
     public ResponseMessage<ContactMessageResponse> create(@RequestBody @Valid ContactMessageRequest contactMessageRequest){
 

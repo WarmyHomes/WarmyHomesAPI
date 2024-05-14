@@ -200,7 +200,7 @@ public class UserService {
     }
 
     //F07 It will update the authenticated user’s password
-    public ResponseEntity<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
+    public ResponseMessage<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
         String email= (String) request.getAttribute("email");
         User user = userRepository.findByEmail(email);
         if (Boolean.TRUE.equals(user.getBuilt_in())){
@@ -215,7 +215,10 @@ public class UserService {
         userRepository.save(user);
 
         String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
-        return  ResponseEntity.ok(response);
+        return ResponseMessage.<String>builder()
+                .message(response)
+                .httpStatus(HttpStatus.OK)
+                .build();
 
     }
 
