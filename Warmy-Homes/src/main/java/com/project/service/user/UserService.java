@@ -321,13 +321,14 @@ public class UserService {
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
 
-        User authorized = (User) servletRequest.getAttribute("email");
+      //  User authorized = (User) servletRequest.getAttribute("email");
+//
+      //  if (authorized.getUserRole().equals(RoleType.MANAGER)){
+      //      if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
+      //          throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+      //      }
+      //  }
 
-        if (authorized.getUserRole().equals(RoleType.MANAGER)){
-            if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
-                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-            }
-        }
         userRepository.deleteById(id);
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_DELETE)
