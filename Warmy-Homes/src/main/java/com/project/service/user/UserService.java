@@ -152,8 +152,8 @@ public class UserService {
     //F04 It will update password
     public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
-        String code= request.getReset_password_codee();
-        if (!code.equals(reset_code)){
+        String code= request.getPassword_hash();
+        if (code.equals(reset_code)){
              throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
         }
         if (!(request.getPassword_hash().equals(request.getRetry_password_hash()))){
