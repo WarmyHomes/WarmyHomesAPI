@@ -152,8 +152,8 @@ public class UserService {
     //F04 It will update password
     public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
-        String code= request.getReset_password_codee();
-        if (!code.equals(reset_code)){
+        String code= request.getPassword_hash();
+        if (code.equals(reset_code)){
              throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
         }
         if (!(request.getPassword_hash().equals(request.getRetry_password_hash()))){
@@ -321,13 +321,14 @@ public class UserService {
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
 
-        User authorized = (User) servletRequest.getAttribute("email");
+      //  User authorized = (User) servletRequest.getAttribute("email");
+//
+      //  if (authorized.getUserRole().equals(RoleType.MANAGER)){
+      //      if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
+      //          throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+      //      }
+      //  }
 
-        if (authorized.getUserRole().equals(RoleType.MANAGER)){
-            if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
-                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-            }
-        }
         userRepository.deleteById(id);
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_DELETE)
