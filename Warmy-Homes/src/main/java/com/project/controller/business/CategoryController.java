@@ -26,7 +26,7 @@ public class CategoryController {
     //C01
     @GetMapping
     public ResponseEntity<Page<CategoryResponse>> getCategories(
-            @RequestParam(value = "q", required = false) String query,
+            @RequestParam(value = "q", defaultValue = "") String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -39,7 +39,7 @@ public class CategoryController {
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
     public ResponseEntity<Page<CategoryResponse>> getAllCategories(
-            @RequestParam(value = "q", required = false) String query,
+            @RequestParam(value = "q", defaultValue = "") String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
