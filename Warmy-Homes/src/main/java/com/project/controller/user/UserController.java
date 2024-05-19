@@ -3,10 +3,7 @@ package com.project.controller.user;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractUserRequest;
 import com.project.payload.request.abstracts.BaseUserRequest;
-import com.project.payload.request.user.LoginRequest;
-import com.project.payload.request.user.PasswordUpdateRequest;
-import com.project.payload.request.user.UserRequest;
-import com.project.payload.request.user.UserUpdatePasswordRequest;
+import com.project.payload.request.user.*;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
@@ -49,18 +46,6 @@ public class UserController {
 
 
 
-//    //F04 It will update password
-//    @PostMapping("/reset-password") //http://localhost:8080/reset-password
-//  //  @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
-//    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
-//                                 HttpServletRequest servletRequest){
-//
-//       userService.updatePassword(request,servletRequest);
-//       return null;
-//
-//    }
-
-
    //F04 It will update password
    @PostMapping("/reset-password") //http://localhost:8080/reset-password
    public String updatePassword(@RequestBody UserUpdatePasswordRequest request,
@@ -97,7 +82,7 @@ public class UserController {
     //F07 It will update the authenticated user’s password
     @PostMapping("/users/auth") // http://localhost:8080/users/auth
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','CUSTOMER')")
-    public ResponseEntity<String> updateUserPassword(HttpServletRequest request,
+    public ResponseMessage<String> updateUserPassword(HttpServletRequest request,
                                                      @RequestBody @Valid PasswordUpdateRequest baseUserRequest){
 
         return   userService.updateUserPassword(request,baseUserRequest);
@@ -140,7 +125,7 @@ public class UserController {
     //F11 /users/4/admin It will update the user
     @PutMapping("/users/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage<BaseUserResponse> updateUserById(@RequestBody @Valid UserRequest userRequest,
+    public ResponseMessage<BaseUserResponse> updateUserById(@RequestBody @Valid UpdateUserRequest userRequest,
                                                             @PathVariable Long id) {
         return userService.updateUserById(userRequest, id);
     }

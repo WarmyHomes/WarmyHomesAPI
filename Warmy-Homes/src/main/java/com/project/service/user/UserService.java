@@ -12,10 +12,7 @@ import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.abstracts.AbstractUserRequest;
 import com.project.payload.request.abstracts.BaseUserRequest;
-import com.project.payload.request.user.LoginRequest;
-import com.project.payload.request.user.PasswordUpdateRequest;
-import com.project.payload.request.user.UserRequest;
-import com.project.payload.request.user.UserUpdatePasswordRequest;
+import com.project.payload.request.user.*;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.AuthResponse;
@@ -104,12 +101,7 @@ public class UserService {
 
         userRole.add(customer);
         User user = userMapper.mapUserRequestToUser(userRequest);
-//        UserRole userRole= new UserRole();
-//        userRole.setRoleType(RoleType.CUSTOMER);
-//        UserRole customer = new UserRole();
-//        customer.setRoleType(RoleType.CUSTOMER);
-//       customer.setName("Customer");
-//        user.setUserRole(customer);
+
         user.setBuilt_in(Boolean.FALSE);
 
         user.setCreate_at(LocalDateTime.now());
@@ -133,28 +125,13 @@ public class UserService {
 
 
 
-    //F04 It will update password
-//    public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
-//
-//         String code= request.getReset_password_code();
-//         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
-//         if (!code.equals(reset_code)){
-//             throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
-//         }
-//
-//         User user= (User) servletRequest.getAttribute("email");
-//         String new_password= passwordEncoder.encode(code);
-//         user.setPassword_hash(new_password);
-//         userRepository.save(user);
-//
-//    }
 
     //F04 It will update password
     public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
         String code= request.getReset_password_codee();
-        if (!code.equals(reset_code)){
-             throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
+        if (code != null && !code.equals(reset_code)){
+            throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
         }
         if (!(request.getPassword_hash().equals(request.getRetry_password_hash()))){
             throw new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
@@ -200,7 +177,7 @@ public class UserService {
     }
 
     //F07 It will update the authenticated user’s password
-    public ResponseEntity<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
+    public ResponseMessage<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
         String email= (String) request.getAttribute("email");
         User user = userRepository.findByEmail(email);
         if (Boolean.TRUE.equals(user.getBuilt_in())){
@@ -210,12 +187,23 @@ public class UserService {
 //            throw  new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
 //        }
 
-        String encodedPassword = passwordEncoder.encode(baseUserRequest.getPassword_hash());
+        if (!(user.getPassword_hash().equalsIgnoreCase(baseUserRequest.getCurrent_password()))){
+            throw new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
+        }
+
+        if (!(baseUserRequest.getNew_password().equalsIgnoreCase(baseUserRequest.getRetry_new_password()))){
+            throw new BadRequestException(ErrorMessages.PASSWORDS_NOT_MATCHED);
+        }
+
+        String encodedPassword = passwordEncoder.encode(baseUserRequest.getNew_password());
         user.setPassword_hash(encodedPassword);
         userRepository.save(user);
 
         String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
-        return  ResponseEntity.ok(response);
+        return ResponseMessage.<String>builder()
+                .message(response)
+                .httpStatus(HttpStatus.OK)
+                .build();
 
     }
 
@@ -275,19 +263,20 @@ public class UserService {
     }
 
     //F11 /users/4/admin It will update the user
-    public ResponseMessage<BaseUserResponse> updateUserById(UserRequest userRequest, Long id) {
+    public ResponseMessage<BaseUserResponse> updateUserById(UpdateUserRequest userRequest, Long id) {
         User user= isUserExist(id);
         Boolean isBuiltlIn= user.getBuilt_in();
 
-        userRequest.setUserRole(user.getUserRole());
+        //userRequest.setUserRole(user.getUserRole());
         if ( Boolean.TRUE.equals(isBuiltlIn)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
-        uniquePropertyValidator.checkUniqueProperties(user,userRequest);
-        User updatedUser = userMapper.mapUserRequestToUpdatedUser(userRequest, id);
+        uniquePropertyValidator.checkUniquePropertiess(user,userRequest);
+        User updatedUser = userMapper.mapUserRequestToUpdatedUserr(userRequest, id);
 
-        updatedUser.setReset_password_code(passwordEncoder.encode(userRequest.getPassword_hash()));
-        updatedUser.setPassword_hash(passwordEncoder.encode(userRequest.getPassword_hash()));
+
+        updatedUser.setReset_password_code(passwordEncoder.encode(user.getReset_password_code()));
+        updatedUser.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
         updatedUser.setUserRole(user.getUserRole());
         updatedUser.setBuilt_in(false);
         updatedUser.setCreate_at(user.getCreate_at());
@@ -318,13 +307,7 @@ public class UserService {
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
 
-        User authorized = (User) servletRequest.getAttribute("email");
 
-        if (authorized.getUserRole().equals(RoleType.MANAGER)){
-            if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
-                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-            }
-        }
         userRepository.deleteById(id);
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_DELETE)

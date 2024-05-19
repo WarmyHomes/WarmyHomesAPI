@@ -42,22 +42,4 @@ public class MailServiceImpl implements MailService{
     }
 
 
-//    @Override
-//    public String sendMail(HttpServletRequest servletRequest) {
-//        String email=(String) servletRequest.getAttribute("email");
-//        User user=userService.findUserByEmail(email);
-//        String resetCode= user.getReset_password_code();
-//        SimpleMailMessage message=new SimpleMailMessage();
-//        message.setFrom("warmyhomes@gmail.com");
-//        message.setTo(email);
-//        message.setText(resetCode);
-//        message.setSubject("Reset Code");
-//        mailSender.send(message);
-//        return "Gonderildi";
-//    }
-//
-//    @Override
-//    public String sendMultiMediaMail() {
-//        return null;
-//    }
 }
