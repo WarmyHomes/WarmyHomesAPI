@@ -1,6 +1,8 @@
 package com.project.controller.mail;
 
+import com.project.payload.request.user.PasswordUpdateRequest;
 import com.project.service.mail.MailService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,8 @@ public class MailController {
     }
 
     @GetMapping("/forgot-password")
-    public ResponseEntity<String> sendMail(HttpServletRequest servletRequest){
-        String email= (String) servletRequest.getAttribute("email");
+    public ResponseEntity<String> sendMail(@RequestBody String email){
+
         return ResponseEntity.ok(mailService.sendMail(email));
     }
 
