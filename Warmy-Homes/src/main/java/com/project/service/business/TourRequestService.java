@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -199,6 +200,14 @@ public class TourRequestService {
         }
     }
 
+
+    //G04
+    public List<TourRequestResponse> getTourRequestsFiltered(LocalDate startDate, LocalDate endDate, String status) {
+        List<Tour_Request> tourRequests = tourRequestRepository.findByDateRangeAndStatus(startDate, endDate, TourStatus.valueOf(status));
+        return tourRequests.stream()
+                .map(tourRequestMapper::mapTourRequestToResponse)
+                .collect(Collectors.toList());
+    }
 
 
 
