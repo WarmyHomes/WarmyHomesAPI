@@ -154,7 +154,7 @@ public class UserService {
         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
         String code= request.getReset_password_codee();
         if (code != null && !code.equals(reset_code)){
-             throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
+            throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
         }
         if (!(request.getPassword_hash().equals(request.getRetry_password_hash()))){
             throw new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
@@ -200,7 +200,7 @@ public class UserService {
     }
 
     //F07 It will update the authenticated user’s password
-    public ResponseEntity<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
+    public ResponseMessage<String> updateUserPassword(HttpServletRequest request, PasswordUpdateRequest baseUserRequest) {
         String email= (String) request.getAttribute("email");
         User user = userRepository.findByEmail(email);
         if (Boolean.TRUE.equals(user.getBuilt_in())){
@@ -215,7 +215,10 @@ public class UserService {
         userRepository.save(user);
 
         String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
-        return  ResponseEntity.ok(response);
+        return ResponseMessage.<String>builder()
+                .message(response)
+                .httpStatus(HttpStatus.OK)
+                .build();
 
     }
 
@@ -318,13 +321,14 @@ public class UserService {
             throw new BadRequestException(ErrorMessages.USER_CAN_NOT_DELETED);
         }
 
-        User authorized = (User) servletRequest.getAttribute("email");
+      //  User authorized = (User) servletRequest.getAttribute("email");
+//
+      //  if (authorized.getUserRole().equals(RoleType.MANAGER)){
+      //      if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
+      //          throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+      //      }
+      //  }
 
-        if (authorized.getUserRole().equals(RoleType.MANAGER)){
-            if (!(user.getUserRole().equals(RoleType.CUSTOMER))){
-                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-            }
-        }
         userRepository.deleteById(id);
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_DELETE)

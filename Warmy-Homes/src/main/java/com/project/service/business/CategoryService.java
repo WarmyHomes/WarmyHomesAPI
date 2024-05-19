@@ -42,20 +42,17 @@ public class CategoryService {
 
     private final CategoryPropertyKeyRepository propertyKeyRepository;
     private final CategoryMapper categoryMapper;
-    private final CategoryPropertyValueRepository categoryPropertyValueRepository;
     private final CategoryHelper categoryHelper;
 
 
-    public List<CategoryResponse> getCategories(String query, int page, int size, String sort, String type) {
+    public Page<CategoryResponse> getCategories(String query, int page, int size, String sort, String type) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(type), sort));
         //todo queri null ilse neye gore siralayacak
         Page<Category> categoryPage = categoryRepository.findByTitleContainingAndIsActiveTrue(query, pageable);
-        return categoryPage.getContent().stream()
-                .map(categoryMapper::mapCategoryToResponse)
-                .collect(Collectors.toList());
+        return  categoryPage.map(categoryMapper::mapCategoryToResponseGetCategory);
     }
 
-    public List<CategoryResponse> getAllCategories(String query, int page, int size, String sort, String type) {
+    public Page<CategoryResponse> getAllCategories(String query, int page, int size, String sort, String type) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(type), sort));
         Page<Category> categoryPage;
         //queri varsa queri ye gore olan categoryleri getiriyor
@@ -64,9 +61,7 @@ public class CategoryService {
         } else {
             categoryPage = categoryRepository.findAll(pageable);
         }
-        return categoryPage.getContent().stream()
-                .map(categoryMapper::mapCategoryToResponse)
-                .collect(Collectors.toList());
+        return categoryPage.map(categoryMapper::mapCategoryToResponseGetCategory);
     }
 
 

@@ -23,7 +23,7 @@ public class AdvertTypesController {
 
 
     // T-01 /advert-types-Get Reklam türlerini döndürmelidir
-    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
+//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     @GetMapping
     public ResponseEntity<List<AdvertTypeResponse>> getAllAdvertTypes() {
         List<AdvertTypeResponse> advertTypes = advertTypesService.getAllAdvertTypes();

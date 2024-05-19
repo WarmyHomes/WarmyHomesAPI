@@ -49,18 +49,18 @@ public class AdvertResponse {
 
     private String location;
 
-    private Advert_Type advert_type_id;
+    private String advert_type_id;
 
-    private Country country_id;
+    private String country_id;
 
-    private City city_id;
+    private String city_id;
 
-    private District district;
+    private String district;
 
 
     private List<Image> images;
 
-    private Category category_id;
+    private String category_id;
 
     //private LocalDateTime createdAt;
 

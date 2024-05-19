@@ -43,7 +43,7 @@ public class CategoryRequest {
    //private String slug;
 
     @NotNull(message = "Active status is required")
-    private Boolean is_active;
+    private Boolean is_active=true;
 
 
     private List<Category_Property_Key> category_property_keys;

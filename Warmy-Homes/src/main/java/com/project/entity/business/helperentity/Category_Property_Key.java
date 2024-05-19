@@ -40,4 +40,10 @@ public class Category_Property_Key {
     @OneToMany(mappedBy = "category_property_key", cascade = CascadeType.REMOVE)
     private List<Category_Property_Value> category_property_values;
 
+
+    public Category_Property_Key(Long id, String name, Boolean built_in) {
+        this.id = id;
+        this.name = name;
+        this.built_in = built_in;
+    }
 }

@@ -124,7 +124,7 @@ public class WarmyHomesApplication implements CommandLineRunner {
 
 
 
-        }
+        }   
 
         if (tourStatusService.getAllStatus().isEmpty()){
             TourStatusRole pending = new TourStatusRole();
