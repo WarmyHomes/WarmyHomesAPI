@@ -153,7 +153,7 @@ public class UserService {
     public void updatePassword(UserUpdatePasswordRequest request, HttpServletRequest servletRequest) {
         String reset_code= (String) servletRequest.getAttribute("reset_password_code");
         String code= request.getReset_password_codee();
-        if (!code.equals(reset_code)){
+        if (code != null && !code.equals(reset_code)){
              throw new BadRequestException(ErrorMessages.NOT_VALID_CODE);
         }
         if (!(request.getPassword_hash().equals(request.getRetry_password_hash()))){
