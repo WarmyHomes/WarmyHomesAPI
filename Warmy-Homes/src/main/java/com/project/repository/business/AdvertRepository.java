@@ -6,6 +6,7 @@ import com.project.entity.business.City;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.user.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -73,6 +74,10 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     Optional<Advert> findBySlug(String slug);
 
 
+    //G03
+    // En popüler ilanları döndüren endpoint
+    @Query("SELECT a FROM Advert a JOIN a.tourRequestList tr GROUP BY a.id ORDER BY COUNT(tr.id) DESC")
+    List<Advert> findMostPopularProperties(Pageable pageable);
 
 
     //Page<Advert> findByTitleOrDescriptionEquals(String title, Pageable pageable);

@@ -24,6 +24,7 @@ import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.business.helperresponse.AdvertForSlugResponse;
 import com.project.payload.response.business.helperresponse.CategoryForAdvertResponse;
 import com.project.payload.response.business.helperresponse.CityForAdvertResponse;
+import com.project.payload.response.user.UserResponse;
 import com.project.repository.business.*;
 import com.project.repository.helperRepository.CategoryPropertyValueRepository;
 import com.project.repository.user.UserRepository;
@@ -32,10 +33,14 @@ import com.project.service.helper.CategoryHelper;
 import com.project.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -496,6 +501,25 @@ public class AdvertService {
    public Advert findAdvertById(Long id){
         return advertRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(ErrorMessages.ADVERT_NOT_FOUND));
    }
+
+
+
+
+    //G03
+    // En popüler ilanları döndüren endpoint
+    public List<AdvertResponse> getMostPopularProperties(int amount) {
+        // PageRequest.of ile başlangıç sayfası 0, istenen sayıda eleman ile bir sayfa nesnesi oluşturuluyor.
+        // Sort.by ile tur isteklerinin sayısına göre azalan sıralama yapılıyor.
+        List<Advert> adverts = advertRepository.findMostPopularProperties(PageRequest.of(0, amount, Sort.by(Sort.Direction.DESC, "tourRequestList.size")));
+
+        // Elde edilen Advert listesi, bir stream haline getirilerek her bir Advert nesnesi AdvertResponse nesnesine dönüştürülüyor.
+        // Bu dönüşüm için advertMapper nesnesinin mapAdvertToAdvertResponse metodundan yararlanılıyor.
+        // Sonuç olarak elde edilen stream, bir liste haline getirilerek dönülüyor.
+        return adverts.stream()
+                .map(advertMapper::mapAdvertToAdvertResponse)
+                .collect(Collectors.toList());
+    }
+
 
 
 }
