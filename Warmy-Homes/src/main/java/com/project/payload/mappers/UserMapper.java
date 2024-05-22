@@ -33,6 +33,7 @@ public class UserMapper {
                 .last_name(user.getLast_name())
                 .phone(user.getPhone())
                 .email(user.getEmail())
+             .role(user.getUserRole().getName())
                 .tour_requestList(user.getTour_requestList())
                 .logs(user.getLogs())
                 .advertList(user.getAdvertList())
