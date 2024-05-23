@@ -3,6 +3,7 @@ package com.project.payload.mappers;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
+import com.project.payload.request.user.UpdateUserRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.response.user.UserAllFieldsResponse;
 import com.project.payload.response.user.UserResponse;
@@ -32,6 +33,7 @@ public class UserMapper {
                 .last_name(user.getLast_name())
                 .phone(user.getPhone())
                 .email(user.getEmail())
+             .role(user.getUserRole().getName())
                 .tour_requestList(user.getTour_requestList())
                 .logs(user.getLogs())
                 .advertList(user.getAdvertList())
@@ -65,6 +67,18 @@ public class UserMapper {
                 .userRole(userRequest.getUserRole())
                 .built_in(userRequest.getBuilt_in())
 
+
+                .build();
+    }
+
+    public User mapUserRequestToUpdatedUserr(UpdateUserRequest userRequest, Long id){
+        return User.builder()
+                .id(id)
+                .first_name(userRequest.getFirst_name())
+                .last_name(userRequest.getLast_name())
+
+                .phone(userRequest.getPhone())
+                .email(userRequest.getEmail())
 
                 .build();
     }

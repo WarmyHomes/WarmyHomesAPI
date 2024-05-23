@@ -105,10 +105,17 @@ public class TourRequestController {
     }
 
     //*S10
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
-    public ResponseEntity<ResponseMessage> deleteTourRequest(@PathVariable Long id, HttpServletRequest servletRequest){
-        return tourRequestService.deleteTourRequest(id, servletRequest);
+    @DeleteMapping("/{id}/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public ResponseEntity<String> deleteTourRequestAdmin(@PathVariable Long id, HttpServletRequest servletRequest){
+        return ResponseEntity.ok(tourRequestService.deleteTourRequest(id,servletRequest));
+    }
+
+    //*S10.5 CUSTOMER SİDE
+    @DeleteMapping("/{id}/auth")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER')")
+    public ResponseEntity<String> deleteTourRequestCustomer(@PathVariable Long id, HttpServletRequest servletRequest){
+        return ResponseEntity.ok(tourRequestService.deleteTourRequestCustomer(id,servletRequest));
     }
 
 

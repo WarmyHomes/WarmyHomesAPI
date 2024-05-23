@@ -26,6 +26,7 @@ public class ErrorMessages {
     public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with id %s";
     public static final String USER_CAN_NOT_DELETED = "Error: User cannot be deleted";
     public static final String NOT_VALID_CODE= "The reset code is not valid.";
+    public static final String PASSWORDS_NOT_MATCHED="New password and retry password are not matched!";
 
 
     public static final String NOT_PERMITTED_METHOD_MESSAGE = "You do not have any permission to do this operation";

@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -153,16 +154,26 @@ public class TourRequestService {
     }
 
     //*S10
-    public ResponseEntity<ResponseMessage>  deleteTourRequest(Long id, HttpServletRequest servletRequest) {
-        String email = (String) servletRequest.getAttribute("email");
-        checkUserRole(RoleType.ADMIN,getUserRoleType(email));
-        Tour_Request deleteOne = isTourRequestExistById(id);
-        tourRequestRepository.delete(deleteOne);
-        ResponseMessage<String> responseMessage = ResponseMessage.<String>builder()
-                .message("Request deleted successfully")
-                .httpStatus(HttpStatus.OK)
-                .build();
-        return ResponseEntity.ok(responseMessage);
+    public String  deleteTourRequest(Long id, HttpServletRequest servletRequest) {
+
+        UserRole role = getUserRole(getUser(servletRequest));
+        if(role.equals(RoleType.ADMIN)|| role.equals(RoleType.MANAGER)){
+            tourRequestRepository.delete(isTourRequestExistById(id));
+            return SuccessMessages.TOUR_REQUEST_DELETED_SUCCESSFULLY;
+        }
+        return ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE;
+    }
+
+    //*S10.5
+    public String deleteTourRequestCustomer(Long id, HttpServletRequest servletRequest) {
+        String email =(String) servletRequest.getAttribute("email");
+        User user =  userService.findUserByEmail(email);
+        UserRole role = user.getUserRole();
+        if (!role.getRoleType().equals(RoleType.CUSTOMER)) {
+            return ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE;
+        }
+        tourRequestRepository.delete(isTourRequestExistById(id));
+        return SuccessMessages.TOUR_REQUEST_DELETED_SUCCESSFULLY;
     }
 
     public Tour_Request isTourRequestExistById(Long id ){
@@ -199,6 +210,14 @@ public class TourRequestService {
         }
     }
 
+
+    //G04
+    public List<TourRequestResponse> getTourRequestsFiltered(LocalDate startDate, LocalDate endDate, String status) {
+        List<Tour_Request> tourRequests = tourRequestRepository.findByDateRangeAndStatus(startDate, endDate, TourStatus.valueOf(status));
+        return tourRequests.stream()
+                .map(tourRequestMapper::mapTourRequestToResponse)
+                .collect(Collectors.toList());
+    }
 
 
 
