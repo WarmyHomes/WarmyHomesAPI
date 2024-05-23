@@ -169,23 +169,6 @@ public class AdvertService {
     }
 
 
-
-
-//    // ******************************************** // A01
-//    public Page<AdvertPageableResponse> allAdvertsQueryByPage(AdvertForQueryRequest advertRequest, String q, int page, int size, String sort, String type) {
-//        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
-//        if (q != null){
-//            Advert advertQuery = advertMapper.mapAdvertQueryToAdvert(advertRequest);
-//
-////            Page<Advert> advertPage = advertRepository.findByTitleOrDescriptionEquals(advertQuery.getTitle(),pageable);
-////            advertMapper.mapQueryPageAdvertToAdvertResponse(advertPage);
-//            return null;
-//
-//        }
-//            return null;
-//    }
-
-
     // ******************************************** //A02
     public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
 

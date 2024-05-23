@@ -42,7 +42,7 @@ public class AdvertController {
     }
 
 
-    // ********************************************* //A01 chatgpt
+    // ********************************************* //A01
     @GetMapping
     public ResponseEntity<List<AdvertResponse>> allAdvertsQueryByPage(
             @RequestParam(required = false) String q,
@@ -59,19 +59,6 @@ public class AdvertController {
         Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, page, size, sort, type);
         return ResponseEntity.ok(adverts.getContent());
     }
-//    @GetMapping
-//    @PreAuthorize("hasAnyAuthority('ANONYMOUS')") // * A01 Benim yazdığım
-//    public Page<AdvertPageableResponse> allAdvertsQueryByPageOld (
-//            @RequestBody @Valid AdvertForQueryRequest advertRequest,
-//            @RequestParam(value = "q") String q,
-//            @RequestParam(value = "page", defaultValue = "0") int page,
-//            @RequestParam(value = "size", defaultValue = "20") int size,
-//            @RequestParam(value = "sort", defaultValue = "category_id") String sort,
-//            @RequestParam(value = "type", defaultValue = "asc") String type
-//
-//    ){
-//        return  advertService.allAdvertsQueryByPage(advertRequest,q,page,size,sort,type);
-//    }
 
 
 
@@ -98,7 +85,7 @@ public class AdvertController {
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public Page<AdvertPageableResponse> getAdvertByPageAll(@RequestParam(value = "page", defaultValue = "0") int page,
                                                            @RequestParam(value = "size", defaultValue = "10") int size,
-                                                           @RequestParam(value = "sort", defaultValue = "category_id") String sort,
+                                                           @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                            @RequestParam(value = "type", defaultValue = "asc") String type,
                                                            HttpServletRequest httpServletRequest
     ){
