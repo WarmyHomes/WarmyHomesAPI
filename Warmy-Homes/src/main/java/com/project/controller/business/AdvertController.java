@@ -45,18 +45,18 @@ public class AdvertController {
     // ********************************************* //A01
     @GetMapping
     public ResponseEntity<List<AdvertResponse>> allAdvertsQueryByPage(
-            @RequestParam(required = false) String q,
-            @RequestParam Long category_id,
-            @RequestParam Long advert_type_id,
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "") Long category_id,
+            @RequestParam(defaultValue = "") Long advert_type_id,
             @RequestParam(required = false) Double price_start,
             @RequestParam(required = false) Double price_end,
-            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "") Long city_id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "category_id") String sort,
+            @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String type
     ) {
-        Page<AdvertResponse> adverts = advertService.getAdverts(q, category_id, advert_type_id, price_start, price_end, status, page, size, sort, type);
+        Page<AdvertResponse> adverts = advertService.getAdverts(q, page, size, sort, type, category_id, advert_type_id, price_start,price_end,city_id);
         return ResponseEntity.ok(adverts.getContent());
     }
 
