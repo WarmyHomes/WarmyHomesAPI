@@ -404,10 +404,18 @@ public class UserService {
 
    //G04
     public List<UserResponse> getUsersByRole(String role) {
-        List<User> users = userRepository.findByUserRole_RoleType(RoleType.valueOf(role.toUpperCase()));
+        List<User> users;
+        if (role == null || role.trim().isEmpty()) {
+            users = userRepository.findAll();
+        } else {
+            users = userRepository.findByUserRole_RoleType(RoleType.valueOf(role.toUpperCase()));
+        }
         return users.stream()
-                .map(user -> userMapper.mapUserToUserResponse(user))
+                .map(userMapper::mapUserToUserResponse)
                 .collect(Collectors.toList());
     }
+
+
+
 
 }
