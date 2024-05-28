@@ -83,11 +83,17 @@ public class ReportService {
     }
 
 
+    //g05
     public List<TourRequestResponse> getTourRequests(LocalDate startDate, LocalDate endDate, String status) {
 
         return tourRequestService.getTourRequestsFiltered(startDate, endDate, status);
 
 
+    }
+
+    //g04
+    public List<UserResponse> findUsersByRole(String role) {
+       return userService.getUsersByRole(role);
     }
 }
 

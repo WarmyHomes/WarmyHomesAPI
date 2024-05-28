@@ -4,6 +4,7 @@ import com.project.entity.business.Advert;
 import com.project.entity.business.Category;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.payload.response.business.*;
+import com.project.payload.response.user.UserResponse;
 import com.project.service.business.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -63,6 +64,9 @@ public class ReportController {
         return reportService.getTourRequests(startDate, endDate, status);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public List<UserResponse> getUsersByRole(@RequestParam(required = false) String role) {
+        return reportService.findUsersByRole(role);
+    }
 
 }
