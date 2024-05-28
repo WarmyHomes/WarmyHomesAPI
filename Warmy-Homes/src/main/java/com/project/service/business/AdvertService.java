@@ -162,14 +162,14 @@ public class AdvertService {
 
 
     // ***************************************** A01
-    public Page<AdvertResponse> getAdverts(String q, Long category_id, Long advert_type_id,
-                                           Double price_start, Double price_end, Integer status, int page, int size, String sort, String type) {
+    public Page<AdvertResponse> getAdverts(String q,  int page, int size, String sort, String type, Long categoryId, Long advert_type_id,
+                                           Double  price_start,Double price_end, Long city_id) {
         Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
 //        if (q != null) {
 //            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
 //        } else {
 
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.searchAllProducts(q, category_id, advert_type_id, price_start, price_end,pageable));
+            return advertMapper.mapAdvertToAdvertResponse( advertRepository.searchAllProducts(q,categoryId,advert_type_id,price_start,price_end,city_id, pageable));
         //}
     }
 

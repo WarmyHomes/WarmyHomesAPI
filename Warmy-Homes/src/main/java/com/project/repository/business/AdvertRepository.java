@@ -53,17 +53,24 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 //          "CASE WHEN :sort = 'status' AND :type = 'desc' THEN a.status END DESC")
 //  Page<Advert> findAllByCategoryIdAndAdvertTypeIdAndPriceBetweenAndStatusOrderBy(Pageable pageable, Long categoryId, Long advertTypeId, Double priceStart, Double priceEnd, Integer status, String sort, String type);
 
-    @Query("SELECT a FROM Advert a " +
-            "WHERE (:q IS NULL OR LOWER(a.title) LIKE CONCAT('%', LOWER(:q), '%') OR LOWER(a.description) LIKE CONCAT('%', LOWER(:q), '%') ) " +
-            "AND (:cId IS NULL OR a.category.id = :cId) " +
-            "AND (:aId IS NULL OR a.advert_type.id = :aId) " +
-            "AND (:pr1 IS NULL OR a.price >= :pr1) " +
-            "AND (:pr2 IS NULL OR a.price <= :pr2)")
-    Page<Advert> searchAllProducts(@Param("q") String q, @Param("cId") Long categoryId,
-                                    @Param("aId") Long advertTypeId, @Param("pr1") Double priceStart,
-                                    @Param("pr2") Double priceEnd, Pageable pageable);
 
-  // NOT: This method wrote for Report.
+    @Query("SELECT a FROM Advert a WHERE (a.slug LIKE %:q% OR a.title LIKE %:q% OR a.location LIKE %:q%) " +
+            "AND (:category_id IS NULL OR a.category.id = :category_id)"+
+            "AND (:advert_type_id IS NULL OR a.advert_type.id = :advert_type_id)"+
+            "AND (:price_start IS NULL OR a.price >= :price_start) " +
+            "AND (:price_end IS NULL OR a.price <= :price_end)"+
+            "AND (:city_id IS NULL OR a.city.id = :city_id)"
+    )
+    Page<Advert> searchAllProducts(@Param("q") String q, @Param("category_id") Long category_id,
+                                   @Param("advert_type_id") Long advert_type_id,
+                                   @Param("price_start") Double price_start,
+                                   @Param("price_end") Double price_end,
+                                   @Param("city_id") Long city_id,
+                                   Pageable pageable);
+
+
+
+    // NOT: This method wrote for Report.
   @Query("SELECT COUNT(id) FROM Advert ")
   Long countAllAdvert();
 
