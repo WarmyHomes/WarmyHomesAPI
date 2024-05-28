@@ -58,7 +58,7 @@ public class AdvertResponse {
     private String district;
 
 
-    private List<Image> images;
+    private List<String> images;
 
     private String category_id;
 

@@ -62,7 +62,7 @@ public class AdvertService {
     private final CategoryHelper categoryHelper;
     private final AdvertHelper advertHelper;
     private final UserRepository userRepository;
-   // private final ImageService imageService;
+    //private final ImageService imageService;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
     // ******************************************** // A10
@@ -168,8 +168,16 @@ public class AdvertService {
 //        if (q != null) {
 //            return advertMapper.mapAdvertToAdvertResponse( advertRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(q, q, pageable));
 //        } else {
+        Page<Advert> adverts= advertRepository.searchAllProducts(q,categoryId,advert_type_id,price_start,price_end,city_id, pageable);
 
-            return advertMapper.mapAdvertToAdvertResponse( advertRepository.searchAllProducts(q,categoryId,advert_type_id,price_start,price_end,city_id, pageable));
+
+
+        Page<AdvertResponse> advertResponse=  advertMapper.mapAdvertToAdvertResponse(adverts);
+
+
+
+        return advertResponse;
+
         //}
     }
 

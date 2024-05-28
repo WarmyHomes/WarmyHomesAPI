@@ -98,7 +98,7 @@ public class AdvertMapper {
                 .country_id(advert.getCountry().getName())
                 .city_id(advert.getCity().getName())
                 .district(advert.getDistrict().getName())
-                .images(advert.getImages())
+                //.images(advert.getImages())
                 .location(advert.getLocation())
                 .build();
     }
@@ -155,7 +155,7 @@ public class AdvertMapper {
                 .district(advert.getDistrict().getName())
                 .location(advert.getLocation())
                 .category_id(advert.getCategory().getTitle())
-                .images(advert.getImages())
+               // .images(advert.getImages())
                 .category_property_values(advert.getCategory_property_values())
                 .build();
     }
@@ -183,7 +183,7 @@ public class AdvertMapper {
                     .id(advert.getId())
                     .district(advert.getDistrict().getName())
                     .category_id(advert.getCategory().getTitle())
-                    .images(advert.getImages())
+                  //  .images(advert.getImages())
                     .location(advert.getLocation())
                     .build();
             responses.add(response);
@@ -192,6 +192,8 @@ public class AdvertMapper {
     }
 
     public Page<AdvertResponse> mapAdvertToAdvertResponse(Page<Advert> adverts) {
+
+
         return adverts.map(advert -> AdvertResponse.builder()
                 .title(advert.getTitle())
                 .description(advert.getDescription())
@@ -202,7 +204,7 @@ public class AdvertMapper {
                 .id(advert.getId())
                 .district(advert.getDistrict().getName())
                 .category_id(advert.getCategory().getTitle())
-                .images(advert.getImages())
+               // .images(advert.getImages())
                 .location(advert.getLocation())
                 .build());
     }
