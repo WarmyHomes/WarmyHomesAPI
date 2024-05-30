@@ -23,6 +23,7 @@ public class Image {
 
     @Lob //büyük boyutlu datalar için sütun oluşmasını sağlar
     @Column(nullable = false)
+    @Basic(fetch = FetchType.LAZY) // Lazy loading
     private byte[] data;
 
     @Column(nullable = false)
