@@ -2,6 +2,7 @@ package com.project.payload.response.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.project.entity.business.*;
 import com.project.entity.business.helperentity.Advert_Type;
 import com.project.entity.business.helperentity.Category_Property_Value;
@@ -57,8 +58,8 @@ public class AdvertResponse {
 
     private String district;
 
-
-    private List<String> images;
+    //@JsonSerialize(contentUsing = ImageSerializer.class) // Özel serileştirici kullanımı
+    private List<Image> images;
 
     private String category_id;
 

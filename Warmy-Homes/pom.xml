@@ -45,6 +45,14 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Maven Dependency for PostgreSQL -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.20</version> <!-- Uygun sürümü seçin -->
+		</dependency>
+
+
 		<!-- Spring Boot DevTools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
