@@ -99,6 +99,8 @@ public class WebSecurityConfig {
             "/adverts/cities",
             "/contact-messages/save",
             "/adverts/categories",
-            "/adverts"
+            "/adverts",
+            "/advert-types",
+            "/categories"
     };
 }
