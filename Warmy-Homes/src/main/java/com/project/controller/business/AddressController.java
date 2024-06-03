@@ -24,7 +24,7 @@ public class AddressController {
         return addressService.getAllCountries();
     }
 
-    //*** getAllCities()
+    //*** getAllCities()  U-02
     // http://localhost:8080/cities
     @GetMapping("/cities")
     public ResponseMessage<List<AddressResponse>> getAllCities() {

@@ -45,9 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -183,18 +181,18 @@ public class AdvertService {
 
 
     // ******************************************** //A02
+
+
     public List<CityForAdvertResponse> getAdvertsDependingOnCities() {
+        List<Object[]> cities = cityRepository.countCities();
 
-            List<Object[]> cities = cityRepository.countCities();
+        return cities.stream().map(result -> {
+            String name = (String) result[0]; // Şehir adı
+            int count = ((Long) result[1]).intValue(); // Şehir sayısı (Long'dan int'e dönüştürme)
+            return new CityForAdvertResponse(name, count);
+        }).collect(Collectors.toList());
+    }
 
-
-
-           return cities.stream().map(objects -> CityForAdvertResponse.builder()
-                   .city((String) objects[0])
-                   .amount((Integer) objects[1])
-                   .build()).collect(Collectors.toList());
-
-            };
 
 
 
@@ -457,7 +455,6 @@ public class AdvertService {
             throw new IllegalArgumentException("There are no popular adverts to retrieve.");
         }
 
-
         popularAdverts.sort(Comparator.comparingInt(this::calculatePopularity).reversed());
 
         int endIndex = Math.min(amount, popularAdverts.size());
@@ -468,10 +465,12 @@ public class AdvertService {
 
     private int calculatePopularity(Advert advert) {
         int totalTourRequests = advertRepository.countByAdvert(advert);
-        int totalViews = advert.getViewCount();
+        int totalViews = advert.getViewCount() != null ? advert.getViewCount() : 0; // null kontrolü eklenmiştir
+
         // Popülerlik puanı hesaplaması
         return 3 * totalTourRequests + totalViews;
     }
+
 
 
 
