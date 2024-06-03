@@ -101,6 +101,8 @@ public class WebSecurityConfig {
             "/adverts/categories",
             "/adverts",
             "/advert-types",
-            "/categories"
+            "/categories",
+            "/cities",
+            "/popular"
     };
 }
