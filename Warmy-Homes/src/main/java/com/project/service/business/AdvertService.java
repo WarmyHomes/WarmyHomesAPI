@@ -204,7 +204,8 @@ public class AdvertService {
 
         return categories.stream().map(objects -> CategoryForAdvertResponse.builder()
                 .category((String) objects[0])
-                .amount((Integer) objects[1])
+                .icon((String) objects[1])
+                .amount((Long) objects[2])
                 .build()).collect(Collectors.toList());
     }
 
