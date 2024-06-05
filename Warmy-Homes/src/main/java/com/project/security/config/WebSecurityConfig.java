@@ -103,7 +103,7 @@ public class WebSecurityConfig {
             "/advert-types",
             "/categories",
             "/cities",
-            "/adverts/popular",
+            "/adverts/popular/**",
             "/adverts/categories",
             "/images"
     };
