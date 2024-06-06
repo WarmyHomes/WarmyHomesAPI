@@ -45,7 +45,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Long countAllCategory();
 
 
-    @Query(value = "SELECT c.title, COUNT(c) FROM categories c GROUP BY c.title", nativeQuery = true)
+    @Query("SELECT c.title, c.icon , COUNT(a) FROM Category c JOIN Advert a ON c.id = a.category.id GROUP BY c.title, c.icon")
     List<Object[]> countCategories();
 
 }

@@ -10,5 +10,7 @@ import lombok.*;
 public class CategoryForAdvertResponse {
 
     private String category;
-    private Integer amount;
+    private String icon;
+    private Long amount;
+
 }

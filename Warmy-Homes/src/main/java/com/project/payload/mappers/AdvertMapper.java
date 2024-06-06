@@ -230,7 +230,7 @@ public class AdvertMapper {
                     .id(advert.getId())
                     .district(advert.getDistrict().getName())
                     .category_id(advert.getCategory().getTitle())
-                    .images(advert.getImages())
+                   // .images(advert.getImages())
                     .location(advert.getLocation())
                     .build();
             responses.add(response);
