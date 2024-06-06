@@ -52,7 +52,7 @@ public class AdvertController {
             @RequestParam(required = false) Double price_end,
             @RequestParam(defaultValue = "") Long city_id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "100") int size,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String type
     ) {
