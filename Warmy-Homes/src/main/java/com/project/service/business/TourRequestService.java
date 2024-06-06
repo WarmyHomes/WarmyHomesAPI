@@ -15,8 +15,10 @@ import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.tourRequestRequests.TourRequestCreateRequest;
 import com.project.payload.request.business.tourRequestRequests.TourRequestRequest;
 import com.project.payload.request.business.tourRequestRequests.TourRequestUpdateRequest;
+import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.business.TourRequestResponse;
+import com.project.payload.response.user.UserResponse;
 import com.project.repository.business.TourRequestRepository;
 import com.project.service.helper.PageableHelper;
 import com.project.service.user.UserService;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +62,14 @@ public class TourRequestService {
         Pageable pageable =pageableHelper.getPageableWithProperties(page,size,sort,type);
         Page<Tour_Request> usersTourReq =  tourRequestRepository.findAllByUserId(user.getId(),pageable);
 
+        List<User> ownerUser = usersTourReq.stream().map(Tour_Request::getOwner_user).toList();
+        UserResponse guestUser = userToUserRes(user);
+        List<Advert> adverts = usersTourReq.stream().map(Tour_Request::getAdvert).toList();
+
         List<TourRequestResponse> mapped =tourRequestMapper.usersTourRequestToTourRequestResponseList(usersTourReq);
+
+
+
         return ResponseEntity.ok(mapped);
     }
 
@@ -208,6 +218,14 @@ public class TourRequestService {
         if(!user.getUserRole().getRoleType().equals(roleType)){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
+    }
+
+    private UserResponse userToUserRes(User user){
+        return userService.userToUserRes(user);
+    }
+
+    private AdvertResponse advertToAdvertRes(Advert advert){
+        return advertService.changeAdvertToAdvertResponse(advert);
     }
 
 

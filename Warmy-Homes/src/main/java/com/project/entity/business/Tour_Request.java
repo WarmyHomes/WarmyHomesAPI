@@ -2,6 +2,7 @@ package com.project.entity.business;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.business.helperentity.StatusRole;
 import com.project.entity.business.helperentity.TourStatusRole;
@@ -45,12 +46,15 @@ public class Tour_Request {
 
 
     @ManyToOne
+    @JsonIgnore
     private Advert advert;
 
     @ManyToOne
+    @JsonIgnore
     private User owner_user;
 
     @ManyToOne
+    @JsonIgnore
     private User guest_user;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
