@@ -415,6 +415,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+public UserResponse userToUserRes(User user){
+        userRepository.findById(user.getId());
+        return userMapper.mapUserToUserResponse(user);
+}
+
 
 
 

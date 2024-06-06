@@ -1,19 +1,17 @@
 package com.project.payload.response.business;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-
 import com.project.entity.business.Advert;
 import com.project.entity.user.User;
-import com.project.payload.response.user.UserResponse;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-
 
 @Getter
 @Setter
@@ -21,7 +19,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TourRequestResponse {
+public class UsersTourRequestResponse {
 
     private Long id;
 
