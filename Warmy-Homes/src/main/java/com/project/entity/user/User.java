@@ -82,11 +82,11 @@ public class User extends EntryDate {
 
 
     @OneToMany(mappedBy = "owner_user", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Tour_Request> tourRequests;
 
     @OneToMany(mappedBy = "guest_user", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Tour_Request> tour_requestList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
