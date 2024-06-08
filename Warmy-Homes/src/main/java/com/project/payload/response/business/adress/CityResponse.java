@@ -1,4 +1,4 @@
-package com.project.payload.response.business;
+package com.project.payload.response.business.adress;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,13 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AddressResponse {
+public class CityResponse {
 
     private Long id;
 
     private String name;
+
+    private Long country_id;
+
+
 }
