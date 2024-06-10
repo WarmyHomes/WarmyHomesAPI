@@ -219,7 +219,26 @@ public class AdvertMapper {
 
     public List<AdvertResponse> mapAdvertToAdvertResponse(List<Advert> adverts) {
         List<AdvertResponse> responses = new ArrayList<>();
+
         for (Advert advert : adverts) {
+            // Advert'e ait image ID'lerini al
+            List<Long> imgIDs = imageRepository.findByAdvertId(advert.getId());
+
+            // Image ID'lerini kullanarak Image nesnelerini al
+            List<Image> images = new ArrayList<>();
+            for (Long id : imgIDs) {
+                Image image = imageRepository.findById(id).orElseThrow(() ->
+                        new ResourceNotFoundException(String.format(ErrorMessages.IMAGE_NOT_FOUND_MESSAGE, id)));
+                if (image != null) {
+                    images.add(image);
+                }
+            }
+
+            // Image nesnelerini response'a uygun formatta dönüştür
+            List<ImageResponse> imageUrls = images.stream()
+                    .map(this::mapImageToImageDTO)
+                    .collect(Collectors.toList());
+
             AdvertResponse response = AdvertResponse.builder()
                     .title(advert.getTitle())
                     .description(advert.getDescription())
@@ -230,13 +249,14 @@ public class AdvertMapper {
                     .id(advert.getId())
                     .district(advert.getDistrict().getName())
                     .category_id(advert.getCategory().getTitle())
-                   // .images(advert.getImages())
+                    .images(images) // Burada imageUrls listesini ekliyoruz
                     .location(advert.getLocation())
                     .build();
             responses.add(response);
         }
         return responses;
     }
+
 
     public Page<AdvertResponse> mapAdvertToAdvertResponse(Page<Advert> adverts) {
         return adverts.map(advert -> {
