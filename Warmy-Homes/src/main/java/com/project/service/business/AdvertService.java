@@ -511,6 +511,11 @@ public class AdvertService {
                 .collect(Collectors.toList());
     }
 
+    public AdvertResponse changeAdvertToAdvertResponse (Advert advert){
+        findAdvertById(advert.getId());
+        return advertMapper.mapAdvertToAdvertResponse(advert);
+    }
+
 
 
 }
