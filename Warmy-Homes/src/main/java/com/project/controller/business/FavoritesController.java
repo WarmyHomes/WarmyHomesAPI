@@ -2,6 +2,7 @@ package com.project.controller.business;
 
 import com.project.payload.response.business.AdvertResponse;
 import com.project.payload.response.business.ResponseMessage;
+import com.project.security.service.UserDetailsImpl;
 import com.project.service.business.FavoritesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,14 +49,16 @@ public class FavoritesController {
         return favoritesService.addOrRemoveAdvertFromFavorites(userId, advertId);
     }
 
-    //*** K04: It will remove all favorites of authenticated user
+    //K04
     @DeleteMapping("/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
     public ResponseEntity<String> deleteAllFavoritesOfAuthUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Long userId = favoritesService.getUserIdByEmail(email);
-        return ResponseEntity.ok(favoritesService.deleteAllFavorites(userId));
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+
+        String message = favoritesService.deleteAllFavorites(userId);
+        return ResponseEntity.ok(message);
     }
 
     //*** K05: It will remove all favorites of a user

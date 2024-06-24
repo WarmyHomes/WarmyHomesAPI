@@ -90,13 +90,14 @@ public class FavoritesService {
         }
     }
 
+
     //*** K04, K05
     public String deleteAllFavorites(Long userId) {
         List<Favorite> favorites = favoritesRepository.findByUserId(userId);
         if (favorites.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_FAVORITES, userId));
         }
-        favoritesRepository.deleteAllByUserId(userId); // deleteAll(favorites)
+        favoritesRepository.deleteAll(favorites);
         return SuccessMessages.FAVORITES_DELETED;
     }
 
