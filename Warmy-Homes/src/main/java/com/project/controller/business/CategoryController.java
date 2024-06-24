@@ -123,8 +123,8 @@ public class CategoryController {
 
 
 
-    //C11
 
+    //C11
     @GetMapping("/categories/{slug}")
     public ResponseEntity<CategoryResponse> getCategoryBySlug(@PathVariable String slug) {
         CategoryResponse category = categoryService.getCategoryBySlug(slug);

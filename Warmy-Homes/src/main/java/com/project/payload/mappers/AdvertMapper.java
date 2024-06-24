@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class AdvertMapper {
-    private final CategoryHelper categoryHelper;
 
+    private final CategoryHelper categoryHelper;
     private final ImageRepository imageRepository;
 
 

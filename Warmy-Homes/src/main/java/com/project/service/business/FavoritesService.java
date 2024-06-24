@@ -3,6 +3,7 @@ package com.project.service.business;
 import com.project.contactmessage.exception.ResourceNotFoundException;
 import com.project.entity.business.Advert;
 import com.project.entity.business.Favorite;
+import com.project.entity.user.User;
 import com.project.payload.mappers.AdvertMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
@@ -28,11 +29,16 @@ public class FavoritesService {
     private final AdvertRepository advertRepository;
     private final UserRepository userRepository;
 
-
+    public Long getUserIdByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, email));
+        }
+        return user.getId();
+    }
 
     //*** K01, K02
     public List<AdvertResponse> getUserFavorites(Long userId) {
-
         // Retrieve favorites for the authenticated user
         List<Favorite> favorites = favoritesRepository.findByUserId(userId);
         if (favorites.isEmpty()) {
@@ -41,26 +47,22 @@ public class FavoritesService {
 
         // Map Favorite entities to Advert entities
         List<Advert> adverts = favorites.stream()
-                .map(Favorite::getAdvert) //method reference to call the getAdvert method on each Favorite object in the stream
+                .map(Favorite::getAdvert) // Method reference to call the getAdvert method on each Favorite object in the stream
                 .collect(Collectors.toList());
 
         // Map Advert entities to AdvertResponse entities
         return adverts.stream()
                 .map(advertMapper::mapAdvertToAdvertResponse)
                 .collect(Collectors.toList());
-
     }
 
-
-
-    //*** K03:
+    //*** K03
     public ResponseMessage<AdvertResponse> addOrRemoveAdvertFromFavorites(Long userId, Long advertId) {
-
-        //advert var mı yok mu
+        // Advert var mı yok mu kontrolü
         Advert advert = advertRepository.findById(advertId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.ADVERT_NOT_FOUND));
 
-        //authentike userın o adverti var mı yok mu
+        // Kullanıcının bu favoriye sahip olup olmadığını kontrol edin
         Favorite favorite = favoritesRepository.findByUserIdAndAdvertId(userId, advertId);
 
         if (favorite != null) {
@@ -75,7 +77,7 @@ public class FavoritesService {
             // If the advert is not in favorites, add it
             favorite = new Favorite();
             favorite.setUser(userRepository.findById(userId)
-                    .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE,userId))));
+                    .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, userId))));
             favorite.setAdvert(advert);
             favorite.setCreate_at(LocalDateTime.now());
             favoritesRepository.save(favorite);
@@ -85,38 +87,26 @@ public class FavoritesService {
                     .message(SuccessMessages.ADVERT_SAVE)
                     .object(advertMapper.mapAdvertToAdvertResponse(advert))
                     .build();
-
         }
-
     }
 
-
-
-    //*** K04, K05:
+    //*** K04, K05
     public String deleteAllFavorites(Long userId) {
-
         List<Favorite> favorites = favoritesRepository.findByUserId(userId);
         if (favorites.isEmpty()) {
             throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_FAVORITES, userId));
         }
-        favoritesRepository.deleteAllByUserId(userId); //deleteAll(favorites)
+        favoritesRepository.deleteAllByUserId(userId); // deleteAll(favorites)
         return SuccessMessages.FAVORITES_DELETED;
     }
 
-
-
     //*** K06
     public String deleteFavorite(Long userId, Long favoriteId) {
-
         Favorite favorite = favoritesRepository.findByIdAndUserId(favoriteId, userId);
         if (favorite == null) {
             throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_FAVORITES, userId));
         }
-
         favoritesRepository.delete(favorite);
-
         return SuccessMessages.FAVORITE_DELETED;
-
     }
-
 }
