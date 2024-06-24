@@ -1,22 +1,23 @@
 package com.project.repository.business;
 
-
 import com.project.entity.business.Favorite;
-import com.project.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FavoritesRepository extends JpaRepository<Favorite, Long> {
 
+    @Query("SELECT f FROM Favorite f WHERE f.user.id = :userId")
+    List<Favorite> findByUserId(@Param("userId") Long userId);
 
-    List<Favorite> findByUserId(Long authenticatedUserId);
+    @Query("SELECT f FROM Favorite f WHERE f.user.id = :userId AND f.advert.id = :advertId")
+    Favorite findByUserIdAndAdvertId(@Param("userId") Long userId, @Param("advertId") Long advertId);
 
-    Favorite findByUserIdAndAdvertId(Long userId, Long advertId);
+    @Query("DELETE FROM Favorite f WHERE f.user.id = :userId")
+    void deleteAllByUserId(@Param("userId") Long userId);
 
-    void deleteAllByUserId(Long userId);
-
-    Favorite findByIdAndUserId(Long favoriteId, Long userId);
-
+    @Query("SELECT f FROM Favorite f WHERE f.id = :favoriteId AND f.user.id = :userId")
+    Favorite findByIdAndUserId(@Param("favoriteId") Long favoriteId, @Param("userId") Long userId);
 }

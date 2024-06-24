@@ -64,6 +64,7 @@ public class ReportController {
         return reportService.getTourRequests(startDate, endDate, status);
     }
 
+    //g04
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public List<UserResponse> getUsersByRole(@RequestParam(required = false) String role) {
         return reportService.findUsersByRole(role);
