@@ -1,23 +1,18 @@
 package com.project.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.abstracts.EntryDate;
 import com.project.entity.business.Advert;
 import com.project.entity.business.Favorite;
 import com.project.entity.business.Log;
 import com.project.entity.business.Tour_Request;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-
-import com.project.entity.enums.RoleType;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
